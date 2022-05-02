@@ -99,7 +99,7 @@ class SautRouteLoggingObserver extends RouteObserver<PageRoute<dynamic>> {
     } else if (_isModalBottomSheetRoute(route)) {
       _log('CLOSE MODEL BOTTOM SHEET', route.settings);
     } else if (route.settings.name != null) {
-      _log('GOING TO', route.settings);
+      _log('BACK TO', route.settings);
     }
   }
 
@@ -116,7 +116,7 @@ class SautRouteLoggingObserver extends RouteObserver<PageRoute<dynamic>> {
     } else if (_isModalBottomSheetRoute(route)) {
       _log('SHOW MODEL BOTTOM SHEET', route.settings);
     } else if (route.settings.name != null) {
-      _log('BACK TO', route.settings);
+      _log('GOING TO', route.settings);
     }
   }
 }
