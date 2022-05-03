@@ -18,7 +18,7 @@ Never _routeObserverIsRequired() {
   throw '[RouteObserver] from [FlutterSimpleAppRouter] has not been initialized';
 }
 
-class Saut {
+class AppRouter {
   /// [routeTypes]: For checking page has been defined each time navigating.
   ///
   /// [initialPage]: The page that will be used when failed to find defined page.
