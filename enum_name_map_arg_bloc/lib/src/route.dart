@@ -124,6 +124,10 @@ RouteConfig getRouteConfig(Enum page) {
   return AppConfig.routes[page]!;
 }
 
+late final RegExp _dynamicTypeRegex = RegExp(
+  r'<dynamic(, dynamic)?>$',
+);
+
 Widget Function() getPageBuilder<T extends Object?>(
   RouteConfig routeConfig,
   Map<String, dynamic>? arguments,
@@ -135,14 +139,31 @@ Widget Function() getPageBuilder<T extends Object?>(
       ));
     } else {
       for (final entry in routeConfig.requiredArguments!.entries) {
+        final Type effectiveEntryType =
+            entry.value is Type ? entry.value as Type : entry.value.runtimeType;
+
         if (!arguments.containsKey(entry.key)) {
-          _logAndThrowError(MissingArgument(entry.key, entry.value));
-        } else if (arguments[entry.key].runtimeType != entry.value) {
-          _logAndThrowError(ArgumentTypeError(
-            entry.value,
-            arguments[entry.key].runtimeType,
-            "'${entry.key}'",
-          ));
+          _logAndThrowError(MissingArgument(entry.key, effectiveEntryType));
+        }
+
+        String effectiveEntryTypeName = entry.value is String
+            ? entry.value as String
+            : effectiveEntryType.toString();
+
+        effectiveEntryTypeName =
+            effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
+
+        if (!arguments[entry.key]
+            .runtimeType
+            .toString()
+            .contains(effectiveEntryTypeName)) {
+          _logAndThrowError(
+            ArgumentTypeError(
+              effectiveEntryType,
+              arguments[entry.key].runtimeType,
+              "'${entry.key}'",
+            ),
+          );
         }
       }
     }

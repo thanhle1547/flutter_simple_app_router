@@ -5,6 +5,8 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
+import 'assert_funcs.dart';
+import 'constants.dart';
 import 'enma_navigator_state_extension.dart';
 import 'saut_route_observer.dart';
 import 'route_config.dart';
@@ -57,8 +59,30 @@ class Saut {
   static set routeTypes(List<Type> routes) => routeTypes = routes;
 
   /// * [requiredArguments] If used, [AppRouter] will check this before navigate
+  /// The key is the name of argument.
   ///
-  /// For example:
+  /// The value is the type of argument. It's can be anything but [dynamic].
+  ///
+  /// Example:
+  /// ```dart
+  /// requiredArguments: {
+  ///   'val_1': int,
+  ///   'val_2': String,
+  ///   'val_3': List,
+  ///   'val_4': 'List<int>',
+  ///   'val_5': 9,
+  /// }
+  /// ```
+  /// In above example:
+  ///
+  ///  * 'val_4'` has value of `'List<int>'` (a String),
+  /// not `List<int>`, because dart analysis will show error:
+  /// `This requires the 'constructor-tearoffs' language feature to be enabled.`
+  ///
+  ///  * `'val_5'` has value of `9` (a spcific number), this value will
+  /// be treat as `runtimeType`
+  ///
+  /// * For example:
   /// ```
   /// AppRouter.define(
   ///   page: Enum.home,
@@ -73,7 +97,7 @@ class Saut {
   /// ```
   void define({
     required Enum page,
-    Map<String, Type>? requiredArguments,
+    Map<String, Object>? requiredArguments,
     required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -84,6 +108,11 @@ class Saut {
     bool? preventDuplicates,
   }) {
     checkRouteType(page);
+
+    assert(
+      assertRequiredArguments(requiredArguments),
+      assertRequiredArgumentsFailed,
+    );
 
     AppConfig.routes.putIfAbsent(
       page,
