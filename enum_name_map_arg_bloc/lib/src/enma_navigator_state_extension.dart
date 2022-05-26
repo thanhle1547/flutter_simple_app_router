@@ -58,7 +58,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
           widget.pages.isNotEmpty &&
           widget.pages.last.name == page.name) {
-        debugLogDuplicatedPage(page.name.runtimeType.toString());
+        throw StateError(
+          "Duplicated Page: ${page.name.runtimeType.toString()}",
+        );
       }
 
       return true;

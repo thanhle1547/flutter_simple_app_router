@@ -62,14 +62,6 @@ PageRouteBuilder createRouteFromName(String? name) {
   }
 }
 
-void _logAndThrowError(Object e) {
-  if (kDebugMode) {
-    log(e.toString(), name: source);
-  }
-
-  throw e;
-}
-
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
 
 bool debugAssertRouteTypeIsValid(Enum page) {
@@ -90,19 +82,15 @@ bool debugAssertRouteTypeIsValid(Enum page) {
 String Function(Enum page) get effectiveRouteNameBuilder =>
     AppConfig.routeNameBuilder ?? (page) => page.name;
 
-/// throw StateError when you pushed the same page to the stack
-void debugLogDuplicatedPage(String name) =>
-    _logAndThrowError(StateError("Duplicated Page: $name"));
-
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   required PageBuilder pageBuilder,
   B? blocValue,
   List<BlocProviderSingleChildWidget>? blocProviders,
 }) {
   if (blocValue != null && blocProviders != null) {
-    _logAndThrowError(ArgumentError(
+    throw ArgumentError(
       'Do not pass value to [blocValue] & [blocProviders] at the same time.',
-    ));
+    );
   }
 
   if (blocValue != null) {
@@ -140,16 +128,16 @@ Widget Function() getPageBuilder<T extends Object?>(
 ) {
   if (routeConfig.requiredArguments != null) {
     if (arguments == null) {
-      _logAndThrowError(MissingArgument(
+      throw MissingArgument(
         routeConfig.requiredArguments.toString(),
-      ));
+      );
     } else {
       for (final entry in routeConfig.requiredArguments!.entries) {
         final Type effectiveEntryType =
             entry.value is Type ? entry.value as Type : entry.value.runtimeType;
 
         if (!arguments.containsKey(entry.key)) {
-          _logAndThrowError(MissingArgument(entry.key, effectiveEntryType));
+          throw MissingArgument(entry.key, effectiveEntryType);
         }
 
         String effectiveEntryTypeName = entry.value is String
@@ -163,12 +151,10 @@ Widget Function() getPageBuilder<T extends Object?>(
             .runtimeType
             .toString()
             .contains(effectiveEntryTypeName)) {
-          _logAndThrowError(
-            ArgumentTypeError(
-              effectiveEntryType,
-              arguments[entry.key].runtimeType,
-              "'${entry.key}'",
-            ),
+          throw ArgumentTypeError(
+            effectiveEntryType,
+            arguments[entry.key].runtimeType,
+            "'${entry.key}'",
           );
         }
       }
