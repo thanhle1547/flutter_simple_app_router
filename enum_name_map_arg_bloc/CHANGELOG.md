@@ -1,3 +1,13 @@
+## 0.2.0
+
+* feat:
+
+  - checking argument type funtion
+
+  - get current navigator route
+
+* fix: checking duplicate page
+
 ## 0.1.1
 
 * forgot to export AppRouter.
