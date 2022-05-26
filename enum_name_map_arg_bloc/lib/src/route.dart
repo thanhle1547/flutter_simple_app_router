@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'
@@ -126,40 +124,49 @@ Widget Function() getPageBuilder<T extends Object?>(
   RouteConfig routeConfig,
   Map<String, dynamic>? arguments,
 ) {
-  if (routeConfig.requiredArguments != null) {
+  assert(() {
+    if (routeConfig.requiredArguments == null) return true;
+
     if (arguments == null) {
       throw MissingArgument(
         routeConfig.requiredArguments.toString(),
       );
-    } else {
-      for (final entry in routeConfig.requiredArguments!.entries) {
-        final Type effectiveEntryType =
-            entry.value is Type ? entry.value as Type : entry.value.runtimeType;
+    }
 
-        if (!arguments.containsKey(entry.key)) {
-          throw MissingArgument(entry.key, effectiveEntryType);
-        }
+    for (final entry in routeConfig.requiredArguments!.entries) {
+      final Type effectiveEntryType =
+          entry.value is Type ? entry.value as Type : entry.value.runtimeType;
 
-        String effectiveEntryTypeName = entry.value is String
-            ? entry.value as String
-            : effectiveEntryType.toString();
+      if (!arguments.containsKey(entry.key)) {
+        throw MissingArgument(entry.key, effectiveEntryType);
+      }
 
-        effectiveEntryTypeName =
-            effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
+      String effectiveEntryTypeName = entry.value is String
+          ? entry.value as String
+          : effectiveEntryType.toString();
 
-        if (!arguments[entry.key]
-            .runtimeType
-            .toString()
-            .contains(effectiveEntryTypeName)) {
-          throw ArgumentTypeError(
-            effectiveEntryType,
-            arguments[entry.key].runtimeType,
-            "'${entry.key}'",
-          );
-        }
+      effectiveEntryTypeName =
+          effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
+
+      final currentArgument = arguments[entry.key];
+
+      String effectiveArgumentType = objectRuntimeType(currentArgument, '');
+
+      if (effectiveArgumentType.contains('=>')) {
+        effectiveArgumentType = 'Function';
+      }
+
+      if (!effectiveArgumentType.contains(effectiveEntryTypeName)) {
+        throw ArgumentTypeError(
+          effectiveEntryType,
+          arguments[entry.key].runtimeType,
+          "'${entry.key}'",
+        );
       }
     }
-  }
+
+    return true;
+  }());
 
   return () => routeConfig.pageBuilder(arguments);
 }
