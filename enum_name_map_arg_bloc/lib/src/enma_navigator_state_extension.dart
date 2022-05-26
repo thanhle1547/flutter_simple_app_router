@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: implementation_imports
@@ -55,12 +56,12 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     final RouteConfig routeConfig = getRouteConfig(page);
 
     assert(() {
+      final String name = effectiveRouteNameBuilder(page);
+      late final String runtimeType = objectRuntimeType(page, 'String');
+
       if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
-          widget.pages.isNotEmpty &&
-          widget.pages.last.name == page.name) {
-        throw StateError(
-          "Duplicated Page: ${page.name.runtimeType.toString()}",
-        );
+          getCurrentNavigatorRouteName(context) == name) {
+        throw StateError("Duplicated Page: $runtimeType");
       }
 
       return true;
