@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'assert_funcs.dart';
 import 'constants.dart';
 import 'route_transition.dart';
 import 'transition_builder_delegate.dart';
@@ -49,7 +48,21 @@ class RouteConfig {
     this.fullscreenDialog = kFullscreenDialog,
     this.preventDuplicates,
   }) : assert(
-          assertRequiredArguments(requiredArguments),
-          assertRequiredArgumentsFailed,
+          _assertRequiredArguments(requiredArguments),
+          'A value of type dynamic can not be defined',
         );
+}
+
+bool _assertRequiredArguments(Map<String, Object>? requiredArguments) {
+  assert(() {
+    if (requiredArguments == null) return true;
+
+    for (final MapEntry<String, Object> item in requiredArguments.entries) {
+      if (item.value.toString() == 'dynamic') return false;
+    }
+
+    return true;
+  }());
+
+  return true;
 }

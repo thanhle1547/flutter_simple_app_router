@@ -11,6 +11,3 @@ const bool kOpaque = true;
 
 /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
 const bool kFullscreenDialog = false;
-
-const String assertRequiredArgumentsFailed =
-    'A value of type dynamic can not be defined';

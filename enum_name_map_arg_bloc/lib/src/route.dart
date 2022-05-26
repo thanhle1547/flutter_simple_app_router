@@ -72,20 +72,26 @@ void _logAndThrowError(Object e) {
 
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
 
-void checkRouteType(Enum page) {
-  if (_shouldCheckRouteType &&
-      !AppConfig.routeTypes.contains(page.runtimeType)) {
-    _logAndThrowError(ArgumentError(
-      "Route types did not contain type ${page.runtimeType} ($page)",
-    ));
-  }
+bool debugAssertRouteTypeIsValid(Enum page) {
+  assert(() {
+    if (_shouldCheckRouteType &&
+        !AppConfig.routeTypes.contains(page.runtimeType)) {
+      throw ArgumentError(
+        "Route types did not contain type ${page.runtimeType} ($page)",
+      );
+    }
+
+    return true;
+  }());
+
+  return true;
 }
 
 String Function(Enum page) get effectiveRouteNameBuilder =>
     AppConfig.routeNameBuilder ?? (page) => page.name;
 
 /// throw StateError when you pushed the same page to the stack
-void duplicatedPage(String name) =>
+void debugLogDuplicatedPage(String name) =>
     _logAndThrowError(StateError("Duplicated Page: $name"));
 
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({

@@ -50,15 +50,19 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    checkRouteType(page);
+    assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page);
 
-    if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
-        widget.pages.isNotEmpty &&
-        widget.pages.last.name == page.name) {
-      duplicatedPage(page.name.runtimeType.toString());
-    }
+    assert(() {
+      if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
+          widget.pages.isNotEmpty &&
+          widget.pages.last.name == page.name) {
+        debugLogDuplicatedPage(page.name.runtimeType.toString());
+      }
+
+      return true;
+    }());
 
     return push<T>(
       createRoute(
@@ -105,7 +109,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    checkRouteType(page);
+    assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page);
 
@@ -150,7 +154,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    checkRouteType(page);
+    assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page);
 

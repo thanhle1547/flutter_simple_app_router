@@ -5,8 +5,6 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
-import 'assert_funcs.dart';
-import 'constants.dart';
 import 'enma_navigator_state_extension.dart';
 import 'saut_route_observer.dart';
 import 'route_config.dart';
@@ -107,12 +105,7 @@ class AppRouter {
     bool fullscreenDialog = false,
     bool? preventDuplicates,
   }) {
-    checkRouteType(page);
-
-    assert(
-      assertRequiredArguments(requiredArguments),
-      assertRequiredArgumentsFailed,
-    );
+    assert(debugAssertRouteTypeIsValid(page));
 
     AppConfig.routes.putIfAbsent(
       page,
