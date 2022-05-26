@@ -1,4 +1,4 @@
-class ArgumentTypeError {
+class ArgumentTypeError extends Error {
   final String? _name;
   final Type _configType;
   final Type _assignedType;
@@ -14,7 +14,7 @@ class ArgumentTypeError {
       "argument ${_name == null ? '' : "$_name "}of type $_configType";
 }
 
-class MissingArgument {
+class MissingArgument implements Exception {
   final String _name;
   final Type? _type;
 
