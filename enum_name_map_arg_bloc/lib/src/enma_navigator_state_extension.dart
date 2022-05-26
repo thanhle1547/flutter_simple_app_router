@@ -199,4 +199,20 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   void backToPage(dynamic page) => backToPageName(
         effectiveRouteNameBuilder(page),
       );
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  Route? getCurrentNavigatorRoute(BuildContext context) {
+    Route? currentRoute;
+    Navigator.of(context).popUntil((route) {
+      currentRoute = route;
+      return true;
+    });
+    return currentRoute;
+  }
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  String? getCurrentNavigatorRouteName(BuildContext context) =>
+      getCurrentNavigatorRoute(context)!.settings.name;
 }

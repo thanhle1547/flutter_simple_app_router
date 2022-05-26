@@ -301,4 +301,15 @@ class AppRouter {
 
   static void backToPage(BuildContext context, Enum page) =>
       backToPageName(context, page.name);
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  static Route? getCurrentNavigatorRoute(BuildContext context) =>
+      (currentNavigator ?? Navigator.of(context))
+          .getCurrentNavigatorRoute(context);
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  static String? getCurrentNavigatorRouteName(BuildContext context) =>
+      getCurrentNavigatorRoute(context)!.settings.name;
 }

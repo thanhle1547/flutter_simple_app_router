@@ -134,4 +134,14 @@ extension EnmaBuildContextExtension on BuildContext {
   void backToPageName(String name) => Navigator.of(this).backToPageName(name);
 
   void backToPage(Enum page) => backToPageName(page.name);
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  Route? getCurrentNavigatorRoute() =>
+      Navigator.of(this).getCurrentNavigatorRoute(this);
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  String? getCurrentNavigatorRouteName() =>
+      getCurrentNavigatorRoute()!.settings.name;
 }
