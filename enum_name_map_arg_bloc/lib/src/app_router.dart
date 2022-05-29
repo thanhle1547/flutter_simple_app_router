@@ -13,10 +13,6 @@ import 'route_transition.dart';
 import 'saut_route_observer.dart';
 import 'transition_builder_delegate.dart';
 
-Never _routeObserverIsRequired() {
-  throw '[RouteObserver] from [FlutterSimpleAppRouter] has not been initialized';
-}
-
 class AppRouter {
   /// [routeTypes]: For checking page has been defined each time navigating.
   ///
@@ -146,13 +142,13 @@ class AppRouter {
       _routeObserver ??= SautRouteObserver();
 
   static void subscribe(RouteAware routeAware, BuildContext context) {
-    if (_routeObserver == null) _routeObserverIsRequired();
+    if (_routeObserver == null) routeObserverIsRequired();
 
     _routeObserver?.subscribe(routeAware, ModalRoute.of(context)!);
   }
 
   static void unsubscribe<R extends Route<dynamic>>(RouteAware routeAware) {
-    if (_routeObserver == null) _routeObserverIsRequired();
+    if (_routeObserver == null) routeObserverIsRequired();
 
     _routeObserver?.unsubscribe(routeAware);
   }

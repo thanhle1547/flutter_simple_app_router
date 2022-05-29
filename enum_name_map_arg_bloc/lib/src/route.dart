@@ -60,6 +60,10 @@ PageRouteBuilder createRouteFromName(String? name) {
   }
 }
 
+Never routeObserverIsRequired() {
+  throw '[RouteObserver] from [FlutterSimpleAppRouter] has not been initialized';
+}
+
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
 
 bool debugAssertRouteTypeIsValid(Enum page) {
