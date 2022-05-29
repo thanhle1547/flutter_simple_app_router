@@ -60,7 +60,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       late final String runtimeType = objectRuntimeType(page, 'String');
 
       if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
-          getCurrentNavigatorRouteName(context) == name) {
+          getCurrentNavigatorRouteName() == name) {
         throw StateError("Duplicated Page: $runtimeType");
       }
 
@@ -203,9 +203,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  Route? getCurrentNavigatorRoute(BuildContext context) {
+  Route? getCurrentNavigatorRoute() {
     Route? currentRoute;
-    Navigator.of(context).popUntil((route) {
+    popUntil((route) {
       currentRoute = route;
       return true;
     });
@@ -214,6 +214,6 @@ extension EnmaNavigatorStateExtension on NavigatorState {
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  String? getCurrentNavigatorRouteName(BuildContext context) =>
-      getCurrentNavigatorRoute(context)!.settings.name;
+  String? getCurrentNavigatorRouteName() =>
+      getCurrentNavigatorRoute()!.settings.name;
 }
