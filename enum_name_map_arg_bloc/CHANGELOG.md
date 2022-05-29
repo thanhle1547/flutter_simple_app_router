@@ -1,3 +1,13 @@
+## 0.3.0
+
+* breaking:
+
+  - `requiredArguments` changed to `debugRequiredArguments`
+
+  - `preventDuplicates` changed to `debugPreventDuplicates`
+
+* **add** mising `debugPreventDuplicates`
+
 ## 0.2.0
 
 * feat:

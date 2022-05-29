@@ -20,7 +20,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///
   /// To provide existing blocs to a new page.
   ///
-  /// * [preventDuplicates]
+  /// * [debugPreventDuplicates]
   ///
   /// Prevent navigate to the same page.
   ///
@@ -46,10 +46,10 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
     Curve? curve,
-    bool? preventDuplicates,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
+    bool? debugPreventDuplicates,
   }) {
     assert(debugAssertRouteTypeIsValid(page));
 
@@ -59,7 +59,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       final String name = effectiveRouteNameBuilder(page);
       late final String runtimeType = objectRuntimeType(page, 'String');
 
-      if ((preventDuplicates ?? AppConfig.shouldPreventDuplicates) &&
+      if ((debugPreventDuplicates ??
+              routeConfig.debugPreventDuplicates ??
+              AppConfig.shouldPreventDuplicates) &&
           getCurrentNavigatorRouteName() == name) {
         throw StateError("Duplicated Page: $runtimeType");
       }

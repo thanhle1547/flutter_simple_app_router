@@ -53,7 +53,7 @@ class AppRouter {
   // ignore: avoid_setters_without_getters
   static set routeTypes(List<Type> routes) => routeTypes = routes;
 
-  /// * [requiredArguments] If used, [AppRouter] will check this before navigate
+  /// * [debugRequiredArguments] If used, [AppRouter] will check this before navigate
   /// The key is the name of argument.
   ///
   /// The value is the type of argument. It's can be anything but [dynamic].
@@ -92,7 +92,7 @@ class AppRouter {
   /// ```
   void define({
     required Enum page,
-    Map<String, Object>? requiredArguments,
+    Map<String, Object>? debugRequiredArguments,
     required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -100,14 +100,14 @@ class AppRouter {
     Curve? curve,
     bool opaque = true,
     bool fullscreenDialog = false,
-    bool? preventDuplicates,
+    bool? debugPreventDuplicates,
   }) {
     assert(debugAssertRouteTypeIsValid(page));
 
     AppConfig.routes.putIfAbsent(
       page,
       () => RouteConfig(
-        requiredArguments: requiredArguments,
+        debugRequiredArguments: debugRequiredArguments,
         pageBuilder: pageBuilder,
         transition: transition,
         customTransitionBuilderDelegate: customTransitionBuilderDelegate,
@@ -115,7 +115,7 @@ class AppRouter {
         curve: curve,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
-        preventDuplicates: preventDuplicates,
+        debugPreventDuplicates: debugPreventDuplicates,
       ),
     );
   }
@@ -175,7 +175,7 @@ class AppRouter {
   ///
   /// To provide existing blocs to a new page.
   ///
-  /// * [preventDuplicates]
+  /// * [debugPreventDuplicates]
   ///
   /// Prevent navigate to the same page.
   ///
@@ -205,6 +205,7 @@ class AppRouter {
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
+    bool? debugPreventDuplicates,
   }) =>
       (currentNavigator ?? Navigator.of(context)).toPage(
         page,
@@ -217,6 +218,7 @@ class AppRouter {
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
+        debugPreventDuplicates: debugPreventDuplicates,
       );
 
   /// [blocValue]: To provide an existing bloc to a new page.

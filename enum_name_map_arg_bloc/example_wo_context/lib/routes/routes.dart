@@ -24,7 +24,7 @@ late final RouteConfig _postPublished = RouteConfig(
 );
 
 late final RouteConfig _postDetail = RouteConfig(
-  requiredArguments: {
+  debugRequiredArguments: {
     'name': String,
     'id': int,
     'aRandomIntListForNothing': 'List<int>',

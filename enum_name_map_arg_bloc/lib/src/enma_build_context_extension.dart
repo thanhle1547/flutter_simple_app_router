@@ -21,7 +21,7 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// To provide existing blocs to a new page.
   ///
-  /// * [preventDuplicates]
+  /// * [debugPreventDuplicates]
   ///
   /// Prevent navigate to the same page.
   ///
@@ -50,6 +50,7 @@ extension EnmaBuildContextExtension on BuildContext {
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
+    bool? debugPreventDuplicates,
   }) =>
       Navigator.of(this).toPage(
         page,
@@ -62,6 +63,7 @@ extension EnmaBuildContextExtension on BuildContext {
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
+        debugPreventDuplicates: debugPreventDuplicates,
       );
 
   /// [blocValue]: To provide an existing bloc to a new page.

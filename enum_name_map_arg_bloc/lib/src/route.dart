@@ -129,15 +129,15 @@ Widget Function() getPageBuilder<T extends Object?>(
   Map<String, dynamic>? arguments,
 ) {
   assert(() {
-    if (routeConfig.requiredArguments == null) return true;
+    if (routeConfig.debugRequiredArguments == null) return true;
 
     if (arguments == null) {
       throw MissingArgument(
-        routeConfig.requiredArguments.toString(),
+        routeConfig.debugRequiredArguments.toString(),
       );
     }
 
-    for (final entry in routeConfig.requiredArguments!.entries) {
+    for (final entry in routeConfig.debugRequiredArguments!.entries) {
       final Type effectiveEntryType =
           entry.value is Type ? entry.value as Type : entry.value.runtimeType;
 

@@ -27,7 +27,7 @@ class RouteConfig {
   ///
   ///  * `'val_5'` has value of `9` (a spcific number), this value will
   /// be treat as `runtimeType`
-  final Map<String, Object>? requiredArguments;
+  final Map<String, Object>? debugRequiredArguments;
   final Widget Function(Map<String, dynamic>? arguments) pageBuilder;
   final RouteTransition? transition;
   final TransitionBuilderDelegate? customTransitionBuilderDelegate;
@@ -35,10 +35,10 @@ class RouteConfig {
   final Curve? curve;
   final bool opaque;
   final bool fullscreenDialog;
-  final bool? preventDuplicates;
+  final bool? debugPreventDuplicates;
 
   RouteConfig({
-    this.requiredArguments,
+    this.debugRequiredArguments,
     required this.pageBuilder,
     this.transition,
     this.customTransitionBuilderDelegate,
@@ -46,9 +46,9 @@ class RouteConfig {
     this.curve,
     this.opaque = kOpaque,
     this.fullscreenDialog = kFullscreenDialog,
-    this.preventDuplicates,
+    this.debugPreventDuplicates,
   }) : assert(
-          _assertRequiredArguments(requiredArguments),
+          _assertRequiredArguments(debugRequiredArguments),
           'A value of type dynamic can not be defined',
         );
 }
