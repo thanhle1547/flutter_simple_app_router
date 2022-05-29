@@ -5,11 +5,12 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
+import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
-import 'saut_route_observer.dart';
+import 'route.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
-import 'route.dart';
+import 'saut_route_observer.dart';
 import 'transition_builder_delegate.dart';
 
 Never _routeObserverIsRequired() {
@@ -168,7 +169,7 @@ class Saut {
   /// See also:
   /// https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments#2-create-a-widget-that-extracts-the-arguments
   static Object? extractArguments(BuildContext context) =>
-      ModalRoute.of(context)?.settings.arguments;
+      context.extractArguments();
 
   /// * [blocValue]
   ///
