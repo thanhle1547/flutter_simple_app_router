@@ -7,6 +7,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
 import 'app_config.dart';
 import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
+import 'navigator_state_extension.dart';
 import 'route.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
@@ -160,7 +161,7 @@ class Saut {
 
   /// {@macro flutter.widgets.widgetsApp.onUnknownRoute}
   static Route<dynamic>? onUnknownRoute(RouteSettings settings) =>
-      createRouteFromName(settings.name);
+      createRouteFromName(settings.name, currentNavigator?.initialRoute);
 
   /// See also:
   /// https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments#2-create-a-widget-that-extracts-the-arguments

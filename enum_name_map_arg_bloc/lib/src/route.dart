@@ -39,19 +39,49 @@ PageRouteBuilder<T> createRoute<T>({
       fullscreenDialog: fullscreenDialog,
     );
 
-PageRouteBuilder createRouteFromName(String? name) {
+PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
   try {
+    String? effectiveName;
+
+    String? configuredInitialPageName = AppConfig.initialPage == null
+        ? null
+        : effectiveRouteNameBuilder(AppConfig.initialPage!);
+
     final key = AppConfig.routes.keys.firstWhere(
-      (e) => effectiveRouteNameBuilder(e) == name,
-      orElse:
-          AppConfig.initialPage == null ? null : () => AppConfig.initialPage!,
+      (e) {
+        String builtName = effectiveRouteNameBuilder(e);
+
+        if (builtName == name) {
+          effectiveName = name;
+          return true;
+        }
+
+        if (builtName == configuredInitialPageName) {
+          effectiveName = configuredInitialPageName;
+          return true;
+        }
+
+        if (builtName == fallbackName) {
+          effectiveName = fallbackName;
+          return true;
+        }
+
+        return false;
+      },
+      orElse: AppConfig.initialPage == null
+          ? null
+          : () {
+              effectiveName = configuredInitialPageName;
+
+              return AppConfig.initialPage!;
+            },
     );
 
     final RouteConfig config = AppConfig.routes[key]!;
 
     return createRoute(
       pageBuilder: () => config.pageBuilder(null),
-      settings: RouteSettings(name: name),
+      settings: RouteSettings(name: effectiveName),
       transitionBuilderDelegate:
           config.transition?.builder ?? config.customTransitionBuilderDelegate,
     );
