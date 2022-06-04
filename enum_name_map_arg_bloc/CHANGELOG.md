@@ -1,3 +1,7 @@
+## 0.4.2
+
+* fix `createRouteFromName` function
+
 ## 0.4.1
 
 * export `SautRouteObserver`

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'
@@ -49,32 +51,41 @@ PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
 
     final key = AppConfig.routes.keys.firstWhere(
       (e) {
-        String builtName = effectiveRouteNameBuilder(e);
+        final String builtName = effectiveRouteNameBuilder(e);
 
-        if (builtName == name) {
-          effectiveName = name;
-          return true;
-        }
+        if (builtName != name) return false;
 
-        if (builtName == configuredInitialPageName) {
-          effectiveName = configuredInitialPageName;
-          return true;
-        }
-
-        if (builtName == fallbackName) {
-          effectiveName = fallbackName;
-          return true;
-        }
-
-        return false;
+        effectiveName = name;
+        return true;
       },
-      orElse: AppConfig.initialPage == null
-          ? null
-          : () {
-              effectiveName = configuredInitialPageName;
+      orElse: () {
+        log("$name could not be found", name: source);
 
-              return AppConfig.initialPage!;
+        try {
+          return AppConfig.routes.keys.firstWhere(
+            (e) {
+              final String builtName = effectiveRouteNameBuilder(e);
+
+              if (builtName == configuredInitialPageName) {
+                effectiveName = configuredInitialPageName;
+                return true;
+              }
+
+              if (builtName == fallbackName) {
+                effectiveName = fallbackName;
+                return true;
+              }
+
+              return false;
             },
+          );
+        } catch (e) {
+          if (AppConfig.initialPage == null) rethrow;
+
+          effectiveName = configuredInitialPageName;
+          return AppConfig.initialPage!;
+        }
+      },
     );
 
     final RouteConfig config = AppConfig.routes[key]!;
