@@ -22,7 +22,7 @@ class Saut {
   /// [routeNameBuilder]: Transform the enum into the string that will shown
   /// in debug console/debug log.
   ///
-  /// [preventDuplicates]: Prevent navigate to the same page.
+  /// [debugPreventDuplicates]: Prevent navigate to the same page on `debug mode`.
   static void setDefaultConfig({
     List<Type>? routeTypes,
     Map<Enum, RouteConfig>? routes,
@@ -31,7 +31,7 @@ class Saut {
     RouteTransition? transition = RouteTransition.rightToLeft,
     Curve? transitionCurve = Curves.easeOutQuad,
     Duration? transitionDuration = const Duration(milliseconds: 320),
-    bool preventDuplicates = true,
+    bool debugPreventDuplicates = true,
   }) {
     if (routeTypes != null) AppConfig.routeTypes = routeTypes;
 
@@ -48,7 +48,7 @@ class Saut {
     AppConfig.defaultTransitionCurve = transitionCurve;
     AppConfig.defaultTransitionDuration = transitionDuration;
 
-    AppConfig.shouldPreventDuplicates = preventDuplicates;
+    AppConfig.shouldPreventDuplicates = debugPreventDuplicates;
   }
 
   // ignore: avoid_setters_without_getters
