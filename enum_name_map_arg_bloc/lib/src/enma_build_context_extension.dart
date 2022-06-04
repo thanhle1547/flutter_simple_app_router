@@ -110,7 +110,7 @@ extension EnmaBuildContextExtension on BuildContext {
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
-    bool Function(Route<dynamic>)? predicate,
+    RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,

@@ -269,7 +269,7 @@ class Saut {
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
     Enum page, {
-    bool Function(Route<dynamic>)? predicate,
+    RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -289,6 +289,9 @@ class Saut {
             opaque: opaque,
             fullscreenDialog: fullscreenDialog,
           );
+
+  static RoutePredicate getModalRoutePredicate(Enum page) =>
+      ModalRoute.withName(effectiveRouteNameBuilder(page));
 
   static void back<T>(
     BuildContext context, {
