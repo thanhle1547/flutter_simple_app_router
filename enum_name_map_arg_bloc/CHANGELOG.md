@@ -1,3 +1,7 @@
+## 0.5.0
+
+* **add** `getModalRoutePredicate` function for convenience
+
 ## 0.4.2
 
 * fix `createRouteFromName` function
