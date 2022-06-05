@@ -199,7 +199,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
                 routeName == AppConfig.initialPageName);
       });
 
-  void backToPage(dynamic page) => backToPageName(
+  void backToPage(Enum page) => backToPageName(
         effectiveRouteNameBuilder(page),
       );
 
