@@ -102,7 +102,7 @@ PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
 }
 
 Never routeObserverIsRequired() {
-  throw '[RouteObserver] from [FlutterSimpleAppRouter] has not been initialized';
+  throw "[RouteObserver] from [$source] has not been initialized";
 }
 
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;

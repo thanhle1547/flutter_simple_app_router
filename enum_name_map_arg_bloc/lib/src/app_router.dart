@@ -145,13 +145,25 @@ class AppRouter {
   static void subscribe(RouteAware routeAware, BuildContext context) {
     if (_routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver?.subscribe(routeAware, ModalRoute.of(context)!);
+    _routeObserver!.subscribe(routeAware, ModalRoute.of(context)!);
   }
 
   static void unsubscribe<R extends Route<dynamic>>(RouteAware routeAware) {
     if (_routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver?.unsubscribe(routeAware);
+    _routeObserver!.unsubscribe(routeAware);
+  }
+
+  static void addListener(RouteAware routeAware) {
+    if (_routeObserver == null) routeObserverIsRequired();
+
+    _routeObserver!.addListener(routeAware);
+  }
+
+  static void removeListener(RouteAware routeAware) {
+    if (_routeObserver == null) routeObserverIsRequired();
+
+    _routeObserver!.removeListener(routeAware);
   }
 
   /// {@macro flutter.widgets.widgetsApp.onGenerateInitialRoutes}
