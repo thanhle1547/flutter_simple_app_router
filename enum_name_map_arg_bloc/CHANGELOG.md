@@ -1,3 +1,17 @@
+## 0.6.0
+
+* feat: `SautRouteObserver` is now able to register `RouteAware` to be informed about route changes.
+
+* **add** `result` argument to `replaceWithPage` method
+
+* breaking:
+
+  - `getCurrentNavigatorRoute` changed to `getCurrentRoute`
+
+  - `getCurrentNavigatorRouteName` changed to `getCurrentRouteName`
+
+  - change `EnmaNavigatorStateExtension.backToPage()` argument type
+
 ## 0.5.0
 
 * **add** `getModalRoutePredicate` function for convenience
