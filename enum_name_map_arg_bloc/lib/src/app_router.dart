@@ -232,13 +232,14 @@ class AppRouter {
   ///
   /// Return a [Future]. The Future resolves when back to previous page
   /// and the [Future]'s value is the [back] method's `result` parameter.
-  static Future<T?>?
-      replaceWithPage<T extends Object?, B extends BlocBase<Object?>>(
+  static Future<T?>? replaceWithPage<T extends Object?,
+          B extends BlocBase<Object?>, TO extends Object?>(
     BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
+    TO? result,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
     RouteTransition? transition,
     Curve? curve,
@@ -246,18 +247,19 @@ class AppRouter {
     bool? opaque,
     bool? fullscreenDialog,
   }) =>
-          (currentNavigator ?? Navigator.of(context)).replaceWithPage(
-            page,
-            arguments: arguments,
-            blocValue: blocValue,
-            blocProviders: blocProviders,
-            transition: transition,
-            customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-            curve: curve,
-            duration: duration,
-            opaque: opaque,
-            fullscreenDialog: fullscreenDialog,
-          );
+      (currentNavigator ?? Navigator.of(context)).replaceWithPage(
+        page,
+        arguments: arguments,
+        blocValue: blocValue,
+        blocProviders: blocProviders,
+        result: result,
+        transition: transition,
+        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+        curve: curve,
+        duration: duration,
+        opaque: opaque,
+        fullscreenDialog: fullscreenDialog,
+      );
 
   /// * [duration]
   ///

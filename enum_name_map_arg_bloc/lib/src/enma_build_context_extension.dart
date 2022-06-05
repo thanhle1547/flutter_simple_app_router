@@ -76,11 +76,13 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// Return a [Future]. The Future resolves when back to previous page
   /// and the [Future]'s value is the [back] method's `result` parameter.
-  Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>>(
+  Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
+          TO extends Object?>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
+    TO? result,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
     Curve? curve,
@@ -93,6 +95,7 @@ extension EnmaBuildContextExtension on BuildContext {
         arguments: arguments,
         blocValue: blocValue,
         blocProviders: blocProviders,
+        result: result,
         transition: transition,
         customTransitionBuilderDelegate: customTransitionBuilderDelegate,
         curve: curve,

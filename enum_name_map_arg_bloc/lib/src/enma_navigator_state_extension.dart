@@ -102,11 +102,13 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///
   /// Return a [Future]. The Future resolves when back to previous page
   /// and the [Future]'s value is the [back] method's `result` parameter.
-  Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>>(
+  Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
+      TO extends Object?>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
+    TO? result,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
     Curve? curve,
@@ -138,6 +140,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
         opaque: opaque ?? routeConfig.opaque,
         fullscreenDialog: fullscreenDialog ?? routeConfig.fullscreenDialog,
       ),
+      result: result,
     );
   }
 
