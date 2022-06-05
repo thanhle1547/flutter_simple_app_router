@@ -309,11 +309,11 @@ class AppRouter {
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  static Route? getCurrentNavigatorRoute(BuildContext context) =>
-      (currentNavigator ?? Navigator.of(context)).getCurrentNavigatorRoute();
+  static Route? getCurrentRoute(BuildContext context) =>
+      (currentNavigator ?? Navigator.of(context)).getCurrentRoute();
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  static String? getCurrentNavigatorRouteName(BuildContext context) =>
-      getCurrentNavigatorRoute(context)!.settings.name;
+  static String? getCurrentRouteName(BuildContext context) =>
+      getCurrentRoute(context)!.settings.name;
 }

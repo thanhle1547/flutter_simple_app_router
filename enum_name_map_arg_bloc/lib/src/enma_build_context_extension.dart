@@ -142,11 +142,9 @@ extension EnmaBuildContextExtension on BuildContext {
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  Route? getCurrentNavigatorRoute() =>
-      Navigator.of(this).getCurrentNavigatorRoute();
+  Route? getCurrentRoute() => Navigator.of(this).getCurrentRoute();
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  String? getCurrentNavigatorRouteName() =>
-      getCurrentNavigatorRoute()!.settings.name;
+  String? getCurrentRouteName() => getCurrentRoute()!.settings.name;
 }
