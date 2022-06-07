@@ -5,37 +5,64 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
-import 'assert_funcs.dart';
-import 'constants.dart';
+import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
-import 'saut_route_observer.dart';
+import 'navigator_state_extension.dart';
+import 'route.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
-import 'route.dart';
+import 'saut_route_observer.dart';
 import 'transition_builder_delegate.dart';
 
-Never _routeObserverIsRequired() {
-  throw '[RouteObserver] from [FlutterSimpleAppRouter] has not been initialized';
-}
-
 class AppRouter {
-  /// [routeTypes]: For checking page has been defined each time navigating.
+  /// * [routeTypes]
   ///
-  /// [initialPage]: The page that will be used when failed to find defined page.
+  /// For checking page has been defined each time navigating.
   ///
-  /// [routeNameBuilder]: Transform the enum into the string that will shown
+  /// * [initialPage]
+  ///
+  /// The page that will be used when failed to find defined page.
+  ///
+  /// * [routeNameBuilder]
+  ///
+  /// Transform the enum into the string that will shown
   /// in debug console/debug log.
   ///
-  /// [preventDuplicates]: Prevent navigate to the same page.
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [transitionDuration]
+  ///
+  /// The duration the transition going forwards.
+  ///
+  /// * [transitionCurve]
+  ///
+  /// An parametric animation easing curve,
+  /// i.e. a mapping of the unit interval to the unit interval.
+  ///
+  /// * [debugPreventDuplicates]
+  ///
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
   static void setDefaultConfig({
     List<Type>? routeTypes,
     Map<Enum, RouteConfig>? routes,
     required Enum initialPage,
     String Function(Enum page)? routeNameBuilder,
     RouteTransition? transition = RouteTransition.rightToLeft,
-    Curve? transitionCurve = Curves.easeOutQuad,
     Duration? transitionDuration = const Duration(milliseconds: 320),
-    bool preventDuplicates = true,
+    Curve? transitionCurve = Curves.easeOutQuad,
+    bool debugPreventDuplicates = true,
   }) {
     if (routeTypes != null) AppConfig.routeTypes = routeTypes;
 
@@ -52,16 +79,18 @@ class AppRouter {
     AppConfig.defaultTransitionCurve = transitionCurve;
     AppConfig.defaultTransitionDuration = transitionDuration;
 
-    AppConfig.shouldPreventDuplicates = preventDuplicates;
+    AppConfig.shouldPreventDuplicates = debugPreventDuplicates;
   }
 
   // ignore: avoid_setters_without_getters
   static set routeTypes(List<Type> routes) => routeTypes = routes;
 
-  /// * [requiredArguments] If used, [AppRouter] will check this before navigate
-  /// The key is the name of argument.
+  /// * [debugRequiredArguments]
   ///
-  /// The value is the type of argument. It's can be anything but [dynamic].
+  /// If used, [AppRouter] will check this before navigating
+  /// The key is the name of the argument.
+  ///
+  /// The value is the type of argument. It can be anything but [dynamic].
   ///
   /// Example:
   /// ```dart
@@ -75,15 +104,16 @@ class AppRouter {
   /// ```
   /// In above example:
   ///
-  ///  * 'val_4'` has value of `'List<int>'` (a String),
-  /// not `List<int>`, because dart analysis will show error:
+  ///  * Notice `'val_4'` has value of `'List<int>'` (a String), not `List<int>`.
+  /// Because dart analysis will show this error if we pass `List<int>`:
   /// `This requires the 'constructor-tearoffs' language feature to be enabled.`
   ///
-  ///  * `'val_5'` has value of `9` (a spcific number), this value will
+  ///  * `'val_5'` has value of `9` (a certain number), this value will
   /// be treat as `runtimeType`
   ///
   /// * For example:
-  /// ```
+  ///
+  /// ```dart
   /// AppRouter.define(
   ///   page: Enum.home,
   ///   requiredArgument: {
@@ -95,9 +125,48 @@ class AppRouter {
   ///   },
   /// );
   /// ```
+  ///
+  /// * [pageBuilder]
+  ///
+  /// Used build the route's primary contents.
+  ///
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [transitionDuration]
+  ///
+  /// The duration the transition going forwards.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
+  ///
+  /// * [opaque]
+  ///
+  /// {@macro flutter.widgets.TransitionRoute.opaque}
+  ///
+  /// * [fullscreenDialog]
+  ///
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  ///
+  /// * [debugPreventDuplicates]
+  ///
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
   void define({
     required Enum page,
-    Map<String, Object>? requiredArguments,
+    Map<String, Object>? debugRequiredArguments,
     required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -105,19 +174,14 @@ class AppRouter {
     Curve? curve,
     bool opaque = true,
     bool fullscreenDialog = false,
-    bool? preventDuplicates,
+    bool? debugPreventDuplicates,
   }) {
-    checkRouteType(page);
-
-    assert(
-      assertRequiredArguments(requiredArguments),
-      assertRequiredArgumentsFailed,
-    );
+    assert(debugAssertRouteTypeIsValid(page));
 
     AppConfig.routes.putIfAbsent(
       page,
       () => RouteConfig(
-        requiredArguments: requiredArguments,
+        debugRequiredArguments: debugRequiredArguments,
         pageBuilder: pageBuilder,
         transition: transition,
         customTransitionBuilderDelegate: customTransitionBuilderDelegate,
@@ -125,7 +189,7 @@ class AppRouter {
         curve: curve,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
-        preventDuplicates: preventDuplicates,
+        debugPreventDuplicates: debugPreventDuplicates,
       ),
     );
   }
@@ -151,16 +215,46 @@ class AppRouter {
   static SautRouteObserver createRouteObserverIfNotExisted() =>
       _routeObserver ??= SautRouteObserver();
 
+  /// Subscribe [routeAware] to be informed about changes to [route].
+  ///
+  /// Going forward, [routeAware] will be informed about qualifying changes
+  /// to [route], e.g. when [route] is covered by another route or when [route]
+  /// is popped off the [Navigator] stack.
   static void subscribe(RouteAware routeAware, BuildContext context) {
-    if (_routeObserver == null) _routeObserverIsRequired();
+    if (_routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver?.subscribe(routeAware, ModalRoute.of(context)!);
+    _routeObserver!.subscribe(routeAware, ModalRoute.of(context)!);
   }
 
+  /// Unsubscribe [routeAware].
+  ///
+  /// [routeAware] is no longer informed about changes to its route. If the given argument was
+  /// subscribed to multiple types, this will unregister it (once) from each type.
   static void unsubscribe<R extends Route<dynamic>>(RouteAware routeAware) {
-    if (_routeObserver == null) _routeObserverIsRequired();
+    if (_routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver?.unsubscribe(routeAware);
+    _routeObserver!.unsubscribe(routeAware);
+  }
+
+  /// Register [routeAware] to be informed about route changes.
+  ///
+  /// Going forward, [routeAware] will be informed via `didPushNext`.
+  ///
+  /// When a route is popped off the [Navigator] stack,
+  /// [routeAware] will be informed via `didPopNext`
+  static void addListener(RouteAware routeAware) {
+    if (_routeObserver == null) routeObserverIsRequired();
+
+    _routeObserver!.addListener(routeAware);
+  }
+
+  /// Remove a previously registered [routeAware].
+  ///
+  /// If the given listener is not registered, the call is ignored.
+  static void removeListener(RouteAware routeAware) {
+    if (_routeObserver == null) routeObserverIsRequired();
+
+    _routeObserver!.removeListener(routeAware);
   }
 
   /// {@macro flutter.widgets.widgetsApp.onGenerateInitialRoutes}
@@ -170,24 +264,35 @@ class AppRouter {
 
   /// {@macro flutter.widgets.widgetsApp.onUnknownRoute}
   static Route<dynamic>? onUnknownRoute(RouteSettings settings) =>
-      createRouteFromName(settings.name);
+      createRouteFromName(settings.name, currentNavigator?.initialRoute);
 
+  /// This function use [ModalRoute.of(context)?.settings.arguments] internally
+  ///
   /// See also:
   /// https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments#2-create-a-widget-that-extracts-the-arguments
   static Object? extractArguments(BuildContext context) =>
-      ModalRoute.of(context)?.settings.arguments;
+      context.extractArguments();
 
   /// * [blocValue]
   ///
-  /// To provide an existing bloc to a new page.
+  /// Used to provide an existing bloc to a new page.
   ///
   /// * [blocProviders]
   ///
-  /// To provide existing blocs to a new page.
+  /// Used to provide existing blocs to a new page.
   ///
-  /// * [preventDuplicates]
+  /// * [transition]
   ///
-  /// Prevent navigate to the same page.
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
   ///
   /// * [duration]
   ///
@@ -201,8 +306,21 @@ class AppRouter {
   ///
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
+  /// * [debugPreventDuplicates]
+  ///
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
+  ///
   /// Return a [Future]. The Future resolves when back to previous page
   /// and the [Future]'s value is the [back] method's `result` parameter.
+  ///
+  /// The `T` type argument is the type of the return value of the route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
   static Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
     Enum page, {
@@ -215,6 +333,7 @@ class AppRouter {
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
+    bool? debugPreventDuplicates,
   }) =>
       (currentNavigator ?? Navigator.of(context)).toPage(
         page,
@@ -227,56 +346,134 @@ class AppRouter {
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
+        debugPreventDuplicates: debugPreventDuplicates,
       );
 
-  /// [blocValue]: To provide an existing bloc to a new page.
+  /// * [blocValue]
+  ///
+  /// Used to provide an existing bloc to a new page.
   ///
   /// __Warning__: `SAUT` won't automatically handle closing the bloc.
+  ///
+  /// * [blocProviders]
+  ///
+  /// Used to provide existing blocs to a new page.
+  ///
+  /// * [result]
+  ///
+  /// If non-null, `result` will be used as the result of the route that is removed;
+  /// the future that had been returned from pushing that old route
+  /// will complete with result. The type of `result`, if provided,
+  /// must match the type argument of the class of the old route (`TO`).
+  ///
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
   ///
   /// * [duration]
   ///
   /// The duration the transition going forwards.
   ///
-  /// Return a [Future]. The Future resolves when back to previous page
-  /// and the [Future]'s value is the [back] method's `result` parameter.
-  static Future<T?>?
-      replaceWithPage<T extends Object?, B extends BlocBase<Object?>>(
+  /// * [opaque]
+  ///
+  /// {@macro flutter.widgets.TransitionRoute.opaque}
+  ///
+  /// * [fullscreenDialog]
+  ///
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  ///
+  /// The `T` type argument is the type of the return value of the new route,
+  /// and `TO` is the type of the return value of the old route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
+  static Future<T?>? replaceWithPage<T extends Object?,
+          B extends BlocBase<Object?>, TO extends Object?>(
     BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
+    TO? result,
     RouteTransition? transition,
+    TransitionBuilderDelegate? customTransitionBuilderDelegate,
     Curve? curve,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
   }) =>
-          (currentNavigator ?? Navigator.of(context)).replaceWithPage(
-            page,
-            arguments: arguments,
-            blocValue: blocValue,
-            blocProviders: blocProviders,
-            transition: transition,
-            customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-            curve: curve,
-            duration: duration,
-            opaque: opaque,
-            fullscreenDialog: fullscreenDialog,
-          );
+      (currentNavigator ?? Navigator.of(context)).replaceWithPage(
+        page,
+        arguments: arguments,
+        blocValue: blocValue,
+        blocProviders: blocProviders,
+        result: result,
+        transition: transition,
+        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+        curve: curve,
+        duration: duration,
+        opaque: opaque,
+        fullscreenDialog: fullscreenDialog,
+      );
 
+  /// [predicate]
+  ///
+  /// To remove routes until a route with a certain name,
+  /// use the [RoutePredicate] returned from [AppRouter.getModalRoutePredicate].
+  ///
+  /// To remove all the routes the replaced route, simply let [predicate] null.
+  ///
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
+  ///
   /// * [duration]
   ///
   /// The duration the transition going forwards.
   ///
-  /// Return a [Future]. The Future resolves when back to previous page
-  /// and the [Future]'s value is the [back] method's `result` parameter.
+  /// * [opaque]
+  ///
+  /// {@macro flutter.widgets.TransitionRoute.opaque}
+  ///
+  /// * [fullscreenDialog]
+  ///
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  ///
+  /// The T type argument is the type of the return value of the new route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
   static Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
     Enum page, {
-    bool Function(Route<dynamic>)? predicate,
+    RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -297,15 +494,44 @@ class AppRouter {
             fullscreenDialog: fullscreenDialog,
           );
 
-  static void back<T>(
+  /// Returns a predicate that's true if the route has the specified name and if
+  /// popping the route will not yield the same route
+  ///
+  /// This function is typically used with
+  /// [AppRouter.replaceAllWithPage()], [Navigator.popUntil()].
+  ///
+  /// This function use [ModalRoute.withName()] internally.
+  static RoutePredicate getModalRoutePredicate(Enum page) =>
+      ModalRoute.withName(effectiveRouteNameBuilder(page));
+
+  /// The `T` type argument is the type of the return value of the popped route.
+  ///
+  /// The type of `result`, if provided,
+  /// must match the type argument of the class of the popped route (`T`).
+  ///
+  /// See [Navigator.pop] for more details of the semantics of popping a route.
+  @optionalTypeArgs
+  static void back<T extends Object?>(
     BuildContext context, {
     T? result,
   }) =>
       (currentNavigator ?? Navigator.of(context)).back(result: result);
 
+  /// Calls [back] repeatedly until found the page with a certain name.
   static void backToPageName(BuildContext context, String name) =>
       (currentNavigator ?? Navigator.of(context)).backToPageName(name);
 
+  /// Calls [back] repeatedly until found the page.
   static void backToPage(BuildContext context, Enum page) =>
       backToPageName(context, page.name);
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  static Route? getCurrentRoute(BuildContext context) =>
+      (currentNavigator ?? Navigator.of(context)).getCurrentRoute();
+
+  /// Trick explained here: https://github.com/flutter/flutter/issues/20451
+  /// Note `ModalRoute.of(context).settings.name` doesn't always work.
+  static String? getCurrentRouteName(BuildContext context) =>
+      getCurrentRoute(context)!.settings.name;
 }

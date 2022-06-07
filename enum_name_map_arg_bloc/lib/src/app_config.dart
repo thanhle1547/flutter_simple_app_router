@@ -16,7 +16,7 @@ class AppConfig {
 
   static Duration? defaultTransitionDuration;
 
-  /// Prevent navigate to the same page
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   static bool shouldPreventDuplicates = true;
 
   static String Function(Enum page)? routeNameBuilder;

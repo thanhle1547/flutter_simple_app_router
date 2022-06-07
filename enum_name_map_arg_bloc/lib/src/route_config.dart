@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'assert_funcs.dart';
 import 'constants.dart';
 import 'route_transition.dart';
 import 'transition_builder_delegate.dart';
@@ -28,7 +27,7 @@ class RouteConfig {
   ///
   ///  * `'val_5'` has value of `9` (a spcific number), this value will
   /// be treat as `runtimeType`
-  final Map<String, Object>? requiredArguments;
+  final Map<String, Object>? debugRequiredArguments;
   final Widget Function(Map<String, dynamic>? arguments) pageBuilder;
   final RouteTransition? transition;
   final TransitionBuilderDelegate? customTransitionBuilderDelegate;
@@ -36,10 +35,12 @@ class RouteConfig {
   final Curve? curve;
   final bool opaque;
   final bool fullscreenDialog;
-  final bool? preventDuplicates;
+
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
+  final bool? debugPreventDuplicates;
 
   RouteConfig({
-    this.requiredArguments,
+    this.debugRequiredArguments,
     required this.pageBuilder,
     this.transition,
     this.customTransitionBuilderDelegate,
@@ -47,9 +48,23 @@ class RouteConfig {
     this.curve,
     this.opaque = kOpaque,
     this.fullscreenDialog = kFullscreenDialog,
-    this.preventDuplicates,
+    this.debugPreventDuplicates,
   }) : assert(
-          assertRequiredArguments(requiredArguments),
-          assertRequiredArgumentsFailed,
+          _assertRequiredArguments(debugRequiredArguments),
+          'A value of type dynamic can not be defined',
         );
+}
+
+bool _assertRequiredArguments(Map<String, Object>? requiredArguments) {
+  assert(() {
+    if (requiredArguments == null) return true;
+
+    for (final MapEntry<String, Object> item in requiredArguments.entries) {
+      if (item.value.toString() == 'dynamic') return false;
+    }
+
+    return true;
+  }());
+
+  return true;
 }

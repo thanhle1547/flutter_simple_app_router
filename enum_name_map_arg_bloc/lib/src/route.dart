@@ -41,19 +41,58 @@ PageRouteBuilder<T> createRoute<T>({
       fullscreenDialog: fullscreenDialog,
     );
 
-PageRouteBuilder createRouteFromName(String? name) {
+PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
   try {
+    String? effectiveName;
+
+    String? configuredInitialPageName = AppConfig.initialPage == null
+        ? null
+        : effectiveRouteNameBuilder(AppConfig.initialPage!);
+
     final key = AppConfig.routes.keys.firstWhere(
-      (e) => effectiveRouteNameBuilder(e) == name,
-      orElse:
-          AppConfig.initialPage == null ? null : () => AppConfig.initialPage!,
+      (e) {
+        final String builtName = effectiveRouteNameBuilder(e);
+
+        if (builtName != name) return false;
+
+        effectiveName = name;
+        return true;
+      },
+      orElse: () {
+        log("$name could not be found", name: source);
+
+        try {
+          return AppConfig.routes.keys.firstWhere(
+            (e) {
+              final String builtName = effectiveRouteNameBuilder(e);
+
+              if (builtName == configuredInitialPageName) {
+                effectiveName = configuredInitialPageName;
+                return true;
+              }
+
+              if (builtName == fallbackName) {
+                effectiveName = fallbackName;
+                return true;
+              }
+
+              return false;
+            },
+          );
+        } catch (e) {
+          if (AppConfig.initialPage == null) rethrow;
+
+          effectiveName = configuredInitialPageName;
+          return AppConfig.initialPage!;
+        }
+      },
     );
 
     final RouteConfig config = AppConfig.routes[key]!;
 
     return createRoute(
       pageBuilder: () => config.pageBuilder(null),
-      settings: RouteSettings(name: name),
+      settings: RouteSettings(name: effectiveName),
       transitionBuilderDelegate:
           config.transition?.builder ?? config.customTransitionBuilderDelegate,
     );
@@ -62,31 +101,29 @@ PageRouteBuilder createRouteFromName(String? name) {
   }
 }
 
-void _logAndThrowError(Object e) {
-  if (kDebugMode) {
-    log(e.toString(), name: source);
-  }
-
-  throw e;
+Never routeObserverIsRequired() {
+  throw "[RouteObserver] from [$source] has not been initialized";
 }
 
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
 
-void checkRouteType(Enum page) {
-  if (_shouldCheckRouteType &&
-      !AppConfig.routeTypes.contains(page.runtimeType)) {
-    _logAndThrowError(ArgumentError(
-      "Route types did not contain type ${page.runtimeType} ($page)",
-    ));
-  }
+bool debugAssertRouteTypeIsValid(Enum page) {
+  assert(() {
+    if (_shouldCheckRouteType &&
+        !AppConfig.routeTypes.contains(page.runtimeType)) {
+      throw ArgumentError(
+        "Route types did not contain type ${page.runtimeType} ($page)",
+      );
+    }
+
+    return true;
+  }());
+
+  return true;
 }
 
 String Function(Enum page) get effectiveRouteNameBuilder =>
     AppConfig.routeNameBuilder ?? (page) => page.name;
-
-/// throw StateError when you pushed the same page to the stack
-void duplicatedPage(String name) =>
-    _logAndThrowError(StateError("Duplicated Page: $name"));
 
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   required PageBuilder pageBuilder,
@@ -94,9 +131,9 @@ PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   List<BlocProviderSingleChildWidget>? blocProviders,
 }) {
   if (blocValue != null && blocProviders != null) {
-    _logAndThrowError(ArgumentError(
+    throw ArgumentError(
       'Do not pass value to [blocValue] & [blocProviders] at the same time.',
-    ));
+    );
   }
 
   if (blocValue != null) {
@@ -132,42 +169,49 @@ Widget Function() getPageBuilder<T extends Object?>(
   RouteConfig routeConfig,
   Map<String, dynamic>? arguments,
 ) {
-  if (routeConfig.requiredArguments != null) {
+  assert(() {
+    if (routeConfig.debugRequiredArguments == null) return true;
+
     if (arguments == null) {
-      _logAndThrowError(MissingArgument(
-        routeConfig.requiredArguments.toString(),
-      ));
-    } else {
-      for (final entry in routeConfig.requiredArguments!.entries) {
-        final Type effectiveEntryType =
-            entry.value is Type ? entry.value as Type : entry.value.runtimeType;
+      throw MissingArgument(
+        routeConfig.debugRequiredArguments.toString(),
+      );
+    }
 
-        if (!arguments.containsKey(entry.key)) {
-          _logAndThrowError(MissingArgument(entry.key, effectiveEntryType));
-        }
+    for (final entry in routeConfig.debugRequiredArguments!.entries) {
+      final Type effectiveEntryType =
+          entry.value is Type ? entry.value as Type : entry.value.runtimeType;
 
-        String effectiveEntryTypeName = entry.value is String
-            ? entry.value as String
-            : effectiveEntryType.toString();
+      if (!arguments.containsKey(entry.key)) {
+        throw MissingArgument(entry.key, effectiveEntryType);
+      }
 
-        effectiveEntryTypeName =
-            effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
+      String effectiveEntryTypeName = entry.value is String
+          ? entry.value as String
+          : effectiveEntryType.toString();
 
-        if (!arguments[entry.key]
-            .runtimeType
-            .toString()
-            .contains(effectiveEntryTypeName)) {
-          _logAndThrowError(
-            ArgumentTypeError(
-              effectiveEntryType,
-              arguments[entry.key].runtimeType,
-              "'${entry.key}'",
-            ),
-          );
-        }
+      effectiveEntryTypeName =
+          effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
+
+      final currentArgument = arguments[entry.key];
+
+      String effectiveArgumentType = objectRuntimeType(currentArgument, '');
+
+      if (effectiveArgumentType.contains('=>')) {
+        effectiveArgumentType = 'Function';
+      }
+
+      if (!effectiveArgumentType.contains(effectiveEntryTypeName)) {
+        throw ArgumentTypeError(
+          effectiveEntryType,
+          arguments[entry.key].runtimeType,
+          "'${entry.key}'",
+        );
       }
     }
-  }
+
+    return true;
+  }());
 
   return () => routeConfig.pageBuilder(arguments);
 }

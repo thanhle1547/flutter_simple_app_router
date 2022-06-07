@@ -9,4 +9,5 @@ export 'src/saut.dart';
 export 'src/saut_route_logging_observer.dart' show SautRouteLoggingObserver;
 export 'src/saut_route_name_builder.dart'
     show mixedCaseWithUnderscoresEnumRouteNameBuilder;
+export 'src/saut_route_observer.dart';
 export 'src/transition_builder_delegate.dart' show TransitionBuilderDelegate;
