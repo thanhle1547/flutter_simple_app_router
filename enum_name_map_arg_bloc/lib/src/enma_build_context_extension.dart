@@ -9,21 +9,32 @@ import 'route_transition.dart';
 import 'transition_builder_delegate.dart';
 
 extension EnmaBuildContextExtension on BuildContext {
+  /// This function use [ModalRoute.of(context)?.settings.arguments] internally
+  ///
   /// See also:
   /// https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments#2-create-a-widget-that-extracts-the-arguments
   Object? extractArguments() => ModalRoute.of(this)?.settings.arguments;
 
   /// * [blocValue]
   ///
-  /// To provide an existing bloc to a new page.
+  /// Used to provide an existing bloc to a new page.
   ///
   /// * [blocProviders]
   ///
-  /// To provide existing blocs to a new page.
+  /// Used to provide existing blocs to a new page.
   ///
-  /// * [debugPreventDuplicates]
+  /// * [transition]
   ///
-  /// Prevent navigate to the same page.
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
   ///
   /// * [duration]
   ///
@@ -37,8 +48,21 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
+  /// * [debugPreventDuplicates]
+  ///
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
+  ///
   /// Return a [Future]. The Future resolves when back to previous page
   /// and the [Future]'s value is the [back] method's `result` parameter.
+  ///
+  /// The `T` type argument is the type of the return value of the route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     Map<String, dynamic>? arguments,
@@ -66,16 +90,57 @@ extension EnmaBuildContextExtension on BuildContext {
         debugPreventDuplicates: debugPreventDuplicates,
       );
 
-  /// [blocValue]: To provide an existing bloc to a new page.
+  /// * [blocValue]
+  ///
+  /// Used to provide an existing bloc to a new page.
   ///
   /// __Warning__: `SAUT` won't automatically handle closing the bloc.
+  ///
+  /// * [blocProviders]
+  ///
+  /// Used to provide existing blocs to a new page.
+  ///
+  /// * [result]
+  ///
+  /// If non-null, `result` will be used as the result of the route that is removed;
+  /// the future that had been returned from pushing that old route
+  /// will complete with result. The type of `result`, if provided,
+  /// must match the type argument of the class of the old route (`TO`).
+  ///
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
   ///
   /// * [duration]
   ///
   /// The duration the transition going forwards.
   ///
-  /// Return a [Future]. The Future resolves when back to previous page
-  /// and the [Future]'s value is the [back] method's `result` parameter.
+  /// * [opaque]
+  ///
+  /// {@macro flutter.widgets.TransitionRoute.opaque}
+  ///
+  /// * [fullscreenDialog]
+  ///
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  ///
+  /// The `T` type argument is the type of the return value of the new route,
+  /// and `TO` is the type of the return value of the old route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
           TO extends Object?>(
     Enum page, {
@@ -104,12 +169,46 @@ extension EnmaBuildContextExtension on BuildContext {
         fullscreenDialog: fullscreenDialog,
       );
 
+  /// [predicate]
+  ///
+  /// To remove routes until a route with a certain name,
+  /// use the [RoutePredicate] returned from [Saut.getModalRoutePredicate].
+  ///
+  /// To remove all the routes the replaced route, simply let [predicate] null.
+  ///
+  /// * [transition]
+  ///
+  /// Used to build the route's transitions.
+  ///
+  /// * [customTransitionBuilderDelegate]
+  ///
+  /// Used to build your own custom route's transitions.
+  ///
+  /// * [curve]
+  ///
+  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
+  /// the unit interval.
+  ///
   /// * [duration]
   ///
   /// The duration the transition going forwards.
   ///
-  /// Return a [Future]. The Future resolves when back to previous page
-  /// and the [Future]'s value is the [back] method's `result` parameter.
+  /// * [opaque]
+  ///
+  /// {@macro flutter.widgets.TransitionRoute.opaque}
+  ///
+  /// * [fullscreenDialog]
+  ///
+  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
+  ///
+  /// The T type argument is the type of the return value of the new route.
+  ///
+  /// See also:
+  ///
+  ///  * [Curve], the interface implemented by the constants available from the
+  ///    [Curves] class.
+  ///  * [Curves], a collection of common animation easing curves.
+  @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
@@ -134,10 +233,20 @@ extension EnmaBuildContextExtension on BuildContext {
             fullscreenDialog: fullscreenDialog,
           );
 
-  void back<T>({T? result}) => Navigator.of(this).back(result: result);
+  /// The `T` type argument is the type of the return value of the popped route.
+  ///
+  /// The type of `result`, if provided,
+  /// must match the type argument of the class of the popped route (`T`).
+  ///
+  /// See [Navigator.pop] for more details of the semantics of popping a route.
+  @optionalTypeArgs
+  void back<T extends Object?>({T? result}) =>
+      Navigator.of(this).back(result: result);
 
+  /// Calls [back] repeatedly until found the page with a certain name.
   void backToPageName(String name) => Navigator.of(this).backToPageName(name);
 
+  /// Calls [back] repeatedly until found the page.
   void backToPage(Enum page) => backToPageName(page.name);
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451

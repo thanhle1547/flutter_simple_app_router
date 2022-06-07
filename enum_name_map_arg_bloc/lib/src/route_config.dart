@@ -35,6 +35,8 @@ class RouteConfig {
   final Curve? curve;
   final bool opaque;
   final bool fullscreenDialog;
+
+  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   final bool? debugPreventDuplicates;
 
   RouteConfig({
