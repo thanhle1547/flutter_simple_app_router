@@ -32,6 +32,10 @@
 
 ## 📦 Dependency
 
+* dart sdk từ phiên bản 2.14.0 trở lên
+
+* flutter sdk từ phiên bản 2.5.0 trở lên
+
 * flutter_bloc bản mới nhất
 
 ## 🧩 Các tính năng
