@@ -1,6 +1,6 @@
 late final RegExp _keyPattern = RegExp('(?<=[a-z])[A-Z]');
 
-extension on Enum {
+extension on Object {
   String get key => toString()
       .split('.')
       .last
@@ -36,4 +36,4 @@ extension on Enum {
 /// enmaRouteNameBuilder(AppPages.AuthSignIn)
 /// ```
 /// ⇒  `auth_sign_in`
-String mixedCaseWithUnderscoresEnumRouteNameBuilder(Enum page) => page.path;
+String mixedCaseWithUnderscoresEnumRouteNameBuilder(Object page) => page.path;

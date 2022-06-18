@@ -64,7 +64,7 @@ extension EnmaBuildContextExtension on BuildContext {
   ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -143,7 +143,7 @@ extension EnmaBuildContextExtension on BuildContext {
   @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
           TO extends Object?>(
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -211,7 +211,7 @@ extension EnmaBuildContextExtension on BuildContext {
   @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
-    Enum page, {
+    Object page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
@@ -247,7 +247,7 @@ extension EnmaBuildContextExtension on BuildContext {
   void backToPageName(String name) => Navigator.of(this).backToPageName(name);
 
   /// Calls [back] repeatedly until found the page.
-  void backToPage(Enum page) => backToPageName(page.name);
+  void backToPage(Object page) => backToPageName(page.toString());
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.

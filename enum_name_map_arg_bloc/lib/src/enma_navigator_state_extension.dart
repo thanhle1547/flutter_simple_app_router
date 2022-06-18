@@ -61,7 +61,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -167,7 +167,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
       TO extends Object?>(
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -249,7 +249,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
-    Enum page, {
+    Object page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
@@ -308,7 +308,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       });
 
   /// Calls [back] repeatedly until found the page.
-  void backToPage(Enum page) => backToPageName(
+  void backToPage(Object page) => backToPageName(
         effectiveRouteNameBuilder(page),
       );
 

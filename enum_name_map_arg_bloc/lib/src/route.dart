@@ -107,7 +107,7 @@ Never routeObserverIsRequired() {
 
 bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
 
-bool debugAssertRouteTypeIsValid(Enum page) {
+bool debugAssertRouteTypeIsValid(Object page) {
   assert(() {
     if (_shouldCheckRouteType &&
         !AppConfig.routeTypes.contains(page.runtimeType)) {
@@ -122,8 +122,8 @@ bool debugAssertRouteTypeIsValid(Enum page) {
   return true;
 }
 
-String Function(Enum page) get effectiveRouteNameBuilder =>
-    AppConfig.routeNameBuilder ?? (page) => page.name;
+String Function(Object page) get effectiveRouteNameBuilder =>
+    AppConfig.routeNameBuilder ?? (page) => page.toString();
 
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   required PageBuilder pageBuilder,
@@ -153,7 +153,7 @@ PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   return pageBuilder;
 }
 
-RouteConfig getRouteConfig(Enum page) {
+RouteConfig getRouteConfig(Object page) {
   if (!AppConfig.routes.containsKey(page)) {
     throw "$page weren't defined";
   }

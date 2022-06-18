@@ -56,9 +56,9 @@ class Saut {
   ///  * [Curves], a collection of common animation easing curves.
   static void setDefaultConfig({
     List<Type>? routeTypes,
-    Map<Enum, RouteConfig>? routes,
-    required Enum initialPage,
-    String Function(Enum page)? routeNameBuilder,
+    Map<Object, RouteConfig>? routes,
+    required Object initialPage,
+    String Function(Object page)? routeNameBuilder,
     RouteTransition? transition = RouteTransition.rightToLeft,
     Duration? transitionDuration = const Duration(milliseconds: 320),
     Curve? transitionCurve = Curves.easeOutQuad,
@@ -115,7 +115,7 @@ class Saut {
   ///
   /// ```dart
   /// AppRouter.define(
-  ///   page: Enum.home,
+  ///   page: Object.home,
   ///   requiredArgument: {
   ///     'id': int,
   ///     'name': String,
@@ -165,7 +165,7 @@ class Saut {
   ///    [Curves] class.
   ///  * [Curves], a collection of common animation easing curves.
   void define({
-    required Enum page,
+    required Object page,
     Map<String, Object>? debugRequiredArguments,
     required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
     RouteTransition? transition,
@@ -323,7 +323,7 @@ class Saut {
   @optionalTypeArgs
   static Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -403,7 +403,7 @@ class Saut {
   static Future<T?>? replaceWithPage<T extends Object?,
           B extends BlocBase<Object?>, TO extends Object?>(
     BuildContext context,
-    Enum page, {
+    Object page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
@@ -472,7 +472,7 @@ class Saut {
   static Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
-    Enum page, {
+    Object page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
@@ -500,7 +500,7 @@ class Saut {
   /// This function is typically used with [Saut.replaceAllWithPage()], [Navigator.popUntil()].
   ///
   /// This function use [ModalRoute.withName()] internally.
-  static RoutePredicate getModalRoutePredicate(Enum page) =>
+  static RoutePredicate getModalRoutePredicate(Object page) =>
       ModalRoute.withName(effectiveRouteNameBuilder(page));
 
   /// The `T` type argument is the type of the return value of the popped route.
@@ -521,8 +521,8 @@ class Saut {
       (currentNavigator ?? Navigator.of(context)).backToPageName(name);
 
   /// Calls [back] repeatedly until found the page.
-  static void backToPage(BuildContext context, Enum page) =>
-      backToPageName(context, page.name);
+  static void backToPage(BuildContext context, Object page) =>
+      backToPageName(context, page.toString());
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.

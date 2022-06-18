@@ -6,7 +6,7 @@ import 'route_config.dart';
 import 'route_transition.dart';
 
 class AppConfig {
-  static Enum? initialPage;
+  static Object? initialPage;
 
   static String? initialPageName;
 
@@ -19,11 +19,11 @@ class AppConfig {
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   static bool shouldPreventDuplicates = true;
 
-  static String Function(Enum page)? routeNameBuilder;
+  static String Function(Object page)? routeNameBuilder;
 
   static List<Type> routeTypes = [];
 
-  static Map<Enum, RouteConfig> routes = HashMap(
+  static Map<Object, RouteConfig> routes = HashMap(
     equals: (key0, key1) => key0 == key1,
     hashCode: (key) => key.hashCode,
   );
