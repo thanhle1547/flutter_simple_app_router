@@ -43,7 +43,7 @@ late final RouteConfig _postDetail = RouteConfig(
   fullscreenDialog: false,
 );
 
-late final Map<Enum, RouteConfig> routes = {
+late final Map<Object, RouteConfig> routes = {
   AppPages.Initial: _postPublished,
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Detail: _postDetail,

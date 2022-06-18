@@ -25,6 +25,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blueGrey,
       ),
+      // initialRoute:
+      //     mixedCaseWithUnderscoresEnumRouteNameBuilder(AppPages.Initial),
       navigatorObservers: [SautRouteLoggingObserver()],
       home: const SplashScreen(),
     );

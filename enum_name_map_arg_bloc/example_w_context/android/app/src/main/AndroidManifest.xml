@@ -2,7 +2,6 @@
     package="example.saut_example_w_context">
    <application
         android:label="saut_example_w_context"
-        android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
