@@ -32,7 +32,11 @@
 
 ## 📦 Dependency
 
-* flutter_bloc: ^7.1.0
+* dart sdk từ phiên bản 2.14.0 trở lên
+
+* flutter sdk từ phiên bản 2.5.0 trở lên
+
+* flutter_bloc bản mới nhất
 
 ## 🧩 Các tính năng
 
@@ -108,7 +112,7 @@ dependencies:
   saut_enma_bloc:
       git:
         url: https://github.com/thanhle1547/flutter_simple_app_router
-        ref: flutter_bloc_7.1.0
+        ref: flutter_bloc_latest
         path: enum_name_map_arg_bloc
 ```
 
@@ -762,7 +766,7 @@ Ngoài ra, bạn cũng có thể lấy được tuyến đường hiện tại t
 
 1. Copy SHA của commit mới nhất.
 
-[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thanhle1547/flutter_simple_app_router/flutter_bloc_7.1.0)](https://github.com/thanhle1547/flutter_simple_app_router/commits/flutter_bloc_7.1.0)
+[![GitHub last commit (branch)](https://img.shields.io/github/last-commit/thanhle1547/flutter_simple_app_router/flutter_bloc_latest)](https://github.com/thanhle1547/flutter_simple_app_router/commits/flutter_bloc_latest)
 
 2. Tìm tên thư viện (`saut_enma_bloc`) trong file `pubspec.lock`.
 
@@ -775,7 +779,7 @@ Preview:
     dependency: "direct main"
     description:
       path: enum_name_map_arg_bloc
-      ref: "flutter_bloc_7.1.0"
+      ref: "flutter_bloc_latest"
       resolved-ref: "69fd9e8a4142fcb732ecf6c23ec4e66a61f07f2e"
       url: "https://github.com/thanhle1547/flutter_simple_app_router"
     source: git
