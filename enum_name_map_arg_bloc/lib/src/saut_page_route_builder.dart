@@ -38,4 +38,7 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
       child,
     );
   }
+
+  @override
+  String get debugLabel => '${super.debugLabel}(${settings.name})';
 }
