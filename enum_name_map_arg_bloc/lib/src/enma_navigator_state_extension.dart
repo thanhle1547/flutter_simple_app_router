@@ -75,7 +75,15 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   }) {
     assert(debugAssertRouteTypeIsValid(page));
 
-    final RouteConfig routeConfig = getRouteConfig(page);
+    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
+      transition: transition,
+      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionDuration: duration,
+      curve: curve,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+      debugPreventDuplicates: debugPreventDuplicates,
+    );
 
     assert(() {
       final String name = effectiveRouteNameBuilder(page);
@@ -103,13 +111,11 @@ extension EnmaNavigatorStateExtension on NavigatorState {
           arguments: arguments,
         ),
         transitionBuilderDelegate:
-            (transition ?? routeConfig.transition)?.builder ??
-                customTransitionBuilderDelegate ??
-                routeConfig.customTransitionBuilderDelegate,
-        transitionDuration: duration ?? routeConfig.transitionDuration,
-        curve: curve ?? routeConfig.curve,
-        opaque: opaque ?? routeConfig.opaque,
-        fullscreenDialog: fullscreenDialog ?? routeConfig.fullscreenDialog,
+            routeConfig.effectiveTransitionBuilderDelegate,
+        transitionDuration: routeConfig.transitionDuration,
+        curve: routeConfig.curve,
+        opaque: routeConfig.opaque,
+        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
     );
   }
@@ -181,7 +187,14 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   }) {
     assert(debugAssertRouteTypeIsValid(page));
 
-    final RouteConfig routeConfig = getRouteConfig(page);
+    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
+      transition: transition,
+      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionDuration: duration,
+      curve: curve,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+    );
 
     return pushReplacement(
       createRoute(
@@ -195,13 +208,11 @@ extension EnmaNavigatorStateExtension on NavigatorState {
           arguments: arguments,
         ),
         transitionBuilderDelegate:
-            (transition ?? routeConfig.transition)?.builder ??
-                customTransitionBuilderDelegate ??
-                routeConfig.customTransitionBuilderDelegate,
-        transitionDuration: duration ?? routeConfig.transitionDuration,
-        curve: curve ?? routeConfig.curve,
-        opaque: opaque ?? routeConfig.opaque,
-        fullscreenDialog: fullscreenDialog ?? routeConfig.fullscreenDialog,
+            routeConfig.effectiveTransitionBuilderDelegate,
+        transitionDuration: routeConfig.transitionDuration,
+        curve: routeConfig.curve,
+        opaque: routeConfig.opaque,
+        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
       result: result,
     );
@@ -261,7 +272,14 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   }) {
     assert(debugAssertRouteTypeIsValid(page));
 
-    final RouteConfig routeConfig = getRouteConfig(page);
+    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
+      transition: transition,
+      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionDuration: duration,
+      curve: curve,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+    );
 
     return pushAndRemoveUntil(
       createRoute(
@@ -271,13 +289,11 @@ extension EnmaNavigatorStateExtension on NavigatorState {
           arguments: arguments,
         ),
         transitionBuilderDelegate:
-            (transition ?? routeConfig.transition)?.builder ??
-                customTransitionBuilderDelegate ??
-                routeConfig.customTransitionBuilderDelegate,
-        transitionDuration: duration ?? routeConfig.transitionDuration,
-        curve: curve ?? routeConfig.curve,
-        opaque: opaque ?? routeConfig.opaque,
-        fullscreenDialog: fullscreenDialog ?? routeConfig.fullscreenDialog,
+            routeConfig.effectiveTransitionBuilderDelegate,
+        transitionDuration: routeConfig.transitionDuration,
+        curve: routeConfig.curve,
+        opaque: routeConfig.opaque,
+        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
       predicate ?? (Route<dynamic> _) => false,
     );

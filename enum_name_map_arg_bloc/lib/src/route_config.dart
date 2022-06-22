@@ -39,6 +39,9 @@ class RouteConfig {
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   final bool? debugPreventDuplicates;
 
+  TransitionBuilderDelegate? get effectiveTransitionBuilderDelegate =>
+      customTransitionBuilderDelegate ?? transition?.builder;
+
   RouteConfig({
     this.debugRequiredArguments,
     required this.pageBuilder,
@@ -53,6 +56,30 @@ class RouteConfig {
           _assertRequiredArguments(debugRequiredArguments),
           'A value of type dynamic can not be defined',
         );
+
+  RouteConfig copyWith({
+    RouteTransition? transition,
+    TransitionBuilderDelegate? customTransitionBuilderDelegate,
+    Duration? transitionDuration,
+    Curve? curve,
+    bool? opaque,
+    bool? fullscreenDialog,
+    bool? debugPreventDuplicates,
+  }) {
+    return RouteConfig(
+      debugRequiredArguments: debugRequiredArguments,
+      pageBuilder: pageBuilder,
+      transition: transition ?? this.transition,
+      customTransitionBuilderDelegate: customTransitionBuilderDelegate ??
+          this.customTransitionBuilderDelegate,
+      transitionDuration: transitionDuration ?? this.transitionDuration,
+      curve: curve ?? this.curve,
+      opaque: opaque ?? this.opaque,
+      fullscreenDialog: fullscreenDialog ?? this.fullscreenDialog,
+      debugPreventDuplicates:
+          debugPreventDuplicates ?? this.debugPreventDuplicates,
+    );
+  }
 }
 
 bool _assertRequiredArguments(Map<String, Object>? requiredArguments) {
