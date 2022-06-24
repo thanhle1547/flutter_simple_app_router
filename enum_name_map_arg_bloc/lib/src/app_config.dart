@@ -2,6 +2,7 @@ import 'dart:collection';
 
 import 'package:flutter/animation.dart';
 
+import 'constants.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
 
@@ -17,7 +18,7 @@ class AppConfig {
   static Duration? defaultTransitionDuration;
 
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
-  static bool shouldPreventDuplicates = true;
+  static bool shouldPreventDuplicates = kDebugPreventDuplicates;
 
   static String Function(Object page)? routeNameBuilder;
 

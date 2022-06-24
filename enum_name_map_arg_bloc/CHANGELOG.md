@@ -1,3 +1,13 @@
+## 0.6.1
+
+* **add** `Semantics`
+
+* **add** `reset` (static) function
+
+* **add** `RouteConfig.copyWith` method
+
+* fix: `RouteObserver` instance created via `Saut` or `AppRouter` was not the same
+
 ## 0.6.0
 
 * feat: `SautRouteObserver` is now able to register `RouteAware` to be informed about route changes.

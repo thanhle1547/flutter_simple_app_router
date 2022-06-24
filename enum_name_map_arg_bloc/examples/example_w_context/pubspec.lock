@@ -133,10 +133,10 @@ packages:
   saut_enma_bloc:
     dependency: "direct main"
     description:
-      path: ".."
+      path: "../.."
       relative: true
     source: path
-    version: "0.6.0"
+    version: "0.6.1"
   sky_engine:
     dependency: transitive
     description: flutter
