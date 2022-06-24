@@ -7,6 +7,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
 import 'app_config.dart';
 import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
+import 'global.dart' as global;
 import 'navigator_state_extension.dart';
 import 'route.dart';
 import 'route_config.dart';
@@ -81,9 +82,6 @@ class Saut {
 
     AppConfig.shouldPreventDuplicates = debugPreventDuplicates;
   }
-
-  // ignore: avoid_setters_without_getters
-  static set routeTypes(List<Type> routes) => routeTypes = routes;
 
   /// * [debugRequiredArguments]
   ///
@@ -210,10 +208,8 @@ class Saut {
     }
   }
 
-  static SautRouteObserver? _routeObserver;
-
   static SautRouteObserver createRouteObserverIfNotExisted() =>
-      _routeObserver ??= SautRouteObserver();
+      global.routeObserver ??= SautRouteObserver();
 
   /// Subscribe [routeAware] to be informed about changes to [route].
   ///
@@ -221,9 +217,9 @@ class Saut {
   /// to [route], e.g. when [route] is covered by another route or when [route]
   /// is popped off the [Navigator] stack.
   static void subscribe(RouteAware routeAware, BuildContext context) {
-    if (_routeObserver == null) routeObserverIsRequired();
+    if (global.routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver!.subscribe(routeAware, ModalRoute.of(context)!);
+    global.routeObserver!.subscribe(routeAware, ModalRoute.of(context)!);
   }
 
   /// Unsubscribe [routeAware].
@@ -231,9 +227,9 @@ class Saut {
   /// [routeAware] is no longer informed about changes to its route. If the given argument was
   /// subscribed to multiple types, this will unregister it (once) from each type.
   static void unsubscribe<R extends Route<dynamic>>(RouteAware routeAware) {
-    if (_routeObserver == null) routeObserverIsRequired();
+    if (global.routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver!.unsubscribe(routeAware);
+    global.routeObserver!.unsubscribe(routeAware);
   }
 
   /// Register [routeAware] to be informed about route changes.
@@ -243,18 +239,18 @@ class Saut {
   /// When a route is popped off the [Navigator] stack,
   /// [routeAware] will be informed via `didPopNext`
   static void addListener(RouteAware routeAware) {
-    if (_routeObserver == null) routeObserverIsRequired();
+    if (global.routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver!.addListener(routeAware);
+    global.routeObserver!.addListener(routeAware);
   }
 
   /// Remove a previously registered [routeAware].
   ///
   /// If the given listener is not registered, the call is ignored.
   static void removeListener(RouteAware routeAware) {
-    if (_routeObserver == null) routeObserverIsRequired();
+    if (global.routeObserver == null) routeObserverIsRequired();
 
-    _routeObserver!.removeListener(routeAware);
+    global.routeObserver!.removeListener(routeAware);
   }
 
   /// {@macro flutter.widgets.widgetsApp.onGenerateInitialRoutes}
