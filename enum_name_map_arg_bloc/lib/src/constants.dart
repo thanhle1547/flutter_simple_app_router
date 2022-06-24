@@ -11,3 +11,5 @@ const bool kOpaque = true;
 
 /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
 const bool kFullscreenDialog = false;
+
+const bool kDebugPreventDuplicates = true;
