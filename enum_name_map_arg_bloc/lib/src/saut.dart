@@ -5,6 +5,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
+import 'constants.dart';
 import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
 import 'global.dart' as global;
@@ -81,6 +82,19 @@ class Saut {
     AppConfig.defaultTransitionDuration = transitionDuration;
 
     AppConfig.shouldPreventDuplicates = debugPreventDuplicates;
+  }
+
+  static void reset() {
+    AppConfig.routeTypes.clear();
+    AppConfig.routes.clear();
+    AppConfig.routeNameBuilder = null;
+    AppConfig.initialPage = null;
+    AppConfig.initialPageName = null;
+    AppConfig.defaultTransition = null;
+    AppConfig.defaultTransitionCurve = null;
+    AppConfig.defaultTransitionDuration = null;
+    AppConfig.shouldPreventDuplicates = kDebugPreventDuplicates;
+    global.routeObserver = null;
   }
 
   /// * [debugRequiredArguments]
