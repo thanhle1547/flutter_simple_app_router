@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart'
 // ignore: implementation_imports
 import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
+import 'package:saut_enma_bloc/src/global.dart';
 
 import 'app_config.dart';
 import 'argument_error.dart';
@@ -26,6 +27,7 @@ PageRouteBuilder<T> createRoute<T>({
   Curve? curve,
   bool opaque = kOpaque,
   bool fullscreenDialog = kFullscreenDialog,
+  bool createdFromPage = false,
 }) =>
     SautPageRouteBuilder<T>(
       settings: settings,
@@ -43,6 +45,7 @@ PageRouteBuilder<T> createRoute<T>({
       curve: curve ?? AppConfig.defaultTransitionCurve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
+      createdFromSautPage: createdFromPage,
     );
 
 PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
@@ -103,6 +106,18 @@ PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
   } on StateError {
     throw StateError("$name not found");
   }
+}
+
+bool debugAssertRouterDelegateExist() {
+  if (routerDelegate == null) {
+    throw StateError(
+      'Feature only available when creates an app '
+      '([MaterialApp], [CupertinoApp]) that uses the [Router] '
+      'and using SautRouterDelegate as [routerDelegate]',
+    );
+  }
+
+  return true;
 }
 
 Never routeObserverIsRequired() {
