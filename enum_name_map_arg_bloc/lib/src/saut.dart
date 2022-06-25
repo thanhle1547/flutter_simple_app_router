@@ -206,15 +206,13 @@ class Saut {
     );
   }
 
-  static GlobalKey<NavigatorState>? _navigatorKey;
-
   static GlobalKey<NavigatorState> createNavigatorKeyIfNotExisted() =>
-      _navigatorKey ??= GlobalKey<NavigatorState>();
+      global.createNavigatorKeyIfNotExisted();
 
-  static NavigatorState? get currentNavigator => _navigatorKey?.currentState;
+  static NavigatorState? get currentNavigator => global.currentNavigatorState;
   static NavigatorState get navigator {
     try {
-      return _navigatorKey!.currentState!;
+      return global.currentNavigatorState!;
     } catch (e) {
       throw StateError(
         "${e.toString()}. Maybe you did not call createNavigatorKeyIfNotExisted",
