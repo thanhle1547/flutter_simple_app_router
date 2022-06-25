@@ -28,6 +28,11 @@ class RouteConfig {
   ///  * `'val_5'` has value of `9` (a spcific number), this value will
   /// be treat as `runtimeType`
   final Map<String, Object>? debugRequiredArguments;
+  final Route<T> Function<T>(
+    RouteConfig resolvedConfig,
+    RouteSettings settings,
+    Widget page,
+  )? routeBuilder;
   final Widget Function(Map<String, dynamic>? arguments) pageBuilder;
   final RouteTransition? transition;
   final TransitionBuilderDelegate? customTransitionBuilderDelegate;
@@ -39,11 +44,14 @@ class RouteConfig {
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   final bool? debugPreventDuplicates;
 
+  bool get useRouteBuilder => routeBuilder != null;
+
   TransitionBuilderDelegate? get effectiveTransitionBuilderDelegate =>
       customTransitionBuilderDelegate ?? transition?.builder;
 
   RouteConfig({
     this.debugRequiredArguments,
+    this.routeBuilder,
     required this.pageBuilder,
     this.transition,
     this.customTransitionBuilderDelegate,

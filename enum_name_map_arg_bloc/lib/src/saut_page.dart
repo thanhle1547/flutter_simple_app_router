@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 
 import 'route.dart' as router;
 import 'route_config.dart';
-import 'route_transition.dart';
 
 typedef PagePredicate = bool Function(Page<dynamic> page);
 
@@ -33,13 +32,8 @@ class SautPage<T extends Object?> extends Page {
   Route createRoute(BuildContext context) {
     return router.createRoute(
       pageBuilder: pageBuilder,
+      config: routeConfig,
       settings: this,
-      transitionBuilderDelegate: routeConfig.customTransitionBuilderDelegate ??
-          routeConfig.transition?.builder,
-      transitionDuration: routeConfig.transitionDuration,
-      curve: routeConfig.curve,
-      opaque: routeConfig.opaque,
-      fullscreenDialog: routeConfig.fullscreenDialog,
       createdFromPage: true,
     );
   }

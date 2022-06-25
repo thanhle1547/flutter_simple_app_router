@@ -19,7 +19,33 @@ import 'transition_builder_delegate.dart';
 
 typedef PageBuilder = Widget Function();
 
-PageRouteBuilder<T> createRoute<T>({
+Route<T> createRoute<T>({
+  required PageBuilder pageBuilder,
+  required RouteConfig config,
+  required RouteSettings settings,
+  bool createdFromPage = false,
+}) {
+  if (config.useRouteBuilder) {
+    return config.routeBuilder!.call<T>(
+      config,
+      settings,
+      pageBuilder(),
+    );
+  }
+
+  return _createSautPageRoute(
+    pageBuilder: pageBuilder,
+    settings: settings,
+    transitionBuilderDelegate: config.effectiveTransitionBuilderDelegate,
+    transitionDuration: config.transitionDuration,
+    curve: config.curve,
+    opaque: config.opaque,
+    fullscreenDialog: config.fullscreenDialog,
+    createdFromPage: createdFromPage,
+  );
+}
+
+PageRouteBuilder<T> _createSautPageRoute<T>({
   required PageBuilder pageBuilder,
   required RouteSettings settings,
   TransitionBuilderDelegate? transitionBuilderDelegate,
@@ -48,7 +74,7 @@ PageRouteBuilder<T> createRoute<T>({
       createdFromSautPage: createdFromPage,
     );
 
-PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
+Route createRouteFromName(String? name, [String? fallbackName]) {
   try {
     String? effectiveName;
 
@@ -99,9 +125,8 @@ PageRouteBuilder createRouteFromName(String? name, [String? fallbackName]) {
 
     return createRoute(
       pageBuilder: () => config.pageBuilder(null),
+      config: config,
       settings: RouteSettings(name: effectiveName),
-      transitionBuilderDelegate:
-          config.transition?.builder ?? config.customTransitionBuilderDelegate,
     );
   } on StateError {
     throw StateError("$name not found");

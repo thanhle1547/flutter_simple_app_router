@@ -438,16 +438,11 @@ extension on NavigatorState {
           blocValue: blocValue,
           blocProviders: blocProviders,
         ),
+        config: routeConfig,
         settings: RouteSettings(
           name: effectiveRouteNameBuilder(page),
           arguments: arguments,
         ),
-        transitionBuilderDelegate:
-            routeConfig.effectiveTransitionBuilderDelegate,
-        transitionDuration: routeConfig.transitionDuration,
-        curve: routeConfig.curve,
-        opaque: routeConfig.opaque,
-        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
     );
   }
@@ -535,16 +530,11 @@ extension on NavigatorState {
           blocValue: blocValue,
           blocProviders: blocProviders,
         ),
+        config: routeConfig,
         settings: RouteSettings(
           name: effectiveRouteNameBuilder(page),
           arguments: arguments,
         ),
-        transitionBuilderDelegate:
-            routeConfig.effectiveTransitionBuilderDelegate,
-        transitionDuration: routeConfig.transitionDuration,
-        curve: routeConfig.curve,
-        opaque: routeConfig.opaque,
-        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
       result: result,
     );
@@ -616,16 +606,11 @@ extension on NavigatorState {
     return pushAndRemoveUntil(
       createRoute(
         pageBuilder: getPageBuilder(routeConfig, arguments),
+        config: routeConfig,
         settings: RouteSettings(
           name: effectiveRouteNameBuilder(page),
           arguments: arguments,
         ),
-        transitionBuilderDelegate:
-            routeConfig.effectiveTransitionBuilderDelegate,
-        transitionDuration: routeConfig.transitionDuration,
-        curve: routeConfig.curve,
-        opaque: routeConfig.opaque,
-        fullscreenDialog: routeConfig.fullscreenDialog,
       ),
       predicate ?? (Route<dynamic> _) => false,
     );
