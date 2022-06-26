@@ -28,6 +28,8 @@ class RouteConfig {
   ///  * `'val_5'` has value of `9` (a spcific number), this value will
   /// be treat as `runtimeType`
   final Map<String, Object>? debugRequiredArguments;
+
+  /// A builder for custom [Route]
   final Route<T> Function<T>(
     BuildContext context,
     RouteConfig resolvedConfig,
@@ -77,6 +79,7 @@ class RouteConfig {
   }) {
     return RouteConfig(
       debugRequiredArguments: debugRequiredArguments,
+      routeBuilder: routeBuilder,
       pageBuilder: pageBuilder,
       transition: transition ?? this.transition,
       customTransitionBuilderDelegate: customTransitionBuilderDelegate ??
