@@ -302,25 +302,26 @@ class Saut {
     Map<String, dynamic>? arguments,
   }) {
     if (global.routerDelegate == null) {
-      final initialPageStack = AppConfig.stackedPages[initialPageStackName];
-
       assert(() {
+        final initialPageStack = AppConfig.stackedPages[initialPageStackName];
+
         if (initialPageStack != null) return initialPageStack.isNotEmpty;
 
-        return initialPage == null || initialPageStack == null;
+        return initialPage != null;
       }());
 
       global.initRouterDelegate(
         navigatorObservers: navigatorObservers,
       );
 
-      final Map<String, dynamic>? effectiveArguments =
-          initialPageStack != null && arguments == null ? {} : arguments;
-
-      global.currentRouterDelegate._setPageStack(
-        initialPageStack ?? [initialPage!],
-        effectiveArguments,
-      );
+      if (initialPageStackName != null) {
+        global.currentRouterDelegate.setPageStack(
+          initialPageStackName,
+          arguments ?? {},
+        );
+      } else {
+        global.currentRouterDelegate.toPage(initialPage!, arguments: arguments);
+      }
     }
 
     return global.currentRouterDelegate;
