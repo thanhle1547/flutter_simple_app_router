@@ -30,6 +30,15 @@ class SautPage<T extends Object?> extends Page {
 
   @override
   Route createRoute(BuildContext context) {
+    if (routeConfig.useRouteBuilder) {
+      return routeConfig.routeBuilder!.call(
+        context,
+        routeConfig,
+        this,
+        pageBuilder(),
+      );
+    }
+
     return router.createRoute(
       pageContext: context,
       pageBuilder: pageBuilder,
@@ -45,10 +54,10 @@ class SautPage<T extends Object?> extends Page {
 }
 
 class SautPageless extends Page {
-  final Route route;
+  late final Route route;
 
-  const SautPageless({
-    required this.route,
+  // ignore: prefer_const_constructors_in_immutables
+  SautPageless({
     String? name,
     Object? arguments,
     String? restorationId,

@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
+import 'package:saut_enma_bloc/src/constants.dart';
 
 import 'global.dart' as global;
 import 'saut_page.dart';
@@ -152,12 +155,31 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
       return;
     }
 
-    routerDelegate.updateAddedPage(SautPageless(
-      route: route,
-      name: route.settings.name,
-      arguments: route.settings.arguments,
-      restorationId: route.restorationScopeId.value,
-    ));
+    for (final Page page in routerDelegate._pages) {
+      if (page == route.settings) return;
+    }
+
+    if (route.settings is SautPageless) {
+      final page = route.settings as SautPageless;
+      page.route = route;
+
+      routerDelegate.updateAddedPage(page);
+    } else {
+      if (kDebugMode) {
+        log(
+          'Warning!!! RouteSettings should be created '
+          'from [Saut.createRouteSettings]. When you navigate to the next '
+          'page (or screen), Flutter will throw an error.',
+          name: source,
+        );
+      }
+
+      routerDelegate.updateAddedPage(SautPageless(
+        name: route.settings.name,
+        arguments: route.settings.arguments,
+        restorationId: route.restorationScopeId.value,
+      )..route = route);
+    }
   }
 
   /// The [Navigator] popped `route`.

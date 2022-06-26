@@ -337,6 +337,20 @@ class Saut {
     global.currentRouterDelegate.setPageStack(stackName, arguments);
   }
 
+  /// Create [RouteSettings] for [showDialog], [showAboutDialog],
+  /// [showGeneralDialog], [showLicensePage], ...
+  static RouteSettings createRouteSettings({
+    String? name,
+    Object? arguments,
+    String? restorationId,
+  }) {
+    return SautPageless(
+      name: name,
+      arguments: arguments,
+      restorationId: restorationId,
+    );
+  }
+
   /// This function use [ModalRoute.of(context)?.settings.arguments] internally
   ///
   /// See also:
