@@ -31,6 +31,7 @@ class SautPage<T extends Object?> extends Page {
   @override
   Route createRoute(BuildContext context) {
     return router.createRoute(
+      pageContext: context,
       pageBuilder: pageBuilder,
       config: routeConfig,
       settings: this,

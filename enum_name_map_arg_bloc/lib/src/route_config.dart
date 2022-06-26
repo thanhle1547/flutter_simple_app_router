@@ -29,6 +29,7 @@ class RouteConfig {
   /// be treat as `runtimeType`
   final Map<String, Object>? debugRequiredArguments;
   final Route<T> Function<T>(
+    BuildContext context,
     RouteConfig resolvedConfig,
     RouteSettings settings,
     Widget page,
