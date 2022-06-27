@@ -1,5 +1,4 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:mock_data/mock_data.dart';
 
 import 'post_trending_state.dart';
 

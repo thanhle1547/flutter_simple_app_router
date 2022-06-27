@@ -6,11 +6,16 @@ import 'package:example_router_delegate/cubits/post_trending/post_trending_cubit
 import 'package:example_router_delegate/screens/post_detail_screen.dart';
 import 'package:example_router_delegate/screens/post_published_screen.dart';
 import 'package:example_router_delegate/screens/post_trending_dialog.dart';
+import 'package:example_router_delegate/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
 import 'app_pages.dart';
+
+late final RouteConfig _splash = RouteConfig(
+  pageBuilder: (arguments) => const SplashScreen(),
+);
 
 late final RouteConfig _postPublished = RouteConfig(
   pageBuilder: (arguments) => MultiBlocProvider(
@@ -111,7 +116,7 @@ late final RouteConfig _postDetail = RouteConfig(
 );
 
 late final Map<Enum, RouteConfig> routes = {
-  AppPages.Initial: _postPublished,
+  AppPages.Initial: _splash,
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Trending: _postTrending,
   AppPages.Post_Detail: _postDetail,
