@@ -11,6 +11,7 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
     this.curve,
     required bool opaque,
     required bool fullscreenDialog,
+    required this.createdFromSautPage,
   }) : super(
           settings: settings,
           pageBuilder: pageBuilder,
@@ -21,6 +22,7 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
 
   final TransitionBuilderDelegate transitionBuilderDelegate;
   final Curve? curve;
+  final bool createdFromSautPage;
 
   @override
   Widget buildTransitions(
