@@ -39,6 +39,7 @@ Future<void> main() async {
         ? null
         : {
             ...jsonDecode(selectedNotificationPayload!) as Map<String, dynamic>,
+            // checkout Q&A in README.md
             'postFavoritesCubitCompleter': Completer<PostFavoritesCubit>(),
           };
   } else {

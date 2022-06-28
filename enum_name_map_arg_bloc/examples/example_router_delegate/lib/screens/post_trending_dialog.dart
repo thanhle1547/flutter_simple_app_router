@@ -13,6 +13,7 @@ class PostTrendingDialog extends StatelessWidget {
     this.postFavoritesCubitCompleter,
   }) : super(key: key);
 
+  // checkout Q&A in README.md
   final Completer<PostFavoritesCubit>? postFavoritesCubitCompleter;
 
   @override
@@ -74,6 +75,7 @@ class TrendingItem extends StatelessWidget {
       );
     } catch (e) {
       if (postFavoritesCubitCompleter != null) {
+        // checkout Q&A in README.md
         postFavoritesCubitCompleter?.future.then((cubit) {
           Saut.toPage(
             context,

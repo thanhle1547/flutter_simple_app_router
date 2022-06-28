@@ -30,6 +30,7 @@ late final RouteConfig _postPublished = RouteConfig(
     child: Builder(
       key: const Key('trending'),
       builder: (context) {
+        // checkout Q&A in README.md
         final Completer<PostFavoritesCubit>? completer =
             arguments?['postFavoritesCubitCompleter'];
 
