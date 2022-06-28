@@ -59,7 +59,11 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     );
   }
 
-  String? get lastPageName => _pages.last.name;
+  String? get lastPageName {
+    if (_pages.isEmpty) return null;
+
+    return _pages.last.name;
+  }
 
   @protected
   void setPages(Iterable<SautPage> pages) {

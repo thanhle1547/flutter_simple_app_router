@@ -11,7 +11,10 @@ class PostPublishedCubit extends Cubit<PostPublishedState> {
   late final List<String> names;
 
   void _loadData() {
-    names = List.generate(10, (_) => mockName());
+    names = List.generate(9, (_) => mockName());
+
+    // for testing notification
+    names.insert(0, 'One');
 
     emit(state.copyWith(isLoading: false, names: names));
   }

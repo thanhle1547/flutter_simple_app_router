@@ -13,37 +13,35 @@ class PostTrendingDialog extends StatelessWidget {
     this.postFavoritesCubitCompleter,
   }) : super(key: key);
 
+  // checkout Q&A in README.md
   final Completer<PostFavoritesCubit>? postFavoritesCubitCompleter;
 
   @override
   Widget build(BuildContext context) {
     final state = context.read<PostTrendingCubit>().state;
 
-    return FractionallySizedBox(
-      widthFactor: 0.5,
-      child: Padding(
-        padding: const EdgeInsets.all(18),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Text(
-              'Trending',
-              style: TextStyle(fontSize: 24, color: Colors.white),
-            ),
-            const SizedBox(height: 12),
-            TrendingItem(
-              name: state.topOne!,
-              id: 1,
-              postFavoritesCubitCompleter: postFavoritesCubitCompleter,
-            ),
-            const SizedBox(height: 6),
-            TrendingItem(
-              name: state.secondary!,
-              id: 2,
-              postFavoritesCubitCompleter: postFavoritesCubitCompleter,
-            ),
-          ],
-        ),
+    return Padding(
+      padding: const EdgeInsets.all(18),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Text(
+            'Trending',
+            style: TextStyle(fontSize: 24, color: Colors.white),
+          ),
+          const SizedBox(height: 12),
+          TrendingItem(
+            name: state.topOne!,
+            id: 1,
+            postFavoritesCubitCompleter: postFavoritesCubitCompleter,
+          ),
+          const SizedBox(height: 6),
+          TrendingItem(
+            name: state.secondary!,
+            id: 2,
+            postFavoritesCubitCompleter: postFavoritesCubitCompleter,
+          ),
+        ],
       ),
     );
   }
@@ -77,6 +75,7 @@ class TrendingItem extends StatelessWidget {
       );
     } catch (e) {
       if (postFavoritesCubitCompleter != null) {
+        // checkout Q&A in README.md
         postFavoritesCubitCompleter?.future.then((cubit) {
           Saut.toPage(
             context,
@@ -97,10 +96,7 @@ class TrendingItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 18,
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       // need Material
       child: Material(
         type: MaterialType.transparency,
