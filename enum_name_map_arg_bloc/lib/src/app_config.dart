@@ -29,7 +29,7 @@ class AppConfig {
     hashCode: (key) => key.hashCode,
   );
 
-  static Map<Object, List<Enum>> stackedPages = HashMap(
+  static Map<Object, List<Object>> stackedPages = HashMap(
     equals: (key0, key1) => key0 == key1,
     hashCode: (key) => key.hashCode,
   );
