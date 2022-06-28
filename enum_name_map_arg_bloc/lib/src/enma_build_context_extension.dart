@@ -6,9 +6,14 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
 
 import 'enma_navigator_state_extension.dart';
 import 'route_transition.dart';
+import 'saut_page.dart';
 import 'transition_builder_delegate.dart';
 
 extension EnmaBuildContextExtension on BuildContext {
+  /// Remove all the pages with new pages
+  void setPageStack(Object stackName, Map<String, dynamic>? arguments) =>
+      Navigator.of(this).setPageStack(stackName, arguments);
+
   /// This function use [ModalRoute.of(context)?.settings.arguments] internally
   ///
   /// See also:
@@ -169,12 +174,22 @@ extension EnmaBuildContextExtension on BuildContext {
         fullscreenDialog: fullscreenDialog,
       );
 
-  /// [predicate]
+  /// [routePredicate]
   ///
   /// To remove routes until a route with a certain name,
   /// use the [RoutePredicate] returned from [Saut.getModalRoutePredicate].
   ///
-  /// To remove all the routes the replaced route, simply let [predicate] null.
+  /// To remove all the routes the replaced route, simply let [routePredicate] null.
+  ///
+  /// [pagePredicate]
+  ///
+  /// To remove pages until a page with a certain name when created an app
+  /// ([MaterialApp], [CupertinoApp]) that uses the [Router]
+  /// instead of a [Navigator].
+  ///
+  /// Use the [PagePredicate] returned from [Saut.getPagePredicate].
+  ///
+  /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
   /// * [transition]
   ///
@@ -212,7 +227,8 @@ extension EnmaBuildContextExtension on BuildContext {
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     Object page, {
-    RoutePredicate? predicate,
+    RoutePredicate? routePredicate,
+    PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -223,7 +239,8 @@ extension EnmaBuildContextExtension on BuildContext {
   }) =>
           Navigator.of(this).replaceAllWithPage(
             page,
-            predicate: predicate,
+            routePredicate: routePredicate,
+            pagePredicate: pagePredicate,
             arguments: arguments,
             transition: transition,
             customTransitionBuilderDelegate: customTransitionBuilderDelegate,

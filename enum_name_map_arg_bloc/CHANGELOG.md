@@ -1,3 +1,11 @@
+## 0.7.0
+
+* **add** `RouterDelegate` and new example (using notification)
+
+* **add** `routeBuilder` to `RouteConfig` for modal dialogs when using `RouterDelegate`
+
+* fix: Navigator Key instance created via `Saut` or `AppRouter` was not the same
+
 ## 0.6.1
 
 * **add** `Semantics`

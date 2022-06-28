@@ -46,15 +46,15 @@
 
 * [Truyền `blocs` qua màn hình khác không cần thông qua `arguments`](#truyền-blocs-qua-màn-hình-khác)
 
-## ⚠️ Giới hạn
-
-Thư viện này chưa hỗ trợ xử lý các trường hợp điều hướng phức tạp, bao gồm:
-
-* Nested navigation
-
-* Thêm nhiều màn hình cùng một lúc.
+* [Thêm nhiều màn hình cùng một lúc](#cách-cấu-hình-để-thiết-lập-sẵn-các-màn-hình-khi-vào-app)
 
   Ví dụ cụ thể cho trường hợp này là ứng dụng chat Messenger: Khi bạn ấn vào thông báo tin nhắn mới, app sẽ chuyển đến màn hình tin nhắn/phòng chat đó. Sau khi ấn nút quay lại thì bạn sẽ về lại màn hình chứa các cuộc trò chuyện (đã diễn ra).
+
+## ⚠️ Giới hạn
+
+Thư viện này chưa hỗ trợ xử lý một số trường hợp điều hướng, bao gồm:
+
+* Nested navigation
 
 * Đối với bản Web, việc thay đổi địa chỉ trên trình duyệt không làm thay đổi màn hình hiện tại. Nói theo cách khác là thực hiện điều hướng đến màn hình mới khi địa chỉ thay đổi.
 
@@ -89,6 +89,12 @@ Thư viện này chưa hỗ trợ xử lý các trường hợp điều hướng
   * [Listening `RouteObserver`](#listening-routeobserver)
 
   * [Truyền `blocs` qua màn hình khác](#truyền-blocs-qua-màn-hình-khác)
+
+  * [Cách cấu hình để thiết lập sẵn CÁC màn hình khi vào app](#cách-cấu-hình-để-thiết-lập-sẵn-các-màn-hình-khi-vào-app)
+
+  * [Sử dụng `showDialog` (các modal dialog) với `RouterDelegate`](#sử-dụng-showdialog-các-modal-dialog-với-routerdelegate)
+
+  * [Thiết lập lại tất cả các cấu hình đã đặt (Reset)](#thiết-lập-lại-tất-cả-các-cấu-hình-đã-đặt-reset)
 
 * [📫 Báo cáo sự cố](#mailbox-báo-cáo-sự-cố)
 
@@ -574,7 +580,7 @@ Kết hợp với việc sử dụng `SautRouteLoggingObserver` đã được tr
 
 ### Cách cấu hình để điều hướng mà không cần dùng `BuildContext`
 
-> [example_wo_context](./example_wo_context/) là một ví dụ cụ thể.
+> [example_wo_context](./examples/example_wo_context/) là một ví dụ cụ thể.
 
 Trong file chứa widget MaterialApp, tạo `navigatorKey` bằng phương thức tĩnh `Saut.createNavigatorKeyIfNotExisted()`.
 
@@ -729,6 +735,77 @@ class RouteAwareWidgetState extends State<RouteAwareWidget> with RouteAware {
     ),
 ```
 
+### Cách cấu hình để thiết lập sẵn CÁC màn hình khi vào app
+
+> [example_router_delegate](./examples/example_router_delegate/) là một ví dụ cụ thể.
+
+1. Khai báo tên của các thiết lập. Các cái tên này có kiểu dữ liệu khác null, ví dụ như String, enum, ...
+
+Theo ví dụ trên, trong file [routes/stacked_pages.dart](examples/example_router_delegate/lib/routes/stacked_pages.dart), tên của các thiết lập này được khai báo bằng kiểu enum.
+
+```dart
+enum AppPageStack {
+  tredingPost,
+  detailTredingPost,
+}
+```
+
+2. Chỉ định các màn hình cho mỗi thiết lập.
+
+Ví dụ:
+
+```dart
+  final Map<AppPageStack, List<Enum>> stackedPages = {
+    AppPageStack.tredingPost: [
+      AppPages.Post_Published,
+      AppPages.Post_Trending,
+    ],
+
+    // etc.
+  };
+
+  Saut.setDefaultConfig(
+    stackedPages: stackedPages,
+  );
+```
+
+Trong trường hợp bạn cần thêm 1 dialog vào trong thiết lập này, `RouteConfig` có một tham số là `routeBuilder` (ví dụ trong file [routes/routes.dart](examples/example_router_delegate/lib/routes/routes.dart)). Đây là một hàm thự hiện tạo route và nhận vào các tham số sau:
+
+  - BuildContext context
+
+  - RouteConfig resolvedConfig: Đây chính là config bạn đã thiết lập. Trong trường hợp bạn sử dụng các phương thức điều hướng (`Saut.toPage`, ...), thì đây chính là config đã được ghi đè bởi các phương thức điều hướng trên.
+
+  - RouteSettings settings
+
+  - Widget page: Đây chính là Widget được tạo ra bởi tham số `pageBuilder`.
+
+3. Sử dụng hàm khởi tạo `MaterialApp.router` (hoặc `CupertinoApp.router` tương ứng) thay cho hàm khởi tạo mặc định `MaterialApp`/`CupertinoApp`. Trong đó, hai tham số bắt buộc phải truyền vào là `routeInformationParser` và `routerDelegate` (được tạo qua phương thức tĩnh `Saut.createRouterDelegateIfNotExisted`). Mặc định, nếu tham số ___`initialPageStackName` khác `null`___ thì:
+
+   - Tham số `arguments` là một `Map` rỗng (kiểu `Map<String, dynamic>`) và tất cả các màn trong thiết lập đó sẽ cùng nhận được cùng một `arguments`. Ví dụ với thiết lập `AppPageStack.tredingPost` ở trên, cả 2 màn `AppPages.Post_Published` và `AppPages.Post_Trending` đều cùng nhận một `arguments`.
+
+   - RouterDelegate sẽ ưu tiên sử dụng `initialPageStackName` thay vì `initialPage`.
+
+```dart
+  Widget build(BuildContext context) {
+    return MaterialApp.router(
+      routeInformationParser: const SautRouteInformationParser(),
+      routerDelegate: Saut.createRouterDelegateIfNotExisted(
+        navigatorObservers: [SautRouteLoggingObserver()], // optional
+        initialPage: yourInitialPage,                     // optional
+        initialPageStackName: yourInitialPageStackName,   // optional
+        arguments: yourArguments,                         // optional
+      ),
+    );
+  }
+```
+
+### Sử dụng `showDialog` (các modal dialog) với `RouterDelegate`
+
+Ngoài cách cấu hình bằng `routeBuilder` của `RouteConfig` và sử dụng `Saut.toPage` như đã đề cập ở phần bên trên. Bạn vẫn có thể sử dụng `showDialog`, `showGeneralDialog`, ... một cách bình thường, nếu như các dialog này không có nằm trong danh sách các màn hình cần được thiết lập sẵn. Tuy nhiên, bạn cần phải tạo `RouteSettings` thông qua phương thức `Saut.createRouteSettings` để `RouterDelegate` có thể nhận diện được các modal dialog này. Nếu bạn không tạo `RouteSettings` thông qua phương thức trên, thì khi bạn chuyển qua màn hình khác (dialog ấy vẫn đang hiển thị), Flutter sẽ tung ra một lỗi trong quá trình assert.
+
+### Thiết lập lại tất cả các cấu hình đã đặt (Reset)
+
+Sử dụng phương thức tĩnh `Saut.reset`.
 
 ## :mailbox: Báo cáo sự cố
 
@@ -799,6 +876,51 @@ Preview:
     Hoặc trong SDK của flutter: `/flutter/.pub-cache/`
 
 6. Chạy `flutter pub get`.
+
+</details>
+
+
+<details id="qa-need-passing-bloc-without-adding-dependency-or-change-the-code">
+
+<summary>
+  <b>Nếu như tôi cần truyền <code>bloc</code> vào 1 màn hình, mà <code>bloc</code> đó được lấy từ màn hình trước đó. Tôi không muốn đặt <code>bloc</code> đó lên phía trên <code>MaterialApp</code>. Có cách nào để xử lý trường hợp này không (không dùng thêm thư viện khác, như <code>get_it</code>, ...)?</b>
+</summary>
+
+Có. Bạn có thể tạo 1 Completer và truyền nó đến màn cần bloc đó.
+
+Trong ví dụ đã được nhắc tới bên trên ([example_router_delegate](./examples/example_router_delegate/)) đã có chứa ví dụ xử lý cho tình huống này.
+
+1. Trong file `main.dart`, thêm 1 tham số là `Completer` với kiểu dữ liệu là bloc.
+
+```dart
+    arguments = selectedNotificationPayload == null
+        ? null
+        : {
+            ...jsonDecode(selectedNotificationPayload!) as Map<String, dynamic>,
+            'postFavoritesCubitCompleter': Completer<PostFavoritesCubit>(), // ⇐ Notice this line
+          };
+```
+
+2. Trong file `routes/routes.dart`:
+
+Sau khi khởi tạo bloc (ở màn trước đó), gọi hàm complete của completer nếu completer chưa completed.
+
+```dart
+        final Completer<PostFavoritesCubit>? completer =
+            arguments?['postFavoritesCubitCompleter'];
+
+        if (completer != null && completer.isCompleted == false) {
+          completer.complete(context.read<PostFavoritesCubit>());
+        }
+```
+
+Cũng với completer ấy, truyền nó vào màn hình mà bạn cần bloc để sử dụng:
+
+```dart
+      child: PostTrendingDialog(
+        postFavoritesCubitCompleter: completer,
+      ),
+```
 
 </details>
 

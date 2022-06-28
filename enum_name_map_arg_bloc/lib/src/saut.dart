@@ -13,7 +13,9 @@ import 'navigator_state_extension.dart';
 import 'route.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
+import 'saut_page.dart';
 import 'saut_route_observer.dart';
+import 'saut_router_delegate.dart';
 import 'transition_builder_delegate.dart';
 
 class Saut {
@@ -59,6 +61,7 @@ class Saut {
   static void setDefaultConfig({
     List<Type>? routeTypes,
     Map<Object, RouteConfig>? routes,
+    Map<Object, List<Object>>? stackedPages,
     required Object initialPage,
     String Function(Object page)? routeNameBuilder,
     RouteTransition? transition = RouteTransition.rightToLeft,
@@ -68,7 +71,16 @@ class Saut {
   }) {
     if (routeTypes != null) AppConfig.routeTypes = routeTypes;
 
-    if (routes != null) AppConfig.routes.addAll(routes);
+    if (routes != null) {
+      AppConfig.routes
+        ..clear()
+        ..addAll(routes);
+    }
+    if (stackedPages != null) {
+      AppConfig.stackedPages
+        ..clear()
+        ..addAll(stackedPages);
+    }
 
     AppConfig.routeNameBuilder = routeNameBuilder;
 
@@ -87,6 +99,7 @@ class Saut {
   static void reset() {
     AppConfig.routeTypes.clear();
     AppConfig.routes.clear();
+    AppConfig.stackedPages.clear();
     AppConfig.routeNameBuilder = null;
     AppConfig.initialPage = null;
     AppConfig.initialPageName = null;
@@ -95,6 +108,8 @@ class Saut {
     AppConfig.defaultTransitionDuration = null;
     AppConfig.shouldPreventDuplicates = kDebugPreventDuplicates;
     global.routeObserver = null;
+    global.disposeNavigatorKey();
+    global.disposeRouterDelegate();
   }
 
   /// * [debugRequiredArguments]
@@ -206,15 +221,13 @@ class Saut {
     );
   }
 
-  static GlobalKey<NavigatorState>? _navigatorKey;
-
   static GlobalKey<NavigatorState> createNavigatorKeyIfNotExisted() =>
-      _navigatorKey ??= GlobalKey<NavigatorState>();
+      global.createNavigatorKeyIfNotExisted();
 
-  static NavigatorState? get currentNavigator => _navigatorKey?.currentState;
+  static NavigatorState? get currentNavigator => global.currentNavigatorState;
   static NavigatorState get navigator {
     try {
-      return _navigatorKey!.currentState!;
+      return global.currentNavigatorState!;
     } catch (e) {
       throw StateError(
         "${e.toString()}. Maybe you did not call createNavigatorKeyIfNotExisted",
@@ -275,6 +288,68 @@ class Saut {
   /// {@macro flutter.widgets.widgetsApp.onUnknownRoute}
   static Route<dynamic>? onUnknownRoute(RouteSettings settings) =>
       createRouteFromName(settings.name, currentNavigator?.initialRoute);
+
+  /// [navigatorObservers]
+  ///
+  /// {@macro flutter.widgets.widgetsApp.navigatorObservers}
+  ///
+  /// If [initialPageStackName] is not null and [arguments] is null, an empty
+  /// [Map] will be created
+  static SautRouterDelegate createRouterDelegateIfNotExisted({
+    List<NavigatorObserver>? navigatorObservers,
+    Object? initialPage,
+    Object? initialPageStackName,
+    Map<String, dynamic>? arguments,
+  }) {
+    if (global.routerDelegate == null) {
+      assert(() {
+        final initialPageStack = AppConfig.stackedPages[initialPageStackName];
+
+        if (initialPageStack != null) return initialPageStack.isNotEmpty;
+
+        return initialPage != null;
+      }());
+
+      global.initRouterDelegate(
+        navigatorObservers: navigatorObservers,
+      );
+
+      if (initialPageStackName != null) {
+        global.currentRouterDelegate.setPageStack(
+          initialPageStackName,
+          arguments ?? {},
+        );
+      } else {
+        global.currentRouterDelegate.toPage(initialPage!, arguments: arguments);
+      }
+    }
+
+    return global.currentRouterDelegate;
+  }
+
+  /// Remove all the pages with new pages
+  static void setPageStack(
+    Object stackName,
+    Map<String, dynamic>? arguments,
+  ) {
+    assert(debugAssertRouterDelegateExist());
+
+    global.currentRouterDelegate.setPageStack(stackName, arguments);
+  }
+
+  /// Create [RouteSettings] for [showDialog], [showAboutDialog],
+  /// [showGeneralDialog], [showLicensePage], ...
+  static RouteSettings createRouteSettings({
+    String? name,
+    Object? arguments,
+    String? restorationId,
+  }) {
+    return SautPageless(
+      name: name,
+      arguments: arguments,
+      restorationId: restorationId,
+    );
+  }
 
   /// This function use [ModalRoute.of(context)?.settings.arguments] internally
   ///
@@ -439,12 +514,22 @@ class Saut {
         fullscreenDialog: fullscreenDialog,
       );
 
-  /// [predicate]
+  /// [routePredicate]
   ///
   /// To remove routes until a route with a certain name,
   /// use the [RoutePredicate] returned from [Saut.getModalRoutePredicate].
   ///
-  /// To remove all the routes the replaced route, simply let [predicate] null.
+  /// To remove all the routes the replaced route, simply let [routePredicate] null.
+  ///
+  /// [pagePredicate]
+  ///
+  /// To remove pages until a page with a certain name when created an app
+  /// ([MaterialApp], [CupertinoApp]) that uses the [Router]
+  /// instead of a [Navigator].
+  ///
+  /// Use the [PagePredicate] returned from [Saut.getPagePredicate].
+  ///
+  /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
   /// * [transition]
   ///
@@ -483,7 +568,8 @@ class Saut {
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
     Object page, {
-    RoutePredicate? predicate,
+    RoutePredicate? routePredicate,
+    PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
     RouteTransition? transition,
     TransitionBuilderDelegate? customTransitionBuilderDelegate,
@@ -494,7 +580,8 @@ class Saut {
   }) =>
           (currentNavigator ?? Navigator.of(context)).replaceAllWithPage(
             page,
-            predicate: predicate,
+            routePredicate: routePredicate,
+            pagePredicate: pagePredicate,
             arguments: arguments,
             transition: transition,
             customTransitionBuilderDelegate: customTransitionBuilderDelegate,
@@ -512,6 +599,22 @@ class Saut {
   /// This function use [ModalRoute.withName()] internally.
   static RoutePredicate getModalRoutePredicate(Object page) =>
       ModalRoute.withName(effectiveRouteNameBuilder(page));
+
+  /// Returns a predicate that's true if the page has the specified name and if
+  /// popping the page will not yield the same page
+  ///
+  /// This function is typically used with [Saut.replaceAllWithPage()], [Navigator.popUntil()].
+  static PagePredicate getPagePredicate(Object page) {
+    final pageName = effectiveRouteNameBuilder(page);
+
+    return (Page<dynamic> page) {
+      if (page is SautPageless) {
+        return !page.route.willHandlePopInternally && page.name == pageName;
+      }
+
+      return page.name == pageName;
+    };
+  }
 
   /// The `T` type argument is the type of the return value of the popped route.
   ///
