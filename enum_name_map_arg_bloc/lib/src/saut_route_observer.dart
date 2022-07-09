@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 
+import 'global.dart' as global;
+
 class SautRouteObserver extends RouteObserver<ModalRoute<Object?>> {
+  SautRouteObserver() {
+    global.routeObserver = this;
+  }
+
   late final Set<RouteAware> _listeners = <RouteAware>{};
 
   /// Register [routeAware] to be informed about route changes.
