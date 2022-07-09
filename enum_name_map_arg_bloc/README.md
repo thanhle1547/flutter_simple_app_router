@@ -615,14 +615,43 @@ Bước 1: Trong file chứa widget MaterialApp, đăng ký `SautRouteObserver` 
   }
 ```
 
-Bước 2: Trong file chứa `StatefulWidget`, triển khai (implement) `RouteAware` trong class State và đăng ký nó với `SautRouteObserver`.
+Bước 2: Trong file chứa `StatefulWidget`,
+
+ - triển khai (implement) `SautRouteSubscriptionStateMixin` trong class State. mixin này sẽ tự động thực hiện đăng ký và hủy đăng ký, bạn chỉ cần ghi đè 2 phương thức: `didPushNext` và `didPopNext`.
+
 
 ```dart
-class RouteAwareWidget extends StatefulWidget {
+class ExampleWidget extends StatefulWidget {
   // some code ...
 }
 
-class RouteAwareWidgetState extends State<RouteAwareWidget> with RouteAware {
+class ExampleWidgetState extends State<ExampleWidget> with SautRouteSubscriptionStateMixin {
+
+  // some code ...
+
+  /// Called when a new route has been pushed,
+  /// and the current route is no longer visible.
+  @override
+  void didPushNext() {
+    // some code ...
+  }
+
+  /// Called when the top route has been popped off,
+  /// and the current route shows up.
+  @override
+  void didPopNext() {
+    // some code ...
+  }
+```
+
+ - Hoặc bạn có thể thực hiện thủ công 2 bước đã được thực hiện tự động ở mixin trên bằng cách triển khai `RouteAware` trong class State và đăng ký nó với `SautRouteObserver`.
+
+```dart
+class ExampleWidget extends StatefulWidget {
+  // some code ...
+}
+
+class ExampleWidgetState extends State<ExampleWidget> with RouteAware {
 
   // some code ...
 
@@ -659,15 +688,15 @@ Nếu bạn đã từng dùng `RouteObserver` để đăng ký nhận thay đổ
 
 <a href="#step-1-subscribing-route-observer">Bước 1</a> (cấu hình): tương tự như như phần [Subscribing `RouteObserver`](#subscribing-routeobserver). 
 
-Điểm khác biệt so với phần trên nằm ở bước 2. Tại bước này, thay vì gọi phương thức `Saut.subscribe()` để đăng ký, thì bạn sẽ gọi phương thức `Saut.addListener()`. Để hủy lắng nghe, thay `Saut.unsubscribe()` bằng phương thức `Saut.removeListener()`. Cuối cùng là ghi đè 2 phương thức `didPushNext()` và `didPopNext()`.
+Điểm khác biệt so với phần trên nằm ở bước 2. Tại bước này, bạn cần triển khai `SautRouteListerningStateMixin` hoặc `RouteAware` trong class State. Với `RouteAware`, thay vì gọi phương thức `Saut.subscribe()` để đăng ký, thì bạn sẽ gọi phương thức `Saut.addListener()`. Để hủy lắng nghe, thay `Saut.unsubscribe()` bằng phương thức `Saut.removeListener()`.
 
 
 ```dart
-class RouteAwareWidget extends StatefulWidget {
+class ExampleWidget extends StatefulWidget {
   // some code ...
 }
 
-class RouteAwareWidgetState extends State<RouteAwareWidget> with RouteAware {
+class ExampleWidgetState extends State<ExampleWidget> with RouteAware {
 
   // some code ...
 
@@ -679,7 +708,7 @@ class RouteAwareWidgetState extends State<RouteAwareWidget> with RouteAware {
 
   @override
   void dispose() {
-    Saut.unsubscribe(this); // ⇐ Notice the changed
+    Saut.removeListener(this); // ⇐ Notice the changed
     super.dispose();
   }
 
