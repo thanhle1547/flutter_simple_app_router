@@ -1,3 +1,15 @@
+## 0.8.0
+
+* **add** route aware state mixin: 
+
+  - `SautRouteSubscriptionStateMixin` for subscribing
+
+  - `SautRouteListerningStateMixin` for listening
+
+* **remove** `Saut.createRouteObserverIfNotExisted`
+
+* fix: cannot listening or subscribing when SautRouteObserver did not create via `Saut.createRouteObserverIfNotExisted`
+
 ## 0.7.0
 
 * **add** `RouterDelegate` and new example (using notification)

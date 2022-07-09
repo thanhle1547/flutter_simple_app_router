@@ -14,7 +14,6 @@ import 'route.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
 import 'saut_page.dart';
-import 'saut_route_observer.dart';
 import 'saut_router_delegate.dart';
 import 'transition_builder_delegate.dart';
 
@@ -234,9 +233,6 @@ class AppRouter {
       );
     }
   }
-
-  static SautRouteObserver createRouteObserverIfNotExisted() =>
-      global.routeObserver ??= SautRouteObserver();
 
   /// Subscribe [routeAware] to be informed about changes to [route].
   ///
