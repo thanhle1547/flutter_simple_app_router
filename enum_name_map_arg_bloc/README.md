@@ -602,14 +602,14 @@ Trong file chứa widget MaterialApp, tạo `navigatorKey` bằng phương thứ
 Nếu bạn muốn dùng `RouteObserver` để lắng nghe thay đổi, `Saut` cung cấp cho bạn 2 phương thức tĩnh `subscribe` và `unsubscribe` để đăng ký và hủy đăng ký `RouteAware`. Các bước thực hiện như sau:
 
 <p id="step-1-subscribing-route-observer"><p>
-Bước 1: Trong file chứa widget MaterialApp, đăng ký `SautRouteObserver` như một navigation observer bằng cách gọi phương thức tĩnh `Saut.createRouteObserverIfNotExisted()`.
+Bước 1: Trong file chứa widget MaterialApp, đăng ký `SautRouteObserver` như một navigation observer.
 
 ```dart
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       navigatorObservers: [
-        Saut.createRouteObserverIfNotExisted(),
+        SautRouteObserver(),
       ],
     );
   }
