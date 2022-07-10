@@ -11,6 +11,9 @@ import 'package:timezone/data/latest_all.dart' as tz;
 // ignore: depend_on_referenced_packages
 import 'package:timezone/timezone.dart' as tz;
 
+const String _kIconName = 'app_icon';
+const String _kIconPath = "assets/icons/$_kIconName.png";
+
 Future<void> _configureLocalTimeZone() async {
   if (kIsWeb || Platform.isLinux) {
     return;
@@ -85,7 +88,7 @@ class NotificationController {
     _configureLocalTimeZone();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings(_kIconName);
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later
@@ -119,7 +122,7 @@ class NotificationController {
     final LinuxInitializationSettings initializationSettingsLinux =
         LinuxInitializationSettings(
       defaultActionName: 'Open notification',
-      defaultIcon: AssetsLinuxIcon('icons/app_icon.png'),
+      defaultIcon: AssetsLinuxIcon(_kIconPath),
     );
     final InitializationSettings initializationSettings =
         InitializationSettings(
