@@ -76,9 +76,8 @@ class SautRouteLoggingObserver extends RouteObserver<PageRoute<dynamic>> {
     String arguments = _resolveArguments(settings.arguments);
 
     if (seperateArgumentsToNewLine) {
-      final int numWhiteSpace =
-          (settings.name?.length ?? 0) > 9 ? settings.name!.length - 9 : 0;
-      arguments = "\n${' ' * numWhiteSpace}message: $arguments";
+      final int numWhiteSpace = action.length > 9 ? action.length - 9 : 0;
+      arguments = "\n${' ' * numWhiteSpace}arguments: $arguments";
     }
 
     log(

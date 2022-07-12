@@ -1,3 +1,11 @@
+## 0.8.1
+
+* optimize `_PagelessNavigatorObserver.didPush` method
+
+* fix: `SautRouterDelegateExtension.replaceWithPage` did not return the value of the old route
+
+* fix: (route logging) printing arguments to new line
+
 ## 0.8.0
 
 * **add** route aware state mixin: 
