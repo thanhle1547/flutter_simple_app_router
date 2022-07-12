@@ -65,11 +65,16 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     return _pages.last.name;
   }
 
+  /// To optimize [_PagelessNavigatorObserver.didPush] method
+  late List<Page<dynamic>> _pagesFromSetMethod = const [];
+
   @protected
   void setPages(Iterable<SautPage> pages) {
     _pages
       ..clear()
       ..addAll(pages);
+
+    _pagesFromSetMethod = List.of(_pages);
 
     notifyListeners();
   }
@@ -99,11 +104,12 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     notifyListeners();
   }
 
+  /// `TO` is the type of the return value of the old page (route).
   @protected
-  void replaceLastPage(SautPage page) {
-    _pages
-      ..removeLast()
-      ..add(page);
+  void replaceLastPage<TO extends Object?>(SautPage page, TO value) {
+    _removeLastPage(value);
+
+    _pages.add(page);
 
     notifyListeners();
   }
@@ -137,13 +143,17 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @protected
   void removeLastPage<T extends Object?>(T value) {
+    _removeLastPage(value);
+
+    notifyListeners();
+  }
+
+  void _removeLastPage<T extends Object?>(T value) {
     final removed = _pages.removeLast();
 
     if (removed is SautPage) {
       removed.completeWith(value);
     }
-
-    notifyListeners();
   }
 }
 
@@ -159,8 +169,17 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
       return;
     }
 
-    for (final Page page in routerDelegate._pages) {
-      if (page == route.settings) return;
+    final List<Page<dynamic>> pages = routerDelegate._pagesFromSetMethod;
+
+    if (pages.isNotEmpty) {
+      for (final Page page in routerDelegate._pages) {
+        if (page == route.settings) {
+          pages.remove(page);
+          return;
+        }
+
+        pages.remove(page);
+      }
     }
 
     if (route.settings is SautPageless) {
