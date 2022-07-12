@@ -58,6 +58,8 @@ Thư viện này chưa hỗ trợ xử lý một số trường hợp điều h�
 
 * Nested navigation
 
+* Deep Links
+
 * Đối với bản Web, việc thay đổi địa chỉ trên trình duyệt không làm thay đổi màn hình hiện tại. Nói theo cách khác là thực hiện điều hướng đến màn hình mới khi địa chỉ thay đổi.
 
 ## 🚩 Mục lục
@@ -800,13 +802,13 @@ Ví dụ:
   );
 ```
 
-Trong trường hợp bạn cần thêm 1 dialog vào trong thiết lập này, `RouteConfig` có một tham số là `routeBuilder` (ví dụ trong file [routes/routes.dart](examples/example_router_delegate/lib/routes/routes.dart)). Đây là một hàm thự hiện tạo route và nhận vào các tham số sau:
+Trong trường hợp bạn cần thêm 1 dialog vào trong thiết lập này, `RouteConfig` có một tham số là `routeBuilder` (ví dụ trong file [routes/routes.dart](examples/example_router_delegate/lib/routes/routes.dart)). Đây là một hàm thực hiện tạo route và nhận vào các tham số sau:
 
   - BuildContext context
 
   - RouteConfig resolvedConfig: Đây chính là config bạn đã thiết lập. Trong trường hợp bạn sử dụng các phương thức điều hướng (`Saut.toPage`, ...), thì đây chính là config đã được ghi đè bởi các phương thức điều hướng trên.
 
-  - RouteSettings settings
+  - RouteSettings settings: Đây là settings mà bạn phải truyền vào route do bạn tạo ra.
 
   - Widget page: Đây chính là Widget được tạo ra bởi tham số `pageBuilder`.
 
