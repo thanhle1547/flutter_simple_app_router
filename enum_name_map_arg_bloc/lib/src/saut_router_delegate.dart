@@ -65,11 +65,16 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     return _pages.last.name;
   }
 
+  /// To optimize [_PagelessNavigatorObserver.didPush] method
+  late List<Page<dynamic>> _pagesFromSetMethod = const [];
+
   @protected
   void setPages(Iterable<SautPage> pages) {
     _pages
       ..clear()
       ..addAll(pages);
+
+    _pagesFromSetMethod = List.of(_pages);
 
     notifyListeners();
   }
@@ -159,8 +164,17 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
       return;
     }
 
-    for (final Page page in routerDelegate._pages) {
-      if (page == route.settings) return;
+    final List<Page<dynamic>> pages = routerDelegate._pagesFromSetMethod;
+
+    if (pages.isNotEmpty) {
+      for (final Page page in routerDelegate._pages) {
+        if (page == route.settings) {
+          pages.remove(page);
+          return;
+        }
+
+        pages.remove(page);
+      }
     }
 
     if (route.settings is SautPageless) {
