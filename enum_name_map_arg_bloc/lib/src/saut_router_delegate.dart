@@ -104,11 +104,12 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     notifyListeners();
   }
 
+  /// `TO` is the type of the return value of the old page (route).
   @protected
-  void replaceLastPage(SautPage page) {
-    _pages
-      ..removeLast()
-      ..add(page);
+  void replaceLastPage<TO extends Object?>(SautPage page, TO value) {
+    _removeLastPage(value);
+
+    _pages.add(page);
 
     notifyListeners();
   }
@@ -142,13 +143,17 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @protected
   void removeLastPage<T extends Object?>(T value) {
+    _removeLastPage(value);
+
+    notifyListeners();
+  }
+
+  void _removeLastPage<T extends Object?>(T value) {
     final removed = _pages.removeLast();
 
     if (removed is SautPage) {
       removed.completeWith(value);
     }
-
-    notifyListeners();
   }
 }
 

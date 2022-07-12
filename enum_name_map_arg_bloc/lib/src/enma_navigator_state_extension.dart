@@ -883,7 +883,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     );
 
     // ignore: invalid_use_of_protected_member
-    replaceLastPage(pageRoute);
+    replaceLastPage(pageRoute, result);
 
     return pageRoute.completed;
   }
