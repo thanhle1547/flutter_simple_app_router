@@ -7,7 +7,7 @@ import 'package:saut_example_wo_context/screens/post_published_screen.dart';
 
 import 'app_pages.dart';
 
-late final RouteConfig _postPublished = RouteConfig(
+final RouteConfig _postPublished = RouteConfig(
   pageBuilder: (arguments) => MultiBlocProvider(
     providers: [
       BlocProvider(
@@ -23,7 +23,7 @@ late final RouteConfig _postPublished = RouteConfig(
   fullscreenDialog: false,
 );
 
-late final RouteConfig _postDetail = RouteConfig(
+final RouteConfig _postDetail = RouteConfig(
   debugRequiredArguments: {
     'name': String,
     'id': int,
@@ -43,7 +43,7 @@ late final RouteConfig _postDetail = RouteConfig(
   fullscreenDialog: false,
 );
 
-late final Map<Enum, RouteConfig> routes = {
+final Map<Enum, RouteConfig> routes = {
   AppPages.Initial: _postPublished,
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Detail: _postDetail,

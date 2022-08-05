@@ -5,7 +5,7 @@ enum AppPageStack {
   detailTredingPost,
 }
 
-late final Map<AppPageStack, List<Enum>> stackedPages = {
+final Map<AppPageStack, List<Enum>> stackedPages = {
   AppPageStack.tredingPost: [
     AppPages.Post_Published,
     AppPages.Post_Trending,
