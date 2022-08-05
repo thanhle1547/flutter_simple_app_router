@@ -13,11 +13,11 @@ import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
 import 'app_pages.dart';
 
-late final RouteConfig _splash = RouteConfig(
+final RouteConfig _splash = RouteConfig(
   pageBuilder: (arguments) => const SplashScreen(),
 );
 
-late final RouteConfig _postPublished = RouteConfig(
+final RouteConfig _postPublished = RouteConfig(
   pageBuilder: (arguments) => MultiBlocProvider(
     providers: [
       BlocProvider(
@@ -47,7 +47,7 @@ late final RouteConfig _postPublished = RouteConfig(
   ),
 );
 
-late final RouteConfig _postTrending = RouteConfig(
+final RouteConfig _postTrending = RouteConfig(
   routeBuilder: <Void>(
     BuildContext context,
     RouteConfig resolvedConfig,
@@ -88,7 +88,7 @@ late final RouteConfig _postTrending = RouteConfig(
   transition: RouteTransition.none,
 );
 
-late final RouteConfig _postDetail = RouteConfig(
+final RouteConfig _postDetail = RouteConfig(
   debugRequiredArguments: {
     'name': String,
     'id': int,
@@ -116,7 +116,7 @@ late final RouteConfig _postDetail = RouteConfig(
   fullscreenDialog: false,
 );
 
-late final Map<Enum, RouteConfig> routes = {
+final Map<Enum, RouteConfig> routes = {
   AppPages.Initial: _splash,
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Trending: _postTrending,
