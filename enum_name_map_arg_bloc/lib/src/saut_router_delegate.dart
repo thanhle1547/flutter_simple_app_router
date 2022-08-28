@@ -24,6 +24,14 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   final List<Page<dynamic>> _pages = [];
 
+  /// The number of requests from the operating system that
+  /// the current route be popped.
+  int _willPopCount = 0;
+
+  /// The number of requests from [Saut.back], [Saut.backToPage], ... API that
+  /// the current route is popped.
+  int _didPopCount = 0;
+
   @override
   Widget build(BuildContext context) {
     return Navigator(
@@ -36,9 +44,17 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   bool _onPopPage(Route<dynamic> route, dynamic result) {
-    removeLastPage(result);
+    if (_didPopCount > 0) {
+      _didPopCount--;
+    } else if (_willPopCount > 0) {
+      _willPopCount--;
+      _removeLastPage(result);
+    } else {
+      // The request might come from [Navigator.pop] API
+      _removeLastPage(result);
+    }
 
-    return !route.didPop(result);
+    return route.didPop(result);
   }
 
   NavigatorState get navigator => global.currentNavigatorState!;
@@ -50,6 +66,15 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @override
   SynchronousFuture<void> setNewRoutePath(RouteInformation configuration) {
     return SynchronousFuture(null);
+  }
+
+  @override
+  Future<bool> popRoute() {
+    final result = super.popRoute();
+
+    _willPopCount++;
+
+    return result;
   }
 
   @override
@@ -115,26 +140,31 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   @protected
-  void removeWhere(bool Function(Page element) test) {
-    _removeWhere(test, onlyFirst: false);
+  void removeWhen(bool Function(Page element) test) {
+    _removeWhen(test, expectedTestResult: false, onlyFirst: false);
 
     notifyListeners();
   }
 
   @protected
-  void updateRemovedPageWhere(bool Function(Page element) test) {
-    _removeWhere(test, onlyFirst: true);
+  void updateRemovedPageWhen(bool Function(Page element) test) {
+    _removeWhen(test, expectedTestResult: true, onlyFirst: true);
   }
 
-  void _removeWhere(
+  void _removeWhen(
     bool Function(Page element) test, {
+    required bool expectedTestResult,
     required bool onlyFirst,
   }) {
     final oldPages = List.of(_pages);
 
-    for (var i = oldPages.length - 1; i > 0; i--) {
-      if (test(oldPages[i])) {
+    for (var i = oldPages.length - 1; i != -1; i--) {
+      if (test(oldPages[i]) == expectedTestResult) {
         _pages.removeAt(i);
+
+        _didPopCount++;
+
+        print(_pages);
 
         if (onlyFirst) return;
       }
@@ -144,6 +174,8 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @protected
   void removeLastPage<T extends Object?>(T value) {
     _removeLastPage(value);
+
+    _didPopCount++;
 
     notifyListeners();
   }
@@ -212,7 +244,7 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
       return;
     }
 
-    routerDelegate.updateRemovedPageWhere((e) {
+    routerDelegate.updateRemovedPageWhen((e) {
       return e is SautPageless ? e.route == route : e == route.settings;
     });
   }

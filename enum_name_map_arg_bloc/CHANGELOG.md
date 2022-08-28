@@ -1,3 +1,9 @@
+## 0.8.2
+
+* When "pop" methods are invoked or there is a request from the operating system, `SautRouterDelegate` delivers unexpected behavior
+
+* fix: `backToPage` methods
+
 ## 0.8.1
 
 * optimize `_PagelessNavigatorObserver.didPush` method
