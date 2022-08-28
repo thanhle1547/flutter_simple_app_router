@@ -23,7 +23,7 @@
 </p>
 -->
 
-![Saut version](https://img.shields.io/badge/Saut-v0.8.1-brightgreen.svg)
+![Saut version](https://img.shields.io/badge/Saut-v0.8.2-brightgreen.svg)
 [![License](https://img.shields.io/badge/License-BSD-blue.svg)](https://docs.oracle.com/cloud/latest/big-data-discovery-cloud/BDDLG/cl_bsd_license.htm)
 
 `Saut` cung cấp các tiện ích (utilities) hỗ trợ việc điều hướng cơ bản trong ứng dụng sử dụng `flutter_bloc` làm state management.
