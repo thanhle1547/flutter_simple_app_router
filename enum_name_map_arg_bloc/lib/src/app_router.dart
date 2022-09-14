@@ -334,7 +334,12 @@ class AppRouter {
   }
 
   /// Create [RouteSettings] for [showDialog], [showAboutDialog],
-  /// [showGeneralDialog], [showLicensePage], ...
+  /// [showGeneralDialog], ...
+  ///
+  /// There will be an exception from `widget library` (with content: `
+  /// A page-based route should not be added using the imperative api.
+  /// Provide a new list with the corresponding Page to Navigator.pages instead.
+  /// `), but it won't affect navigating/routing.
   static RouteSettings createRouteSettings({
     String? name,
     Object? arguments,
