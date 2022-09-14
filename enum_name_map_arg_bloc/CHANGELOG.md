@@ -1,3 +1,17 @@
+## 0.9.0
+
+* update `SautRouteLoggingObserver`
+
+  - change & update messages
+
+  - override didRemove & didReplace
+
+  - make `resolveArguments`, `getStringRepresentationOfListItems`, `dynamicWordRegex`, `buildMessageStringBuffer` public
+
+* update docs
+
+* update `flutter_bloc` to version 8.1.1
+
 ## 0.8.2
 
 * When "pop" methods are invoked or there is a request from the operating system, `SautRouterDelegate` delivers unexpected behavior
