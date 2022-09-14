@@ -5,6 +5,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'enma_navigator_state_extension.dart';
+import 'route.dart';
 import 'route_transition.dart';
 import 'saut_page.dart';
 import 'transition_builder_delegate.dart';
@@ -264,7 +265,8 @@ extension EnmaBuildContextExtension on BuildContext {
   void backToPageName(String name) => Navigator.of(this).backToPageName(name);
 
   /// Calls [back] repeatedly until found the page.
-  void backToPage(Object page) => backToPageName(page.toString());
+  void backToPage(Object page) =>
+      backToPageName(effectiveRouteNameBuilder(page));
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.

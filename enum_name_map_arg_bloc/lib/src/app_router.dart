@@ -334,7 +334,12 @@ class AppRouter {
   }
 
   /// Create [RouteSettings] for [showDialog], [showAboutDialog],
-  /// [showGeneralDialog], [showLicensePage], ...
+  /// [showGeneralDialog], ...
+  ///
+  /// There will be an exception from `widget library` (with content: `
+  /// A page-based route should not be added using the imperative api.
+  /// Provide a new list with the corresponding Page to Navigator.pages instead.
+  /// `), but it won't affect navigating/routing.
   static RouteSettings createRouteSettings({
     String? name,
     Object? arguments,
@@ -632,7 +637,7 @@ class AppRouter {
 
   /// Calls [back] repeatedly until found the page.
   static void backToPage(BuildContext context, Object page) =>
-      backToPageName(context, page.toString());
+      backToPageName(context, effectiveRouteNameBuilder(page));
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.

@@ -1,6 +1,6 @@
 name: saut_enma_bloc
 description: A declarative router for Flutter. Navigate by enum, argument passing type Map, with latest flutter_bloc dependency.
-version: 0.8.1
+version: 0.9.0
 homepage: https://github.com/thanhle1547/flutter_simple_app_router/tree/flutter_bloc_7.1.0_dart_below_2.14.0/enum_name_map_arg_bloc
 
 environment:

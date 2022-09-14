@@ -980,7 +980,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// Calls [back] repeatedly until found the page with a certain name.
   void backToPageName(String name) {
     // ignore: invalid_use_of_protected_member
-    removeWhere((page) => page.name == name);
+    removeWhen((page) => page.name == name);
   }
 
   /// Calls [back] repeatedly until found the page.
