@@ -100,6 +100,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
         customTransitionBuilderDelegate: customTransitionBuilderDelegate,
         curve: curve,
         duration: duration,
+        opaque: opaque,
+        fullscreenDialog: fullscreenDialog,
+        debugPreventDuplicates: debugPreventDuplicates,
       );
     }
 
@@ -112,6 +115,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       customTransitionBuilderDelegate: customTransitionBuilderDelegate,
       curve: curve,
       duration: duration,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+      debugPreventDuplicates: debugPreventDuplicates,
     );
   }
 
