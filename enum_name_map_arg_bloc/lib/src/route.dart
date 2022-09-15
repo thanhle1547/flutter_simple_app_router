@@ -168,8 +168,10 @@ bool debugAssertRouteTypeIsValid(Object page) {
   return true;
 }
 
+String _defaultRouteNameBuilder(Object page) => page.toString();
+
 String Function(Object page) get effectiveRouteNameBuilder =>
-    AppConfig.routeNameBuilder ?? (page) => page.toString();
+    AppConfig.routeNameBuilder ?? _defaultRouteNameBuilder;
 
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   required PageBuilder pageBuilder,
