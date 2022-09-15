@@ -1,3 +1,9 @@
+## 0.9.1
+
+* fix: some parameters of `EnmaNavigatorStateExtension.toPage` (`opaque`, `fullscreenDialog`, `debugPreventDuplicates`) not working
+
+* fix: `Saut.createRouterDelegateIfNotExisted` did not use `initialPage` passed to `setDefaultConfig`
+
 ## 0.9.0
 
 * update `SautRouteLoggingObserver`

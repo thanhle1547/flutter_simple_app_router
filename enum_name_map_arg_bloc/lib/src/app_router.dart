@@ -289,6 +289,9 @@ class AppRouter {
   ///
   /// {@macro flutter.widgets.widgetsApp.navigatorObservers}
   ///
+  /// If [initialPage] is null, then the one passed to [setDefaultConfig]
+  /// will be used instead.
+  ///
   /// If [initialPageStackName] is not null and [arguments] is null, an empty
   /// [Map] will be created
   static SautRouterDelegate createRouterDelegateIfNotExisted({
@@ -316,7 +319,12 @@ class AppRouter {
           arguments ?? {},
         );
       } else {
-        global.currentRouterDelegate.toPage(initialPage!, arguments: arguments);
+        assert(initialPage == null || AppConfig.initialPage == null);
+
+        global.currentRouterDelegate.toPage(
+          initialPage ?? AppConfig.initialPage!,
+          arguments: arguments,
+        );
       }
     }
 

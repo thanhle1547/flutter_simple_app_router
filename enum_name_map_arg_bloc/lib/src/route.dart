@@ -168,8 +168,10 @@ bool debugAssertRouteTypeIsValid(Enum page) {
   return true;
 }
 
+String _defaultRouteNameBuilder(Enum page) => page.name;
+
 String Function(Enum page) get effectiveRouteNameBuilder =>
-    AppConfig.routeNameBuilder ?? (page) => page.name;
+    AppConfig.routeNameBuilder ?? _defaultRouteNameBuilder;
 
 PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   required PageBuilder pageBuilder,
