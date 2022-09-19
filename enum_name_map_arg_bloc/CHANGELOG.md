@@ -1,3 +1,7 @@
+## 0.9.2
+
+* fix: replace all pages with an existing page but `Navigator` reserves its route state
+
 ## 0.9.1
 
 * fix: some parameters of `EnmaNavigatorStateExtension.toPage` (`opaque`, `fullscreenDialog`, `debugPreventDuplicates`) not working
