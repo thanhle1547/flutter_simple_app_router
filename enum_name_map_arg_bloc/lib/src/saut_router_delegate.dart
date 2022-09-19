@@ -90,6 +90,25 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     return _pages.last.name;
   }
 
+  @protected
+  LocalKey? getExistingPageKey(Enum page) {
+    for (final e in _pages) {
+      final pageKey = e.key;
+
+      if (pageKey is SautPageKey) {
+        final givenKey = pageKey.key;
+
+        if (givenKey.value == page) {
+          return pageKey;
+        }
+      } else if (pageKey is ValueKey && pageKey.value == page) {
+        return pageKey;
+      }
+    }
+
+    return null;
+  }
+
   /// To optimize [_PagelessNavigatorObserver.didPush] method
   late List<Page<dynamic>> _pagesFromSetMethod = const [];
 
