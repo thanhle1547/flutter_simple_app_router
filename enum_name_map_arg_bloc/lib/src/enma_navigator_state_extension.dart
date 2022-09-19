@@ -686,7 +686,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       final RouteConfig routeConfig = getRouteConfig(e);
 
       return SautPage(
-        page: e,
+        // ignore: invalid_use_of_protected_member
+        key: getExistingPageKey(e) ?? SautPageKey(e),
         name: effectiveRouteNameBuilder(e),
         pageBuilder: getPageBuilder(routeConfig, arguments),
         arguments: arguments,
@@ -783,7 +784,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     }());
 
     final pageRoute = SautPage<T>(
-      page: page,
+      key: SautPageKey(page),
       name: effectiveRouteNameBuilder(page),
       pageBuilder: resolvePageBuilderWithBloc(
         pageBuilder: getPageBuilder(routeConfig, arguments),
@@ -877,7 +878,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     );
 
     final pageRoute = SautPage<T>(
-      page: page,
+      key: SautPageKey(page),
       name: effectiveRouteNameBuilder(page),
       pageBuilder: resolvePageBuilderWithBloc(
         pageBuilder: getPageBuilder(routeConfig, arguments),
@@ -958,7 +959,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     );
 
     final pageRoute = SautPage<T>(
-      page: page,
+      key: SautPageKey(page),
       name: effectiveRouteNameBuilder(page),
       pageBuilder: getPageBuilder(routeConfig, arguments),
       arguments: arguments,

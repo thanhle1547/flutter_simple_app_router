@@ -7,16 +7,22 @@ import 'route_config.dart';
 
 typedef PagePredicate = bool Function(Page<dynamic> page);
 
+class SautPageKey<T> extends UniqueKey {
+  SautPageKey(T value) : key = ValueKey<T>(value);
+
+  final ValueKey key;
+}
+
 class SautPage<T extends Object?> extends Page {
   SautPage({
-    required dynamic page,
+    required LocalKey key,
     required this.pageBuilder,
     String? name,
     Map<String, dynamic>? arguments,
     required this.routeConfig,
   })  : _popCompleter = Completer<T?>(),
         super(
-          key: ValueKey(page),
+          key: key,
           name: name,
           arguments: arguments,
           restorationId: name,
