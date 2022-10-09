@@ -1,3 +1,7 @@
+## 0.9.3
+
+* fix: wrong assertion in `createRouterDelegateIfNotExisted`
+
 ## 0.9.2
 
 * fix: replace all pages with an existing page but `Navigator` reserves its route state
