@@ -319,7 +319,7 @@ class AppRouter {
           arguments ?? {},
         );
       } else {
-        assert(initialPage == null || AppConfig.initialPage == null);
+        assert(initialPage != null || AppConfig.initialPage != null);
 
         global.currentRouterDelegate.toPage(
           initialPage ?? AppConfig.initialPage!,
