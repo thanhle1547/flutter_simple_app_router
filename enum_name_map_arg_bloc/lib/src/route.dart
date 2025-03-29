@@ -217,6 +217,22 @@ late final RegExp _dynamicTypeRegex = RegExp(
   r'<dynamic(, dynamic)?>$',
 );
 
+/// Example:
+///
+///  * CastList<dynamic, String>
+///  * CastSet<dynamic, String>
+///  * `... are allowed`
+///
+///  * _CastList<dynamic, String>
+///  * (int, _CastList<dynamic, String>)
+///  * (double, OverridedCastList<dynamic, String>)
+///  * `... are NOT allowed`
+late final RegExp _castTypeRegex = RegExp(
+  r'(?<![\w_])Cast(\w+)<\w+,\s(\w+)>',
+  caseSensitive: true,
+  multiLine: false,
+);
+
 Widget Function() getPageBuilder<T extends Object?>(
   RouteConfig routeConfig,
   Map<String, dynamic>? arguments,
@@ -235,15 +251,17 @@ Widget Function() getPageBuilder<T extends Object?>(
     }
 
     for (final entry in debugRequiredArguments.entries) {
-      final Type effectiveEntryType =
-          entry.value is Type ? entry.value as Type : entry.value.runtimeType;
+      final entryKey = entry.key;
+      final entryValue = entry.value;
 
-      if (!arguments.containsKey(entry.key)) {
-        throw MissingArgument(entry.key, effectiveEntryType);
+      final Type effectiveEntryType = entryValue is Type ? entryValue : entryValue.runtimeType;
+
+      if (!arguments.containsKey(entryKey)) {
+        throw MissingArgument(entryKey, effectiveEntryType);
       }
 
-      String effectiveEntryTypeName = entry.value is String
-          ? entry.value as String
+      String effectiveEntryTypeName = entryValue is String
+          ? entryValue
           : effectiveEntryType.toString();
 
       effectiveEntryTypeName =
@@ -253,15 +271,26 @@ Widget Function() getPageBuilder<T extends Object?>(
 
       String effectiveArgumentType = objectRuntimeType(currentArgument, '');
 
+      effectiveArgumentType = effectiveArgumentType.replaceAllMapped(
+        _castTypeRegex,
+        (match) {
+          return "${match.group(1)}<${match.group(2)}>";
+        },
+      );
+
       if (effectiveArgumentType.contains('=>')) {
         effectiveArgumentType = 'Function';
       }
 
+      // Using contains instead of equality operator due to
+      // internal implementation of Dart Type
+      //
+      // Ex: CastList
       if (!effectiveArgumentType.contains(effectiveEntryTypeName)) {
         throw ArgumentTypeError(
           effectiveEntryType,
-          arguments[entry.key].runtimeType,
-          "'${entry.key}'",
+          arguments[entryKey].runtimeType,
+          "'$entryKey'",
         );
       }
     }
