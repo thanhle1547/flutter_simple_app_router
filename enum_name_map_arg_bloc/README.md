@@ -23,7 +23,7 @@
 </p>
 -->
 
-![Saut version](https://img.shields.io/badge/Saut-v0.9.3-brightgreen.svg)
+![Saut version](https://img.shields.io/badge/Saut-v0.9.4-brightgreen.svg)
 [![License](https://img.shields.io/badge/License-BSD-blue.svg)](https://docs.oracle.com/cloud/latest/big-data-discovery-cloud/BDDLG/cl_bsd_license.htm)
 
 `Saut` cung cấp các tiện ích (utilities) hỗ trợ việc điều hướng cơ bản trong ứng dụng sử dụng `flutter_bloc` làm state management.
@@ -64,47 +64,31 @@ Thư viện này chưa hỗ trợ xử lý một số trường hợp điều h�
 
 ## 🚩 Mục lục
 
-* [🚀 Getting started](#rocket-getting-started)
-
-* [🐾 Cách sử dụng](#feet-cách-sử-dụng)
-
-  * [Chuyển màn hình](#chuyển-màn-hình)
-
-  * [Quay lại màn hình cũ](#quay-lại-màn-hình-cũ)
-
-  * [Lấy dữ liệu trả về từ màn hình trước](#lấy-dữ-liệu-trả-về-từ-màn-hình-trước)
-
-  * [Truyền dữ liệu qua màn hình khác](#truyền-dữ-liệu-qua-màn-hình-khác)
-
-  * [Nhận dữ liệu được truyền qua màn hình mới](#nhận-dữ-liệu-được-truyền-qua-màn-hình-mới)
-
-  * [Thay thế màn hình hiện tại bằng màn hình khác](#thay-thế-màn-hình-hiện-tại-bằng-màn-hình-khác)
-
-  * [Loại bỏ nhiều màn hình và thay bằng một màn hình khác](#loại-bỏ-nhiều-màn-hình-và-thay-bằng-một-màn-hình-khác)
-
-  * [Route Logging](#route-logging)
-
-  * [Thay đổi tên của tuyến đường được in ra trong console](#thay-đổi-tên-của-tuyến-đường-được-in-ra-trong-console)
-
-  * [Cách cấu hình để điều hướng mà không cần dùng `BuildContext`](#cách-cấu-hình-để-điều-hướng-mà-không-cần-dùng-buildcontext)
-
-  * [Subscribing `RouteObserver`](#subscribing-routeobserver)
-
-  * [Listening `RouteObserver`](#listening-routeobserver)
-
-  * [Truyền `blocs` qua màn hình khác](#truyền-blocs-qua-màn-hình-khác)
-
-  * [Cách cấu hình để thiết lập sẵn CÁC màn hình khi vào app](#cách-cấu-hình-để-thiết-lập-sẵn-các-màn-hình-khi-vào-app)
-
-  * [Sử dụng `showDialog` (các modal dialog) với `RouterDelegate`](#sử-dụng-showdialog-các-modal-dialog-với-routerdelegate)
-
-  * [Thiết lập lại tất cả các cấu hình đã đặt (Reset)](#thiết-lập-lại-tất-cả-các-cấu-hình-đã-đặt-reset)
-
-* [📫 Báo cáo sự cố](#mailbox-báo-cáo-sự-cố)
-
-* [❓ Q&A](#question-qa)
-
-* [📜 Giấy phép](#scroll-giấy-phép)
+- [📦 Dependency](#-dependency)
+- [🧩 Các tính năng](#-các-tính-năng)
+- [⚠️ Giới hạn](#️-giới-hạn)
+- [🚩 Mục lục](#-mục-lục)
+- [:rocket: Getting started](#rocket-getting-started)
+- [:feet: Cách sử dụng](#feet-cách-sử-dụng)
+  - [Chuyển màn hình](#chuyển-màn-hình)
+  - [Quay lại màn hình cũ](#quay-lại-màn-hình-cũ)
+  - [Lấy dữ liệu trả về từ màn hình trước](#lấy-dữ-liệu-trả-về-từ-màn-hình-trước)
+  - [Truyền dữ liệu qua màn hình khác](#truyền-dữ-liệu-qua-màn-hình-khác)
+  - [Nhận dữ liệu được truyền qua màn hình mới](#nhận-dữ-liệu-được-truyền-qua-màn-hình-mới)
+  - [Thay thế màn hình hiện tại bằng màn hình khác](#thay-thế-màn-hình-hiện-tại-bằng-màn-hình-khác)
+  - [Loại bỏ nhiều màn hình và thay bằng một màn hình khác](#loại-bỏ-nhiều-màn-hình-và-thay-bằng-một-màn-hình-khác)
+  - [Route Logging](#route-logging)
+  - [Thay đổi tên của tuyến đường được in ra trong console](#thay-đổi-tên-của-tuyến-đường-được-in-ra-trong-console)
+  - [Cách cấu hình để điều hướng mà không cần dùng `BuildContext`](#cách-cấu-hình-để-điều-hướng-mà-không-cần-dùng-buildcontext)
+  - [Subscribing `RouteObserver`](#subscribing-routeobserver)
+  - [Listening `RouteObserver`](#listening-routeobserver)
+  - [Truyền `blocs` qua màn hình khác](#truyền-blocs-qua-màn-hình-khác)
+  - [Cách cấu hình để thiết lập sẵn CÁC màn hình khi vào app](#cách-cấu-hình-để-thiết-lập-sẵn-các-màn-hình-khi-vào-app)
+  - [Sử dụng `showDialog` (các modal dialog) với `RouterDelegate`](#sử-dụng-showdialog-các-modal-dialog-với-routerdelegate)
+  - [Thiết lập lại tất cả các cấu hình đã đặt (Reset)](#thiết-lập-lại-tất-cả-các-cấu-hình-đã-đặt-reset)
+- [:mailbox: Báo cáo sự cố](#mailbox-báo-cáo-sự-cố)
+- [:question: Q\&A](#question-qa)
+- [:scroll: Giấy phép](#scroll-giấy-phép)
 
 ------
 

@@ -1,3 +1,8 @@
+## 0.9.4
+
+* fix: `debugRequiredArguments` declaration can be empty
+* fix: `arguments` parameter can be empty
+
 ## 0.9.3
 
 * fix: wrong assertion in `createRouterDelegateIfNotExisted`
