@@ -218,15 +218,19 @@ Widget Function() getPageBuilder<T extends Object?>(
   Map<String, dynamic>? arguments,
 ) {
   assert(() {
-    if (routeConfig.debugRequiredArguments == null) return true;
+    final Map<String, Object>? debugRequiredArguments = routeConfig.debugRequiredArguments;
 
-    if (arguments == null) {
+    if (debugRequiredArguments == null || debugRequiredArguments.isEmpty == true) {
+      return true;
+    }
+
+    if (arguments == null || arguments.isEmpty == true) {
       throw MissingArgument(
-        routeConfig.debugRequiredArguments.toString(),
+        debugRequiredArguments.toString(),
       );
     }
 
-    for (final entry in routeConfig.debugRequiredArguments!.entries) {
+    for (final entry in debugRequiredArguments.entries) {
       final Type effectiveEntryType =
           entry.value is Type ? entry.value as Type : entry.value.runtimeType;
 
