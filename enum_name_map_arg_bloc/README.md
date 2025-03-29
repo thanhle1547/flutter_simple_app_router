@@ -313,16 +313,6 @@ Bảng dưới đây mô tả các tham số của `RouteConfig`:
     onPressed: () => Saut.toPage(context, AppPages.Example2),
 ```
 
-Ngoài ra, bạn cũng có thể sử dụng:
-
-* `AppRouter.toPage()` (`AppRouter` chỉ là một cái tên khác, thay vì gọi `Saut`, bạn có thể gọi `AppRouter`)
-
-* `context.toPage()`
-
-* `Saut.navigator.toPage()`
-
-* `AppRouter.navigator.toPage()`
-
 > **Lưu ý:**
 >
 > Nên sử dụng một cách gọi phương thức điều hướng để giữ sự nhất quán.
@@ -581,7 +571,7 @@ Trong file chứa widget MaterialApp, tạo `navigatorKey` bằng phương thứ
   }
 ```
 
-Để gọi các hàm `toPage(), back(), ...` mà không cần dùng `BuildContext`, hãy sử dụng `Saut.navigator.toPage(), Saut.navigator.back(), ...` , hoặc thông qua `AppRouter`.
+Để gọi các hàm `toPage()`, `back()`, ... mà không cần dùng `BuildContext`, hãy sử dụng `Saut.navigator.toPage()`, `Saut.navigator.back()`, ...
 
 ### Subscribing `RouteObserver`
 

@@ -1,6 +1,5 @@
 library enum_name_map_arg_bloc;
 
-export 'src/app_router.dart';
 export 'src/enma_build_context_extension.dart';
 export 'src/enma_navigator_state_extension.dart';
 export 'src/route_config.dart' show RouteConfig;

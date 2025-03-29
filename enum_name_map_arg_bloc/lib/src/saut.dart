@@ -113,7 +113,7 @@ class Saut {
 
   /// * [debugRequiredArguments]
   ///
-  /// If used, [AppRouter] will check this before navigating
+  /// If used, [Saut] will check this before navigating
   /// The key is the name of the argument.
   ///
   /// The value is the type of argument. It can be anything but [dynamic].
@@ -140,7 +140,7 @@ class Saut {
   /// * For example:
   ///
   /// ```dart
-  /// AppRouter.define(
+  /// Saut.define(
   ///   page: Enum.home,
   ///   requiredArgument: {
   ///     'id': int,
