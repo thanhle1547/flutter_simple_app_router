@@ -1,3 +1,7 @@
+## 0.10.0
+
+* **remove** `AppRouter`
+
 ## 0.9.5
 
 * update assertion inside getPageBuilder to allow casted type & Object type
