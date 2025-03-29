@@ -10,7 +10,7 @@ import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
 import 'global.dart' as global;
 import 'navigator_state_extension.dart';
-import 'route.dart';
+import 'internal.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
 import 'saut_page.dart';

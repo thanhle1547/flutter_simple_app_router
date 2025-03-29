@@ -6,7 +6,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
-import 'route.dart';
+import 'internal.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
 import 'global.dart' as global;

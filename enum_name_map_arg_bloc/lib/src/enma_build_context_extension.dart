@@ -5,7 +5,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'enma_navigator_state_extension.dart';
-import 'route.dart';
+import 'internal.dart';
 import 'route_transition.dart';
 import 'saut_page.dart';
 import 'transition_builder_delegate.dart';

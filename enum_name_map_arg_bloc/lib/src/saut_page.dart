@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 
-import 'route.dart' as router;
+import 'internal.dart' as router;
 import 'route_config.dart';
 
 typedef PagePredicate = bool Function(Page<dynamic> page);
