@@ -1,3 +1,7 @@
+## 0.9.5
+
+* update assertion inside getPageBuilder to allow casted type & Object type
+
 ## 0.9.4
 
 * fix: `debugRequiredArguments` declaration can be empty
