@@ -209,6 +209,10 @@ RouteConfig getRouteConfig(Enum page) {
   return AppConfig.routes[page]!;
 }
 
+/// Example:
+///
+///  * `<dynamic>` in `List<dynamic>`
+///  * `<dynamic, dynamic>` in `Map<dynamic, dynamic>`
 late final RegExp _dynamicTypeRegex = RegExp(
   r'<dynamic(, dynamic)?>$',
 );
