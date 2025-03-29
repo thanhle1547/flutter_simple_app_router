@@ -267,6 +267,8 @@ Widget Function() getPageBuilder<T extends Object?>(
       effectiveEntryTypeName =
           effectiveEntryTypeName.replaceFirst(_dynamicTypeRegex, '');
 
+      if (effectiveEntryTypeName == 'Object') continue;
+
       final currentArgument = arguments[entry.key];
 
       String effectiveArgumentType = objectRuntimeType(currentArgument, '');
