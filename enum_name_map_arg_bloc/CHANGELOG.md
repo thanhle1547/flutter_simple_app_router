@@ -1,3 +1,8 @@
+## 0.10.1
+
+* fix: missing the `Route`'s return type correspond to the type argument `T` of `SautPage`
+* fix: `SautPage.completeWith` did not accept null value
+
 ## 0.10.0
 
 * **remove** `AppRouter`
