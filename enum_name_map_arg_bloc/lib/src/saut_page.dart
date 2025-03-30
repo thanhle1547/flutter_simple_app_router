@@ -54,7 +54,7 @@ class SautPage<T extends Object?> extends Page<T> {
     );
   }
 
-  void completeWith(T value) {
+  void completeWith(T? value) {
     _popCompleter.complete(value);
   }
 }
