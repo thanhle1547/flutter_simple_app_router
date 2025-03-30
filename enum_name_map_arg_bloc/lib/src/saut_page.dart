@@ -13,7 +13,7 @@ class SautPageKey<T> extends UniqueKey {
   final ValueKey key;
 }
 
-class SautPage<T extends Object?> extends Page {
+class SautPage<T extends Object?> extends Page<T> {
   SautPage({
     required LocalKey key,
     required this.pageBuilder,
@@ -35,7 +35,7 @@ class SautPage<T extends Object?> extends Page {
   Future<T?> get completed => _popCompleter.future;
 
   @override
-  Route createRoute(BuildContext context) {
+  Route<T> createRoute(BuildContext context) {
     if (routeConfig.useRouteBuilder) {
       return routeConfig.routeBuilder!.call(
         context,
