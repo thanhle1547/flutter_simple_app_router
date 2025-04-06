@@ -17,12 +17,15 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     ];
   }
 
+  final List<Page<dynamic>> _pages = [];
+
+  /// To optimize [_PagelessNavigatorObserver.didPush] method
+  late List<Page<dynamic>> _pagesFromSetMethod = const [];
+
   late final List<NavigatorObserver> _navigatorObservers;
 
   final TransitionDelegate _transitionDelegate =
       const DefaultTransitionDelegate<dynamic>();
-
-  final List<Page<dynamic>> _pages = [];
 
   /// The number of requests from the operating system that
   /// the current route be popped.
@@ -109,8 +112,15 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     return null;
   }
 
-  /// To optimize [_PagelessNavigatorObserver.didPush] method
-  late List<Page<dynamic>> _pagesFromSetMethod = const [];
+  @protected
+  void updateAddedPage(Page page) {
+    _pages.add(page);
+  }
+
+  @protected
+  void updateRemovedPageWhen(bool Function(Page element) test) {
+    removeWhen(test);
+  }
 
   @protected
   void setPages(Iterable<SautPage> pages) {
@@ -128,11 +138,6 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     _pages.add(page);
 
     notifyListeners();
-  }
-
-  @protected
-  void updateAddedPage(Page page) {
-    _pages.add(page);
   }
 
   @protected
@@ -156,11 +161,6 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     _pages.add(page);
 
     notifyListeners();
-  }
-
-  @protected
-  void updateRemovedPageWhen(bool Function(Page element) test) {
-    removeWhen(test);
   }
 
   @protected
