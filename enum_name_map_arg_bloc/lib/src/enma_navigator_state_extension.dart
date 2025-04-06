@@ -423,14 +423,15 @@ extension on NavigatorState {
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
-    assert(() {
-      final String name = effectiveRouteNameBuilder(page);
-      late final String runtimeType = objectRuntimeType(page, 'String');
+    final String name = effectiveRouteNameBuilder(page);
 
+    assert(() {
       if ((debugPreventDuplicates ??
               routeConfig.debugPreventDuplicates ??
               AppConfig.shouldPreventDuplicates) &&
           getCurrentRouteName() == name) {
+        final String runtimeType = objectRuntimeType(page, 'String');
+
         throw StateError("Duplicated Page: $runtimeType");
       }
 
@@ -446,7 +447,7 @@ extension on NavigatorState {
         ),
         config: routeConfig,
         settings: RouteSettings(
-          name: effectiveRouteNameBuilder(page),
+          name: name,
           arguments: arguments,
         ),
       ),
@@ -769,14 +770,15 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
-    assert(() {
-      final String name = effectiveRouteNameBuilder(page);
-      late final String runtimeType = objectRuntimeType(page, 'String');
+    final String name = effectiveRouteNameBuilder(page);
 
+    assert(() {
       if ((debugPreventDuplicates ??
               routeConfig.debugPreventDuplicates ??
               AppConfig.shouldPreventDuplicates) &&
           global.routerDelegate!.lastPageName == name) {
+        final String runtimeType = objectRuntimeType(page, 'String');
+
         throw StateError("Duplicated Page: $runtimeType");
       }
 
@@ -785,7 +787,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
-      name: effectiveRouteNameBuilder(page),
+      name: name,
       pageBuilder: resolvePageBuilderWithBloc(
         pageBuilder: getPageBuilder(routeConfig, arguments),
         blocValue: blocValue,
