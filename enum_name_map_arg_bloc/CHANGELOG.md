@@ -1,3 +1,8 @@
+## 0.10.2
+
+* Add `abstract` modifier to `Saut` class to prevents instantiation
+* Prevents extending `Saut` class by adding a private generative constructor
+
 ## 0.10.1
 
 * fix: missing the `Route`'s return type correspond to the type argument `T` of `SautPage`
