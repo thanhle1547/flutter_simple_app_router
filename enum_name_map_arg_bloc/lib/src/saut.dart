@@ -302,13 +302,17 @@ abstract class Saut {
     Object? initialPageStackName,
     Map<String, dynamic>? arguments,
   }) {
+    assert(initialPage != null || AppConfig.initialPage != null);
+
+    initialPage ??= AppConfig.initialPage!;
+
     if (global.routerDelegate == null) {
       assert(() {
         final initialPageStack = AppConfig.stackedPages[initialPageStackName];
 
         if (initialPageStack != null) return initialPageStack.isNotEmpty;
 
-        return initialPage != null;
+        return true;
       }());
 
       global.initRouterDelegate(
@@ -321,10 +325,8 @@ abstract class Saut {
           arguments ?? {},
         );
       } else {
-        assert(initialPage != null || AppConfig.initialPage != null);
-
         global.currentRouterDelegate.toPage(
-          initialPage ?? AppConfig.initialPage!,
+          initialPage,
           arguments: arguments,
         );
       }
