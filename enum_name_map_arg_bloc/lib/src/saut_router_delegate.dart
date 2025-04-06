@@ -159,34 +159,55 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   @protected
-  void removeWhen(bool Function(Page element) test) {
-    _removeWhen(test, expectedTestResult: false, onlyFirst: false);
-
-    notifyListeners();
+  void updateRemovedPageWhen(bool Function(Page element) test) {
+    removeWhen(test);
   }
 
   @protected
-  void updateRemovedPageWhen(bool Function(Page element) test) {
-    _removeWhen(test, expectedTestResult: true, onlyFirst: true);
-  }
-
-  void _removeWhen(
-    bool Function(Page element) test, {
-    required bool expectedTestResult,
-    required bool onlyFirst,
-  }) {
+  void removeWhen(bool Function(Page element) test) {
     final oldPages = List.of(_pages);
 
     for (var i = oldPages.length - 1; i != -1; i--) {
-      if (test(oldPages[i]) == expectedTestResult) {
+      if (test(oldPages[i])) {
         _pages.removeAt(i);
 
         _didPopCount++;
 
-        print(_pages);
+        // print(_pages);
 
-        if (onlyFirst) return;
+        notifyListeners();
+
+        return;
       }
+    }
+  }
+
+  @protected
+  void removeUntil(bool Function(Page element) test) {
+    final oldPages = List.of(_pages);
+
+    bool hasAnyPageBeingRemoved = false;
+
+    for (var i = oldPages.length - 1; i != -1; i--) {
+      if (test(oldPages[i])) {
+        if (hasAnyPageBeingRemoved) {
+          notifyListeners();
+        }
+
+        return;
+      } else {
+        _pages.removeAt(i);
+
+        hasAnyPageBeingRemoved = true;
+
+        _didPopCount++;
+
+        // print(_pages);
+      }
+    }
+
+    if (hasAnyPageBeingRemoved) {
+      notifyListeners();
     }
   }
 
