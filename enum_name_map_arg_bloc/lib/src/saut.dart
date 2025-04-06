@@ -17,7 +17,9 @@ import 'saut_page.dart';
 import 'saut_router_delegate.dart';
 import 'transition_builder_delegate.dart';
 
-class Saut {
+abstract class Saut {
+  Saut._();
+
   /// * [routeTypes]
   ///
   /// For checking page has been defined each time navigating.
