@@ -124,9 +124,15 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @protected
   void setPages(Iterable<SautPage> pages) {
+    // Convert [pages] to a [List]
+    // in cases where [getExistingPageKey]
+    // being call when creating this Iterable parameter,
+    // it won't loop through the empty [_pages]
+    final newPages = pages.toList();
+
     _pages
       ..clear()
-      ..addAll(pages);
+      ..addAll(newPages);
 
     _pagesFromSetMethod = List.of(_pages);
 
