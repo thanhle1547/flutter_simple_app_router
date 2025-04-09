@@ -260,6 +260,10 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
       }
     }
 
+    if (route.settings is SautPage) {
+      return;
+    }
+
     if (route.settings is SautPageless) {
       final page = route.settings as SautPageless;
       page.route = route;
@@ -287,6 +291,10 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is SautPageRouteBuilder && route.createdFromSautPage) {
+      return;
+    }
+
+    if (route.settings is SautPage) {
       return;
     }
 
