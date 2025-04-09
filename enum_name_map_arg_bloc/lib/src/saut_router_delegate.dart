@@ -151,7 +151,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     if (test == null) {
       _pages.clear();
     } else {
-      _pages.removeWhere(test);
+      _removeUntil(test);
     }
 
     _pages.add(page);
@@ -190,21 +190,21 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @protected
   void removeUntil(bool Function(Page element) test) {
-    final oldPages = List.of(_pages);
+    bool hasAnyPageBeingRemoved = _removeUntil(test);
 
-    bool hasAnyPageBeingRemoved = false;
+    if (hasAnyPageBeingRemoved) {
+      notifyListeners();
+    }
+  }
+
+  bool _removeUntil(bool Function(Page element) test) {
+    final oldPages = List.of(_pages /* .value */);
 
     for (var i = oldPages.length - 1; i != -1; i--) {
       if (test(oldPages[i])) {
-        if (hasAnyPageBeingRemoved) {
-          notifyListeners();
-        }
-
-        return;
+        return true;
       } else {
         _pages.removeAt(i);
-
-        hasAnyPageBeingRemoved = true;
 
         _didPopCount++;
 
@@ -212,9 +212,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
       }
     }
 
-    if (hasAnyPageBeingRemoved) {
-      notifyListeners();
-    }
+    return false;
   }
 
   @protected
