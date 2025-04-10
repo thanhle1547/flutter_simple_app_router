@@ -35,7 +35,7 @@ Route<T> createRoute<T>({
     );
   }
 
-  return _createSautPageRoute(
+  return _createSautPageRoute<T>(
     pageBuilder: pageBuilder,
     settings: settings,
     transitionBuilderDelegate: config.effectiveTransitionBuilderDelegate,

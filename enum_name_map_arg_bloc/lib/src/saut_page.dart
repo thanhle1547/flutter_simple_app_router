@@ -45,7 +45,7 @@ class SautPage<T extends Object?> extends Page<T> {
       );
     }
 
-    return router.createRoute(
+    return router.createRoute<T>(
       pageContext: context,
       pageBuilder: pageBuilder,
       config: routeConfig,

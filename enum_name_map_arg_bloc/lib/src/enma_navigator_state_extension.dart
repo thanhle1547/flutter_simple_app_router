@@ -439,7 +439,7 @@ extension on NavigatorState {
     }());
 
     return push<T>(
-      createRoute(
+      createRoute<T>(
         pageBuilder: resolvePageBuilderWithBloc(
           pageBuilder: getPageBuilder(routeConfig, arguments),
           blocValue: blocValue,
@@ -531,7 +531,7 @@ extension on NavigatorState {
     );
 
     return pushReplacement(
-      createRoute(
+      createRoute<T>(
         pageBuilder: resolvePageBuilderWithBloc(
           pageBuilder: getPageBuilder(routeConfig, arguments),
           blocValue: blocValue,
@@ -611,7 +611,7 @@ extension on NavigatorState {
     );
 
     return pushAndRemoveUntil(
-      createRoute(
+      createRoute<T>(
         pageBuilder: getPageBuilder(routeConfig, arguments),
         config: routeConfig,
         settings: RouteSettings(
