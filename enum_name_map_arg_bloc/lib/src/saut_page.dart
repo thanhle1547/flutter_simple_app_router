@@ -36,15 +36,6 @@ class SautPage<T extends Object?> extends Page<T> {
 
   @override
   Route<T> createRoute(BuildContext context) {
-    if (routeConfig.useRouteBuilder) {
-      return routeConfig.routeBuilder!.call(
-        context,
-        routeConfig,
-        this,
-        pageBuilder(),
-      );
-    }
-
     return router.createRoute<T>(
       pageContext: context,
       pageBuilder: pageBuilder,
