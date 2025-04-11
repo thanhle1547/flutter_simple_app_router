@@ -43,4 +43,13 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
+
+  @override
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
+    return Semantics(
+      scopesRoute: true,
+      explicitChildNodes: true,
+      child: super.buildPage(context, animation, secondaryAnimation),
+    );
+  }
 }
