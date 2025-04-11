@@ -1,3 +1,17 @@
+## 0.10.3
+
+* fix: null check in assertion before call initRouterDelegate
+
+* fix: `SautRouterDelegate.backToPage` & `SautRouterDelegate.backToPageName` remove all pages below the target page
+
+* fix: `SautRouterDelegate.setPageStack` did not keep the current pages's state
+
+* fix: assertion false after navigate to new page from a page that the `Route` not is the `SautPageRouteBuilder` (e.g. `DialogRoute`)
+
+* fix: `PagePredicate` param in `SautRouterDelegate.replaceAllWithPage` not working like `RoutePredicate`
+
+* fix: change from one screen to another did not properly get announcements and audio-feedback (Edge-triggered semantics)
+
 ## 0.10.2
 
 * Add `abstract` modifier to `Saut` class to prevents instantiation
