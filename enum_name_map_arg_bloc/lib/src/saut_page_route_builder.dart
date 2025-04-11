@@ -1,4 +1,5 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import 'transition_builder_delegate.dart';
 
@@ -39,6 +40,25 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
       curve,
       child,
     );
+  }
+
+  @override
+  bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
+    // Suppress previous route from transitioning if this is a fullscreenDialog route.
+    //
+    // From Flutter 3.29.0
+    // https://github.com/flutter/flutter/pull/159312
+    return previousRoute is PageRoute && !fullscreenDialog;
+  }
+
+  @override
+  bool canTransitionTo(TransitionRoute<dynamic> nextRoute) {
+    // Don't perform outgoing animation if the next route is a fullscreen dialog.
+    final bool nextRouteIsNotFullscreen =
+        (nextRoute is! PageRoute<T>) || !nextRoute.fullscreenDialog;
+
+    return nextRouteIsNotFullscreen &&
+        (nextRoute is MaterialRouteTransitionMixin || nextRoute is CupertinoRouteTransitionMixin);
   }
 
   @override
