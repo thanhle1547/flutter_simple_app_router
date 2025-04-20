@@ -18,8 +18,9 @@ class _SplashScreenState extends State<SplashScreen> {
       await Future.delayed(const Duration(milliseconds: 1200)).then((value) {
         Saut.navigator.replaceAllWithPage(
           AppPages.Post_Published,
-          transition: RouteTransition.fadeIn,
-          curve: Curves.easeIn,
+          transition: FadeInTransition(
+            curve: Curves.easeIn,
+          ),
           duration: const Duration(milliseconds: 450),
         );
       });

@@ -85,7 +85,7 @@ final RouteConfig _postTrending = RouteConfig(
       ),
     );
   },
-  transition: RouteTransition.none,
+  transitionsBuilder: SautRouteTransition.none,
 );
 
 final RouteConfig _postDetail = RouteConfig(
@@ -111,7 +111,7 @@ final RouteConfig _postDetail = RouteConfig(
 
     return screen;
   },
-  transition: RouteTransition.rightToLeftWithFade,
+  transitionsBuilder: SautRouteTransition.rightToLeftWithFade,
   opaque: true,
   fullscreenDialog: false,
 );

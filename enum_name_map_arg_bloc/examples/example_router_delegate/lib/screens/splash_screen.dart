@@ -19,8 +19,9 @@ class _SplashScreenState extends State<SplashScreen> {
         Saut.replaceAllWithPage(
           context,
           AppPages.Post_Published,
-          transition: RouteTransition.fadeIn,
-          curve: Curves.easeIn,
+          transitionsBuilder: const FadeInTransition(
+            curve: Curves.easeIn,
+          ),
           duration: const Duration(milliseconds: 450),
         );
       });

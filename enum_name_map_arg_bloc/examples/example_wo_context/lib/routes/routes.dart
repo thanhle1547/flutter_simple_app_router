@@ -38,7 +38,7 @@ final RouteConfig _postDetail = RouteConfig(
     name: arguments!['name'] as String,
     id: arguments['id'] as int,
   ),
-  transition: RouteTransition.rightToLeftWithFade,
+  transitionsBuilder: SautRouteTransition.rightToLeftWithFade,
   opaque: true,
   fullscreenDialog: false,
 );
