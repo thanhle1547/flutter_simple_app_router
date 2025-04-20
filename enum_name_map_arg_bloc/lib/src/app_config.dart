@@ -1,21 +1,20 @@
 import 'dart:collection';
 
-import 'package:flutter/animation.dart';
+import 'package:flutter/material.dart';
 
 import 'constants.dart';
 import 'route_config.dart';
-import 'route_transition.dart';
 
 class AppConfig {
   static Enum? initialPage;
 
   static String? initialPageName;
 
-  static RouteTransition? defaultTransition;
-
-  static Curve? defaultTransitionCurve;
+  static PageTransitionsBuilder? defaultTransitionsBuilder;
 
   static Duration? defaultTransitionDuration;
+
+  static Curve? defaultTransitionCurve;
 
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
   static bool shouldPreventDuplicates = kDebugPreventDuplicates;

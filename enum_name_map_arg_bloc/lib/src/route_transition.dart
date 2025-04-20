@@ -1,39 +1,28 @@
-import 'transition_builder_delegate.dart';
+import 'package:flutter/material.dart';
 
-enum RouteTransition {
-  fadeIn,
-  rightToLeft,
-  rightToLeftWithFade,
-  downToUp,
+import 'transition_builder.dart';
 
-  /// This transition is intended to match the default for Android P.
-  openUpwards,
+abstract class SautRouteTransition {
+  SautRouteTransition._();
 
+  static const PageTransitionsBuilder fadeIn = FadeInTransition();
+  static const PageTransitionsBuilder rightToLeft = RightToLeftTransition();
+  static const PageTransitionsBuilder rightToLeftWithFade = RightToLeftWithFadeTransition();
+  static const PageTransitionsBuilder downToUp = DownToUpTransition();
+
+  /// Similar to the one provided by Android O
+  ///
   /// Slides the page upwards and fades it in, starting
   /// from 1/4 screen below the top.
-  fadeUpwards,
+  static const PageTransitionsBuilder fadeUpwards = FadeUpwardsPageTransitionsBuilder();
 
-  // zoomLikeAndroid10,
-  none,
-}
+  /// Similar to the one provided by Android P
+  static const PageTransitionsBuilder openUpwards = OpenUpwardsPageTransitionsBuilder();
 
-extension TransitionExt on RouteTransition {
-  TransitionBuilderDelegate get builder {
-    switch (this) {
-      case RouteTransition.fadeIn:
-        return const FadeInTransition();
-      case RouteTransition.rightToLeft:
-        return const RightToLeftTransition();
-      case RouteTransition.rightToLeftWithFade:
-        return const RightToLeftWithFadeTransition();
-      case RouteTransition.downToUp:
-        return const DownToUpTransition();
-      case RouteTransition.openUpwards:
-        return const OpenUpwardsTransition();
-      case RouteTransition.fadeUpwards:
-        return const FadeUpwardsTransition();
-      case RouteTransition.none:
-        return const NoTransition();
-    }
-  }
+  /// Similar to the one provided by Android Q
+  ///
+  /// Zooms and fades a new page in, zooming out the previous page.
+  static const PageTransitionsBuilder zoom = ZoomPageTransitionsBuilder();
+
+  static const PageTransitionsBuilder none = NoTransition();
 }

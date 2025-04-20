@@ -13,9 +13,7 @@ import 'app_config.dart';
 import 'argument_error.dart';
 import 'constants.dart';
 import 'route_config.dart';
-import 'route_transition.dart';
 import 'saut_page_route_builder.dart';
-import 'transition_builder_delegate.dart';
 
 typedef PageBuilder = Widget Function();
 
@@ -38,9 +36,8 @@ Route<T> createRoute<T>({
   return _createSautPageRoute<T>(
     pageBuilder: pageBuilder,
     settings: settings,
-    transitionBuilderDelegate: config.effectiveTransitionBuilderDelegate,
+    transitionsBuilder: config.transitionsBuilder,
     transitionDuration: config.transitionDuration,
-    curve: config.curve,
     opaque: config.opaque,
     fullscreenDialog: config.fullscreenDialog,
     createdFromPage: createdFromPage,
@@ -50,9 +47,8 @@ Route<T> createRoute<T>({
 PageRouteBuilder<T> _createSautPageRoute<T>({
   required PageBuilder pageBuilder,
   required RouteSettings settings,
-  TransitionBuilderDelegate? transitionBuilderDelegate,
+  PageTransitionsBuilder? transitionsBuilder,
   Duration? transitionDuration,
-  Curve? curve,
   bool opaque = kOpaque,
   bool fullscreenDialog = kFullscreenDialog,
   bool createdFromPage = false,
@@ -64,13 +60,12 @@ PageRouteBuilder<T> _createSautPageRoute<T>({
         explicitChildNodes: true,
         child: pageBuilder(),
       ),
-      transitionBuilderDelegate: transitionBuilderDelegate ??
-          AppConfig.defaultTransition?.builder ??
-          kRouteTransition.builder,
+      pageTransitionsBuilder: transitionsBuilder ??
+          AppConfig.defaultTransitionsBuilder ??
+          kPageTransitionsBuilder,
       transitionDuration: transitionDuration ??
           AppConfig.defaultTransitionDuration ??
           kTransitionDuration,
-      curve: curve ?? AppConfig.defaultTransitionCurve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
       createdFromSautPage: createdFromPage,

@@ -1,8 +1,10 @@
+import 'package:flutter/material.dart';
+
 import 'route_transition.dart';
 
 const String source = 'SAUT';
 
-const RouteTransition kRouteTransition = RouteTransition.none;
+const PageTransitionsBuilder kPageTransitionsBuilder = SautRouteTransition.none;
 
 const Duration kTransitionDuration = Duration(milliseconds: 300);
 

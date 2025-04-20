@@ -9,13 +9,12 @@ import 'constants.dart';
 import 'enma_build_context_extension.dart';
 import 'enma_navigator_state_extension.dart';
 import 'global.dart' as global;
-import 'navigator_state_extension.dart';
 import 'internal.dart';
+import 'navigator_state_extension.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
 import 'saut_page.dart';
 import 'saut_router_delegate.dart';
-import 'transition_builder_delegate.dart';
 
 abstract class Saut {
   Saut._();
@@ -33,22 +32,21 @@ abstract class Saut {
   /// Transform the enum into the string that will shown
   /// in debug console/debug log.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
+  /// Used to build the route's transition animation.
   ///
   /// * [transitionDuration]
   ///
   /// The duration the transition going forwards.
   ///
   /// * [transitionCurve]
-  ///
-  /// An parametric animation easing curve,
-  /// i.e. a mapping of the unit interval to the unit interval.
+  /// Used to apply a non-linear [Curve] when using some of
+  /// the route's transition animation below:
+  ///   - [SautRouteTransition.fadeIn]
+  ///   - [SautRouteTransition.rightToLeft]
+  ///   - [SautRouteTransition.rightToLeftWithFade]
+  ///   - [SautRouteTransition.downToUp]
   ///
   /// * [debugPreventDuplicates]
   ///
@@ -65,7 +63,7 @@ abstract class Saut {
     Map<Object, List<Enum>>? stackedPages,
     required Enum initialPage,
     String Function(Enum page)? routeNameBuilder,
-    RouteTransition? transition = RouteTransition.rightToLeft,
+    PageTransitionsBuilder transitionsBuilder = SautRouteTransition.rightToLeft,
     Duration? transitionDuration = const Duration(milliseconds: 320),
     Curve? transitionCurve = Curves.easeOutQuad,
     bool debugPreventDuplicates = true,
@@ -90,9 +88,9 @@ abstract class Saut {
         ? null
         : effectiveRouteNameBuilder(initialPage);
 
-    AppConfig.defaultTransition = transition;
-    AppConfig.defaultTransitionCurve = transitionCurve;
+    AppConfig.defaultTransitionsBuilder = transitionsBuilder;
     AppConfig.defaultTransitionDuration = transitionDuration;
+    AppConfig.defaultTransitionCurve = transitionCurve;
 
     AppConfig.shouldPreventDuplicates = debugPreventDuplicates;
   }
@@ -104,8 +102,7 @@ abstract class Saut {
     AppConfig.routeNameBuilder = null;
     AppConfig.initialPage = null;
     AppConfig.initialPageName = null;
-    AppConfig.defaultTransition = null;
-    AppConfig.defaultTransitionCurve = null;
+    AppConfig.defaultTransitionsBuilder = null;
     AppConfig.defaultTransitionDuration = null;
     AppConfig.shouldPreventDuplicates = kDebugPreventDuplicates;
     global.routeObserver = null;
@@ -158,22 +155,13 @@ abstract class Saut {
   ///
   /// Used build the route's primary contents.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
+  /// Used to build the route's transition animation.
   ///
   /// * [transitionDuration]
   ///
   /// The duration the transition going forwards.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
   ///
   /// * [opaque]
   ///
@@ -186,20 +174,12 @@ abstract class Saut {
   /// * [debugPreventDuplicates]
   ///
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   void define({
     required Enum page,
     Map<String, Object>? debugRequiredArguments,
     required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? transitionDuration,
-    Curve? curve,
     bool opaque = true,
     bool fullscreenDialog = false,
     bool? debugPreventDuplicates,
@@ -211,10 +191,8 @@ abstract class Saut {
       () => RouteConfig(
         debugRequiredArguments: debugRequiredArguments,
         pageBuilder: pageBuilder,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+        transitionsBuilder: transitionsBuilder,
         transitionDuration: transitionDuration,
-        curve: curve,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
         debugPreventDuplicates: debugPreventDuplicates,
@@ -379,18 +357,9 @@ abstract class Saut {
   ///
   /// Used to provide existing blocs to a new page.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -412,12 +381,6 @@ abstract class Saut {
   /// and the [Future]'s value is the [back] method's `result` parameter.
   ///
   /// The `T` type argument is the type of the return value of the route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   static Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
@@ -425,9 +388,7 @@ abstract class Saut {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -438,9 +399,7 @@ abstract class Saut {
         arguments: arguments,
         blocValue: blocValue,
         blocProviders: blocProviders,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -464,18 +423,9 @@ abstract class Saut {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -491,12 +441,6 @@ abstract class Saut {
   ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   static Future<T?>? replaceWithPage<T extends Object?,
           B extends BlocBase<Object?>, TO extends Object?>(
@@ -506,9 +450,7 @@ abstract class Saut {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -519,9 +461,7 @@ abstract class Saut {
         blocValue: blocValue,
         blocProviders: blocProviders,
         result: result,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -544,18 +484,9 @@ abstract class Saut {
   ///
   /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -570,12 +501,6 @@ abstract class Saut {
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
   /// The T type argument is the type of the return value of the new route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   static Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -584,9 +509,7 @@ abstract class Saut {
     RoutePredicate? routePredicate,
     PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -596,9 +519,7 @@ abstract class Saut {
             routePredicate: routePredicate,
             pagePredicate: pagePredicate,
             arguments: arguments,
-            transition: transition,
-            customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-            curve: curve,
+            transitionsBuilder: transitionsBuilder,
             duration: duration,
             opaque: opaque,
             fullscreenDialog: fullscreenDialog,

@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'transition_builder_delegate.dart';
-
 class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
   SautPageRouteBuilder({
     RouteSettings? settings,
     required RoutePageBuilder pageBuilder,
-    required this.transitionBuilderDelegate,
+    required this.pageTransitionsBuilder,
     required Duration transitionDuration,
-    this.curve,
     required bool opaque,
     required bool fullscreenDialog,
     required this.createdFromSautPage,
@@ -21,8 +18,7 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
           fullscreenDialog: fullscreenDialog,
         );
 
-  final TransitionBuilderDelegate transitionBuilderDelegate;
-  final Curve? curve;
+  final PageTransitionsBuilder pageTransitionsBuilder;
   final bool createdFromSautPage;
 
   @override
@@ -32,12 +28,11 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
     Animation<double> secondaryAnimation,
     Widget child,
   ) {
-    return transitionBuilderDelegate.buildTransition(
+    return pageTransitionsBuilder.buildTransitions(
       this,
       context,
       animation,
       secondaryAnimation,
-      curve,
       child,
     );
   }

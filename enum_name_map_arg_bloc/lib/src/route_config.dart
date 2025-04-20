@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'constants.dart';
-import 'route_transition.dart';
-import 'transition_builder_delegate.dart';
 
 class RouteConfig {
   /// The key is the name of argument.
@@ -37,10 +35,8 @@ class RouteConfig {
     Widget page,
   )? routeBuilder;
   final Widget Function(Map<String, dynamic>? arguments) pageBuilder;
-  final RouteTransition? transition;
-  final TransitionBuilderDelegate? customTransitionBuilderDelegate;
+  final PageTransitionsBuilder? transitionsBuilder;
   final Duration? transitionDuration;
-  final Curve? curve;
   final bool opaque;
   final bool fullscreenDialog;
 
@@ -49,17 +45,12 @@ class RouteConfig {
 
   bool get useRouteBuilder => routeBuilder != null;
 
-  TransitionBuilderDelegate? get effectiveTransitionBuilderDelegate =>
-      customTransitionBuilderDelegate ?? transition?.builder;
-
   RouteConfig({
     this.debugRequiredArguments,
     this.routeBuilder,
     required this.pageBuilder,
-    this.transition,
-    this.customTransitionBuilderDelegate,
+    this.transitionsBuilder,
     this.transitionDuration,
-    this.curve,
     this.opaque = kOpaque,
     this.fullscreenDialog = kFullscreenDialog,
     this.debugPreventDuplicates,
@@ -69,10 +60,8 @@ class RouteConfig {
         );
 
   RouteConfig copyWith({
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? transitionDuration,
-    Curve? curve,
     bool? opaque,
     bool? fullscreenDialog,
     bool? debugPreventDuplicates,
@@ -81,11 +70,8 @@ class RouteConfig {
       debugRequiredArguments: debugRequiredArguments,
       routeBuilder: routeBuilder,
       pageBuilder: pageBuilder,
-      transition: transition ?? this.transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate ??
-          this.customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder ?? this.transitionsBuilder,
       transitionDuration: transitionDuration ?? this.transitionDuration,
-      curve: curve ?? this.curve,
       opaque: opaque ?? this.opaque,
       fullscreenDialog: fullscreenDialog ?? this.fullscreenDialog,
       debugPreventDuplicates:

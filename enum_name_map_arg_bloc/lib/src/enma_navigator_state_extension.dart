@@ -6,13 +6,11 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
     show BlocProviderSingleChildWidget;
 
 import 'app_config.dart';
+import 'global.dart' as global;
 import 'internal.dart';
 import 'route_config.dart';
-import 'route_transition.dart';
-import 'global.dart' as global;
 import 'saut_page.dart';
 import 'saut_router_delegate.dart';
-import 'transition_builder_delegate.dart';
 
 extension EnmaNavigatorStateExtension on NavigatorState {
   /// Remove all the pages with new pages
@@ -37,18 +35,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///
   /// Used to provide existing blocs to a new page.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -70,21 +59,13 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   /// and the [Future]'s value is the [back] method's `result` parameter.
   ///
   /// The `T` type argument is the type of the return value of the route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -96,9 +77,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
         arguments: arguments,
         blocValue: blocValue,
         blocProviders: blocProviders,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -111,9 +90,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       arguments: arguments,
       blocValue: blocValue,
       blocProviders: blocProviders,
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-      curve: curve,
+      transitionsBuilder: transitionsBuilder,
       duration: duration,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
@@ -138,18 +115,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -165,12 +133,6 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
       TO extends Object?>(
@@ -179,9 +141,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -193,9 +153,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
         blocValue: blocValue,
         blocProviders: blocProviders,
         result: result,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -208,9 +166,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       blocValue: blocValue,
       blocProviders: blocProviders,
       result: result,
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-      curve: curve,
+      transitionsBuilder: transitionsBuilder,
       duration: duration,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
@@ -234,18 +190,9 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   ///
   /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -260,12 +207,6 @@ extension EnmaNavigatorStateExtension on NavigatorState {
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
   /// The T type argument is the type of the return value of the new route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -273,9 +214,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
     RoutePredicate? routePredicate,
     PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -285,9 +224,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
         page,
         predicate: pagePredicate,
         arguments: arguments,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -298,9 +235,7 @@ extension EnmaNavigatorStateExtension on NavigatorState {
       page,
       predicate: routePredicate,
       arguments: arguments,
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-      curve: curve,
+      transitionsBuilder: transitionsBuilder,
       duration: duration,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
@@ -358,18 +293,9 @@ extension on NavigatorState {
   ///
   /// Used to provide existing blocs to a new page.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -391,21 +317,13 @@ extension on NavigatorState {
   /// and the [Future]'s value is the [back] method's `result` parameter.
   ///
   /// The `T` type argument is the type of the return value of the route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> _toPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -414,10 +332,8 @@ extension on NavigatorState {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
@@ -471,18 +387,9 @@ extension on NavigatorState {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -498,12 +405,6 @@ extension on NavigatorState {
   ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>? _replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
       TO extends Object?>(
@@ -512,9 +413,7 @@ extension on NavigatorState {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -522,10 +421,8 @@ extension on NavigatorState {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
     );
@@ -554,18 +451,9 @@ extension on NavigatorState {
   ///
   /// To remove all the routes the replaced route, simply let [predicate] null.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -580,21 +468,13 @@ extension on NavigatorState {
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
   /// The T type argument is the type of the return value of the new route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>?
       _replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -602,10 +482,8 @@ extension on NavigatorState {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
     );
@@ -705,18 +583,9 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   ///
   /// Used to provide existing blocs to a new page.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -738,21 +607,13 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// and the [Future]'s value is the [back] method's `result` parameter.
   ///
   /// The `T` type argument is the type of the return value of the route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -761,10 +622,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
@@ -820,18 +679,9 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -847,12 +697,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
       TO extends Object?>(
@@ -861,9 +705,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -871,10 +713,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
     );
@@ -904,18 +744,9 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   ///
   /// To remove all the pages the replaced page, simply let [predicate] null.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -930,21 +761,13 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
   /// The T type argument is the type of the return value of the new route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     PagePredicate? predicate,
     Map<String, dynamic>? arguments,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -952,10 +775,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     assert(debugAssertRouteTypeIsValid(page));
 
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transition: transition,
-      customTransitionBuilderDelegate: customTransitionBuilderDelegate,
+      transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
-      curve: curve,
       opaque: opaque,
       fullscreenDialog: fullscreenDialog,
     );

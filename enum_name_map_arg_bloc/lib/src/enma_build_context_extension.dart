@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: implementation_imports
 import 'package:flutter_bloc/src/bloc_provider.dart'
@@ -6,9 +6,7 @@ import 'package:flutter_bloc/src/bloc_provider.dart'
 
 import 'enma_navigator_state_extension.dart';
 import 'internal.dart';
-import 'route_transition.dart';
 import 'saut_page.dart';
-import 'transition_builder_delegate.dart';
 
 extension EnmaBuildContextExtension on BuildContext {
   /// Remove all the pages with new pages
@@ -29,18 +27,9 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// Used to provide existing blocs to a new page.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -62,21 +51,13 @@ extension EnmaBuildContextExtension on BuildContext {
   /// and the [Future]'s value is the [back] method's `result` parameter.
   ///
   /// The `T` type argument is the type of the return value of the route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -87,9 +68,7 @@ extension EnmaBuildContextExtension on BuildContext {
         arguments: arguments,
         blocValue: blocValue,
         blocProviders: blocProviders,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -113,18 +92,9 @@ extension EnmaBuildContextExtension on BuildContext {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -140,12 +110,6 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>,
           TO extends Object?>(
@@ -154,9 +118,7 @@ extension EnmaBuildContextExtension on BuildContext {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -167,9 +129,7 @@ extension EnmaBuildContextExtension on BuildContext {
         blocValue: blocValue,
         blocProviders: blocProviders,
         result: result,
-        transition: transition,
-        customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-        curve: curve,
+        transitionsBuilder: transitionsBuilder,
         duration: duration,
         opaque: opaque,
         fullscreenDialog: fullscreenDialog,
@@ -192,18 +152,9 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
-  /// * [transition]
+  /// * [transitionsBuilder]
   ///
-  /// Used to build the route's transitions.
-  ///
-  /// * [customTransitionBuilderDelegate]
-  ///
-  /// Used to build your own custom route's transitions.
-  ///
-  /// * [curve]
-  ///
-  /// An parametric animation easing curve, i.e. a mapping of the unit interval to
-  /// the unit interval.
+  /// Used to build the route's transition animation.
   ///
   /// * [duration]
   ///
@@ -218,12 +169,6 @@ extension EnmaBuildContextExtension on BuildContext {
   /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
   ///
   /// The T type argument is the type of the return value of the new route.
-  ///
-  /// See also:
-  ///
-  ///  * [Curve], the interface implemented by the constants available from the
-  ///    [Curves] class.
-  ///  * [Curves], a collection of common animation easing curves.
   @optionalTypeArgs
   Future<T?>?
       replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -231,9 +176,7 @@ extension EnmaBuildContextExtension on BuildContext {
     RoutePredicate? routePredicate,
     PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
-    RouteTransition? transition,
-    TransitionBuilderDelegate? customTransitionBuilderDelegate,
-    Curve? curve,
+    PageTransitionsBuilder? transitionsBuilder,
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
@@ -243,9 +186,7 @@ extension EnmaBuildContextExtension on BuildContext {
             routePredicate: routePredicate,
             pagePredicate: pagePredicate,
             arguments: arguments,
-            transition: transition,
-            customTransitionBuilderDelegate: customTransitionBuilderDelegate,
-            curve: curve,
+            transitionsBuilder: transitionsBuilder,
             duration: duration,
             opaque: opaque,
             fullscreenDialog: fullscreenDialog,
