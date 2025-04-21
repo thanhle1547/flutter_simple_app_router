@@ -1,24 +1,39 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
+class SautPageRouteBuilder<T> extends PageRoute<T> {
   SautPageRouteBuilder({
     RouteSettings? settings,
-    required RoutePageBuilder pageBuilder,
+    required this.pageBuilder,
     required this.pageTransitionsBuilder,
-    required Duration transitionDuration,
-    required bool opaque,
+    required this.transitionDuration,
+    required this.opaque,
     required bool fullscreenDialog,
     required this.createdFromSautPage,
   }) : super(
           settings: settings,
-          pageBuilder: pageBuilder,
-          transitionDuration: transitionDuration,
-          opaque: opaque,
           fullscreenDialog: fullscreenDialog,
         );
 
+  final RoutePageBuilder pageBuilder;
+
+  @override
+  final Duration transitionDuration;
+
   final PageTransitionsBuilder pageTransitionsBuilder;
+
+  @override
+  final bool opaque;
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  bool get maintainState => true;
+
   final bool createdFromSautPage;
 
   @override
@@ -64,7 +79,7 @@ class SautPageRouteBuilder<T> extends PageRouteBuilder<T> {
     return Semantics(
       scopesRoute: true,
       explicitChildNodes: true,
-      child: super.buildPage(context, animation, secondaryAnimation),
+      child: pageBuilder(context, animation, secondaryAnimation),
     );
   }
 }

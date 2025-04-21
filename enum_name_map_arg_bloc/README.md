@@ -463,7 +463,7 @@ Ngược lại, bạn cần gọi hàm đã được dùng để truyền vào t
       context, 
       AppPages.Example2,
       predicate: (Route<dynamic> route) {
-        if (route is PageRouteBuilder)
+        if (route is PageRoute)
           return route.settings.name == name;
 
         return false;

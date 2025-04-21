@@ -44,7 +44,7 @@ Route<T> createRoute<T>({
   );
 }
 
-PageRouteBuilder<T> _createSautPageRoute<T>({
+PageRoute<T> _createSautPageRoute<T>({
   required PageBuilder pageBuilder,
   required RouteSettings settings,
   PageTransitionsBuilder? transitionsBuilder,

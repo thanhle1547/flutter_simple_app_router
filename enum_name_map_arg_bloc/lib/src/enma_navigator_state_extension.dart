@@ -516,7 +516,7 @@ extension on NavigatorState {
 
         String? routeName;
 
-        if (route is MaterialPageRoute || route is PageRouteBuilder) {
+        if (route is MaterialPageRoute || route is PageRoute) {
           routeName = route.settings.name;
         }
 
