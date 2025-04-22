@@ -24,5 +24,8 @@ abstract class SautRouteTransition {
   /// Zooms and fades a new page in, zooming out the previous page.
   static const PageTransitionsBuilder zoom = ZoomPageTransitionsBuilder();
 
+  /// A horizontal page transition that matches native iOS page transitions.
+  static const PageTransitionsBuilder cupertino = CupertinoPageTransitionsBuilder();
+
   static const PageTransitionsBuilder none = NoTransition();
 }
