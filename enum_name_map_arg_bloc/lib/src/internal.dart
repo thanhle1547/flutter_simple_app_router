@@ -55,11 +55,7 @@ PageRoute<T> _createSautPageRoute<T>({
 }) =>
     SautPageRouteBuilder<T>(
       settings: settings,
-      pageBuilder: (_, __, ___) => Semantics(
-        scopesRoute: true,
-        explicitChildNodes: true,
-        child: pageBuilder(),
-      ),
+      pageBuilder: (_, __, ___) => pageBuilder(),
       pageTransitionsBuilder: transitionsBuilder ??
           AppConfig.defaultTransitionsBuilder ??
           kPageTransitionsBuilder,
