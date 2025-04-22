@@ -514,11 +514,7 @@ extension on NavigatorState {
   void _backToPageName(String name) => popUntil((route) {
         if (route is DialogRoute) return false;
 
-        String? routeName;
-
-        if (route is MaterialPageRoute || route is PageRoute) {
-          routeName = route.settings.name;
-        }
+        final String? routeName = route.settings.name;
 
         return routeName == name ||
             (AppConfig.initialPageName != null &&
