@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SautPageRouteBuilder<T> extends PageRoute<T> {
-  SautPageRouteBuilder({
+abstract class AbstractSautPageRouteBuilder<T> extends PageRoute<T> {
+  AbstractSautPageRouteBuilder({
     RouteSettings? settings,
     required this.pageBuilder,
     required this.pageTransitionsBuilder,
-    required this.transitionDuration,
-    required this.opaque,
     required bool fullscreenDialog,
     required this.createdFromSautPage,
   }) : super(
@@ -17,40 +15,9 @@ class SautPageRouteBuilder<T> extends PageRoute<T> {
 
   final RoutePageBuilder pageBuilder;
 
-  @override
-  final Duration transitionDuration;
-
   final PageTransitionsBuilder pageTransitionsBuilder;
 
-  @override
-  final bool opaque;
-
-  @override
-  Color? get barrierColor => null;
-
-  @override
-  String? get barrierLabel => null;
-
-  @override
-  bool get maintainState => true;
-
   final bool createdFromSautPage;
-
-  @override
-  Widget buildTransitions(
-    BuildContext context,
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-    Widget child,
-  ) {
-    return pageTransitionsBuilder.buildTransitions(
-      this,
-      context,
-      animation,
-      secondaryAnimation,
-      child,
-    );
-  }
 
   @override
   bool canTransitionFrom(TransitionRoute<dynamic> previousRoute) {
@@ -73,6 +40,55 @@ class SautPageRouteBuilder<T> extends PageRoute<T> {
 
   @override
   String get debugLabel => '${super.debugLabel}(${settings.name})';
+
+  @override
+  Widget buildTransitions(
+    BuildContext context,
+    Animation<double> animation,
+    Animation<double> secondaryAnimation,
+    Widget child,
+  ) {
+    return pageTransitionsBuilder.buildTransitions(
+      this,
+      context,
+      animation,
+      secondaryAnimation,
+      child,
+    );
+  }
+}
+
+class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
+  SautPageRouteBuilder({
+    RouteSettings? settings,
+    required RoutePageBuilder pageBuilder,
+    required PageTransitionsBuilder pageTransitionsBuilder,
+    required this.transitionDuration,
+    required this.opaque,
+    required bool fullscreenDialog,
+    required bool createdFromSautPage,
+  }) : super(
+          settings: settings,
+          pageBuilder: pageBuilder,
+          pageTransitionsBuilder: pageTransitionsBuilder,
+          fullscreenDialog: fullscreenDialog,
+          createdFromSautPage: createdFromSautPage,
+        );
+
+  @override
+  final Duration transitionDuration;
+
+  @override
+  final bool opaque;
+
+  @override
+  Color? get barrierColor => null;
+
+  @override
+  String? get barrierLabel => null;
+
+  @override
+  bool get maintainState => true;
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {

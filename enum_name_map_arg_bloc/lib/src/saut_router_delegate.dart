@@ -241,7 +241,7 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
   /// The [Navigator] pushed `route`.
   @override
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route is SautPageRouteBuilder && route.createdFromSautPage) {
+    if (route is AbstractSautPageRouteBuilder && route.createdFromSautPage) {
       return;
     }
 
@@ -288,7 +288,7 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
   /// The [Navigator] popped `route`.
   @override
   void didPop(Route<dynamic> route, Route<dynamic>? previousRoute) {
-    if (route is SautPageRouteBuilder && route.createdFromSautPage) {
+    if (route is AbstractSautPageRouteBuilder && route.createdFromSautPage) {
       return;
     }
 
