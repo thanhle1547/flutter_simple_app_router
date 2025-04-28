@@ -1,3 +1,23 @@
+## 0.11.0
+
+* Suppress transition between routes
+
+  - Suppress previous route transition if current route is fullscreenDialog
+
+  - Suppress outgoing route transition if the next route is a fullscreen dialog
+
+* fix: `Navigator.of(context).backToPageName()` not working with a route that extends `PageRoute`, `CupertinoPageRoute`, `DialogRoute`
+
+* **add** cupertino route transition
+
+* breaking:
+
+  - **replace** `transition`, `customTransitionBuilderDelegate` and `curve` with `transitionsBuilder`
+
+  - **remove** `TransitionBuilderDelegate`
+
+  - **replace** `RouteTransition` with `SautRouteTransition`
+
 ## 0.10.3
 
 * fix: null check in assertion before call initRouterDelegate
