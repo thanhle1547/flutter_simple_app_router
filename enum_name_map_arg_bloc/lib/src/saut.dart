@@ -346,16 +346,17 @@ abstract class Saut {
   ///
   /// See also:
   /// https://docs.flutter.dev/cookbook/navigation/navigate-with-arguments#2-create-a-widget-that-extracts-the-arguments
-  static Object? extractArguments(BuildContext context) =>
-      context.extractArguments();
+  static Object? extractArguments(BuildContext context) {
+    return context.extractArguments();
+  }
 
   /// * [blocValue]
   ///
-  /// Used to provide an existing bloc to a new page.
+  /// Used to provide an existing bloc to the new page.
   ///
   /// * [blocProviders]
   ///
-  /// Used to provide existing blocs to a new page.
+  /// Used to provide existing blocs to the new page.
   ///
   /// * [transitionsBuilder]
   ///
@@ -393,28 +394,29 @@ abstract class Saut {
     bool? opaque,
     bool? fullscreenDialog,
     bool? debugPreventDuplicates,
-  }) =>
-      (currentNavigator ?? Navigator.of(context)).toPage(
-        page,
-        arguments: arguments,
-        blocValue: blocValue,
-        blocProviders: blocProviders,
-        transitionsBuilder: transitionsBuilder,
-        duration: duration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
-        debugPreventDuplicates: debugPreventDuplicates,
-      );
+  }) {
+    return context.toPage(
+      page,
+      arguments: arguments,
+      blocValue: blocValue,
+      blocProviders: blocProviders,
+      transitionsBuilder: transitionsBuilder,
+      duration: duration,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+      debugPreventDuplicates: debugPreventDuplicates,
+    );
+  }
 
   /// * [blocValue]
   ///
-  /// Used to provide an existing bloc to a new page.
+  /// Used to provide an existing bloc to the new page.
   ///
   /// __Warning__: `SAUT` won't automatically handle closing the bloc.
   ///
   /// * [blocProviders]
   ///
-  /// Used to provide existing blocs to a new page.
+  /// Used to provide existing blocs to the new page.
   ///
   /// * [result]
   ///
@@ -442,8 +444,7 @@ abstract class Saut {
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
-  static Future<T?>? replaceWithPage<T extends Object?,
-          B extends BlocBase<Object?>, TO extends Object?>(
+  static Future<T?>? replaceWithPage<T extends Object?, B extends BlocBase<Object?>, TO extends Object?>(
     BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
@@ -454,25 +455,32 @@ abstract class Saut {
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
-  }) =>
-      (currentNavigator ?? Navigator.of(context)).replaceWithPage(
-        page,
-        arguments: arguments,
-        blocValue: blocValue,
-        blocProviders: blocProviders,
-        result: result,
-        transitionsBuilder: transitionsBuilder,
-        duration: duration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
-      );
+  }) {
+    return context.replaceWithPage(
+      page,
+      arguments: arguments,
+      blocValue: blocValue,
+      blocProviders: blocProviders,
+      result: result,
+      transitionsBuilder: transitionsBuilder,
+      duration: duration,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+    );
+  }
 
   /// [routePredicate]
+  ///
+  /// The predicate may be applied to the same route more than once if
+  /// [Route.willHandlePopInternally] is true.
   ///
   /// To remove routes until a route with a certain name,
   /// use the [RoutePredicate] returned from [Saut.getModalRoutePredicate].
   ///
-  /// To remove all the routes the replaced route, simply let [routePredicate] null.
+  /// To remove all the routes the replaced route,
+  /// simply let [routePredicate] null,
+  /// or use a [RoutePredicate] that always returns false
+  /// (e.g. `(Route<dynamic> route) => false`).
   ///
   /// [pagePredicate]
   ///
@@ -502,8 +510,7 @@ abstract class Saut {
   ///
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
-  static Future<T?>?
-      replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
+  static Future<T?>? replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
     BuildContext context,
     Enum page, {
     RoutePredicate? routePredicate,
@@ -513,17 +520,18 @@ abstract class Saut {
     Duration? duration,
     bool? opaque,
     bool? fullscreenDialog,
-  }) =>
-          (currentNavigator ?? Navigator.of(context)).replaceAllWithPage(
-            page,
-            routePredicate: routePredicate,
-            pagePredicate: pagePredicate,
-            arguments: arguments,
-            transitionsBuilder: transitionsBuilder,
-            duration: duration,
-            opaque: opaque,
-            fullscreenDialog: fullscreenDialog,
-          );
+  }) {
+    return context.replaceAllWithPage(
+      page,
+      routePredicate: routePredicate,
+      pagePredicate: pagePredicate,
+      arguments: arguments,
+      transitionsBuilder: transitionsBuilder,
+      duration: duration,
+      opaque: opaque,
+      fullscreenDialog: fullscreenDialog,
+    );
+  }
 
   /// Returns a predicate that's true if the route has the specified name and if
   /// popping the route will not yield the same route
@@ -560,24 +568,29 @@ abstract class Saut {
   static void back<T extends Object?>(
     BuildContext context, {
     T? result,
-  }) =>
-      (currentNavigator ?? Navigator.of(context)).back(result: result);
+  }) {
+    context.back(result: result);
+  }
 
   /// Calls [back] repeatedly until found the page with a certain name.
-  static void backToPageName(BuildContext context, String name) =>
-      (currentNavigator ?? Navigator.of(context)).backToPageName(name);
+  static void backToPageName(BuildContext context, String name) {
+    context.backToPageName(name);
+  }
 
   /// Calls [back] repeatedly until found the page.
-  static void backToPage(BuildContext context, Enum page) =>
-      backToPageName(context, effectiveRouteNameBuilder(page));
+  static void backToPage(BuildContext context, Enum page) {
+    context.backToPage(page);
+  }
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  static Route? getCurrentRoute(BuildContext context) =>
-      (currentNavigator ?? Navigator.of(context)).getCurrentRoute();
+  static Route? getCurrentRoute(BuildContext context) {
+    return context.getCurrentRoute();
+  }
 
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
-  static String? getCurrentRouteName(BuildContext context) =>
-      getCurrentRoute(context)!.settings.name;
+  static String? getCurrentRouteName(BuildContext context) {
+    return context.getCurrentRouteName();
+  }
 }
