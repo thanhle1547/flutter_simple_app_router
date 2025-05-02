@@ -1,7 +1,7 @@
 library enum_name_map_arg_bloc;
 
 export 'src/enma_build_context_extension.dart';
-export 'src/enma_navigator_state_extension.dart';
+export 'src/enma_saut_router_delegate_extension.dart';
 export 'src/route_config.dart' show RouteConfig;
 export 'src/route_transition.dart';
 export 'src/saut.dart';
