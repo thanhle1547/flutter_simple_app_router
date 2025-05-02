@@ -17,11 +17,7 @@ extension EnmaBuildContextExtension on BuildContext {
   void setPageStack(Object stackName, Map<String, dynamic>? arguments) {
     assert(debugAssertRouterDelegateExist());
 
-    if (AppConfig.stackedPages[stackName] == null) {
-      throw StateError("Stack name: $stackName not found");
-    }
-
-    global.currentRouterDelegate._setPageStack(
+    global.currentRouterDelegate.setPageStack(
       AppConfig.stackedPages[stackName]!,
       arguments,
     );
