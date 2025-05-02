@@ -91,7 +91,7 @@ extension EnmaBuildContextExtension on BuildContext {
       );
     }
 
-    final navigator = global.currentNavigatorState ?? Navigator.of(this);
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     return navigator._toPage(
       page,
@@ -270,7 +270,7 @@ extension EnmaBuildContextExtension on BuildContext {
       global.currentRouterDelegate.back(result: result);
     }
 
-    final navigator = global.currentNavigatorState ?? Navigator.of(this);
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     navigator.pop<T>(result);
   }
@@ -281,7 +281,7 @@ extension EnmaBuildContextExtension on BuildContext {
       global.currentRouterDelegate.backToPageName(name);
     }
 
-    final navigator = global.currentNavigatorState ?? Navigator.of(this);
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     navigator.popUntil((route) {
       if (route is DialogRoute) return false;
@@ -307,7 +307,7 @@ extension EnmaBuildContextExtension on BuildContext {
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
   Route? getCurrentRoute() {
-    final navigator = global.currentNavigatorState ?? Navigator.of(this);
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     return navigator._getCurrentRoute();
   }
@@ -315,7 +315,7 @@ extension EnmaBuildContextExtension on BuildContext {
   /// Trick explained here: https://github.com/flutter/flutter/issues/20451
   /// Note `ModalRoute.of(context).settings.name` doesn't always work.
   String? getCurrentRouteName() {
-    final navigator = global.currentNavigatorState ?? Navigator.of(this);
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     return navigator._getCurrentRouteName();
   }
