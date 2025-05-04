@@ -303,9 +303,9 @@ abstract class Saut {
           arguments ?? {},
         );
       } else {
-        global.currentRouterDelegate.toPage(
-          initialPage,
-          arguments: arguments,
+        global.currentRouterDelegate.clearAndAppendPages(
+          [initialPage],
+          arguments,
         );
       }
     }

@@ -19,26 +19,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       throw StateError("Stack name: $stackName not found");
     }
 
-    _setPageStack(AppConfig.stackedPages[stackName]!, arguments);
-  }
-
-  void _setPageStack(
-    List<Enum> pageNames,
-    Map<String, dynamic>? arguments,
-  ) {
-    // ignore: invalid_use_of_protected_member
-    setPages(pageNames.map((e) {
-      final RouteConfig routeConfig = getRouteConfig(e);
-
-      return SautPage(
-        // ignore: invalid_use_of_protected_member
-        key: getExistingPageKey(e) ?? SautPageKey(e),
-        name: effectiveRouteNameBuilder(e),
-        pageBuilder: getPageBuilder(routeConfig, arguments),
-        arguments: arguments,
-        routeConfig: routeConfig,
-      );
-    }));
+    clearAndAppendPages(AppConfig.stackedPages[stackName]!, arguments);
   }
 
   /// * [blocValue]
@@ -75,6 +56,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// The `T` type argument is the type of the return value of the route.
   @optionalTypeArgs
   Future<T?> toPage<T extends Object?, B extends BlocBase<Object?>>(
+    BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
@@ -112,6 +94,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
+      context: context,
       name: name,
       pageBuilder: resolvePageBuilderWithBloc(
         pageBuilder: getPageBuilder(routeConfig, arguments),
@@ -165,6 +148,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
   Future<T?> replaceWithPage<T extends Object?, B extends BlocBase<Object?>, TO extends Object?>(
+    BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
@@ -186,6 +170,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
+      context: context,
       name: effectiveRouteNameBuilder(page),
       pageBuilder: resolvePageBuilderWithBloc(
         pageBuilder: getPageBuilder(routeConfig, arguments),
@@ -228,6 +213,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   Future<T?> replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
+    BuildContext context,
     Enum page, {
     PagePredicate? predicate,
     Map<String, dynamic>? arguments,
@@ -247,6 +233,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
+      context: context,
       name: effectiveRouteNameBuilder(page),
       pageBuilder: getPageBuilder(routeConfig, arguments),
       arguments: arguments,
@@ -285,4 +272,26 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   }
 
   String? getCurrentPageName() => lastPageName;
+}
+
+extension InternalSautRouterDelegateExtension on SautRouterDelegate {
+  void clearAndAppendPages(
+    List<Enum> pageNames,
+    Map<String, dynamic>? arguments,
+  ) {
+    // ignore: invalid_use_of_protected_member
+    setPages(pageNames.map((e) {
+      final RouteConfig routeConfig = getRouteConfig(e);
+
+      return SautPage(
+        // ignore: invalid_use_of_protected_member
+        key: getExistingPageKey(e) ?? SautPageKey(e),
+        context: null,
+        name: effectiveRouteNameBuilder(e),
+        pageBuilder: getPageBuilder(routeConfig, arguments),
+        arguments: arguments,
+        routeConfig: routeConfig,
+      );
+    }));
+  }
 }

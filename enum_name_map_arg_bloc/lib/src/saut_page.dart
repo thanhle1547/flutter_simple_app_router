@@ -16,6 +16,7 @@ class SautPageKey<T> extends UniqueKey {
 class SautPage<T extends Object?> extends Page<T> {
   SautPage({
     required LocalKey key,
+    required this.context,
     required this.pageBuilder,
     String? name,
     Map<String, dynamic>? arguments,
@@ -28,6 +29,7 @@ class SautPage<T extends Object?> extends Page<T> {
           restorationId: name,
         );
 
+  final BuildContext? context;
   final Widget Function() pageBuilder;
   final RouteConfig routeConfig;
   final Completer<T?> _popCompleter;
@@ -37,7 +39,7 @@ class SautPage<T extends Object?> extends Page<T> {
   @override
   Route<T> createRoute(BuildContext context) {
     return router.createRoute<T>(
-      pageContext: context,
+      context: this.context,
       pageBuilder: pageBuilder,
       config: routeConfig,
       settings: this,

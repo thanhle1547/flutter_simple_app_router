@@ -75,6 +75,7 @@ extension EnmaBuildContextExtension on BuildContext {
   }) {
     if (global.useRouter) {
       return global.currentRouterDelegate.toPage(
+        this,
         page,
         arguments: arguments,
         blocValue: blocValue,
@@ -90,6 +91,7 @@ extension EnmaBuildContextExtension on BuildContext {
     final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
 
     return navigator._toPage(
+      this,
       page,
       arguments: arguments,
       blocValue: blocValue,
@@ -151,6 +153,7 @@ extension EnmaBuildContextExtension on BuildContext {
   }) {
     if (global.useRouter) {
       return global.currentRouterDelegate.replaceWithPage(
+        this,
         page,
         arguments: arguments,
         blocValue: blocValue,
@@ -166,6 +169,7 @@ extension EnmaBuildContextExtension on BuildContext {
     final navigator = global.currentNavigatorState ?? Navigator.of(this);
 
     return navigator._replaceWithPage(
+      this,
       page,
       arguments: arguments,
       blocValue: blocValue,
@@ -231,6 +235,7 @@ extension EnmaBuildContextExtension on BuildContext {
   }) {
     if (global.useRouter) {
       return global.currentRouterDelegate.replaceAllWithPage(
+        this,
         page,
         predicate: pagePredicate,
         arguments: arguments,
@@ -244,6 +249,7 @@ extension EnmaBuildContextExtension on BuildContext {
     final navigator = global.currentNavigatorState ?? Navigator.of(this);
 
     return navigator._replaceAllWithPage(
+      this,
       page,
       predicate: routePredicate,
       arguments: arguments,
@@ -352,6 +358,7 @@ extension on NavigatorState {
   /// The `T` type argument is the type of the return value of the route.
   @optionalTypeArgs
   Future<T?> _toPage<T extends Object?, B extends BlocBase<Object?>>(
+    BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
@@ -399,6 +406,7 @@ extension on NavigatorState {
           name: name,
           arguments: arguments,
         ),
+        context: context,
       ),
     );
   }
@@ -440,6 +448,7 @@ extension on NavigatorState {
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
   Future<T?> _replaceWithPage<T extends Object?, B extends BlocBase<Object?>, TO extends Object?>(
+    BuildContext context,
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
@@ -471,6 +480,7 @@ extension on NavigatorState {
           name: effectiveRouteNameBuilder(page),
           arguments: arguments,
         ),
+        context: context,
       ),
       result: result,
     );
@@ -508,6 +518,7 @@ extension on NavigatorState {
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   Future<T?> _replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
+    BuildContext context,
     Enum page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
@@ -533,6 +544,7 @@ extension on NavigatorState {
           name: effectiveRouteNameBuilder(page),
           arguments: arguments,
         ),
+        context: context,
       ),
       predicate ?? (Route<dynamic> _) => false,
     );
