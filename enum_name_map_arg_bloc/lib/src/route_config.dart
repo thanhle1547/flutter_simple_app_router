@@ -60,6 +60,13 @@ class RouteConfig {
         );
 
   RouteConfig copyWith({
+    Route<T> Function<T>(
+      BuildContext context,
+      RouteConfig resolvedConfig,
+      RouteSettings settings,
+      Widget page,
+    )? routeBuilder,
+    Widget Function(Map<String, dynamic>? arguments)? pageBuilder,
     PageTransitionsBuilder? transitionsBuilder,
     Duration? transitionDuration,
     bool? opaque,
@@ -68,8 +75,8 @@ class RouteConfig {
   }) {
     return RouteConfig(
       debugRequiredArguments: debugRequiredArguments,
-      routeBuilder: routeBuilder,
-      pageBuilder: pageBuilder,
+      routeBuilder: routeBuilder ?? this.routeBuilder,
+      pageBuilder: pageBuilder ?? this.pageBuilder,
       transitionsBuilder: transitionsBuilder ?? this.transitionsBuilder,
       transitionDuration: transitionDuration ?? this.transitionDuration,
       opaque: opaque ?? this.opaque,
