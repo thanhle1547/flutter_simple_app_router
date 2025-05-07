@@ -260,6 +260,35 @@ extension EnmaBuildContextExtension on BuildContext {
     );
   }
 
+  /// The [name], [page] parameters are used to
+  /// create [RouteSettings.name] and the page key.
+  Future<T?> toUnconfiguredPage<T extends Object?>({
+    required BuildContext context,
+    String? name,
+    Enum? page,
+    required RouteConfig routeConfig,
+  }) {
+    assert(name != null || page != null);
+
+    final SautPage<T> sautPage = SautPage(
+      key: SautPageKey(page ?? name),
+      context: context,
+      pageBuilder: () => routeConfig.pageBuilder(null),
+      name: name ?? effectiveRouteNameBuilder(page!),
+      routeConfig: routeConfig,
+    );
+
+    if (global.useRouter) {
+      return global.currentRouterDelegate.add<T>(sautPage);
+    }
+
+    final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
+
+    return navigator.push<T>(
+      sautPage.createRoute(context),
+    );
+  }
+
   /// The `T` type argument is the type of the return value of the popped route.
   ///
   /// The type of `result`, if provided,

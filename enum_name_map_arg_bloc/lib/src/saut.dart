@@ -558,6 +558,22 @@ abstract class Saut {
     };
   }
 
+  /// The [name], [page] parameters are used to
+  /// create [RouteSettings.name] and the page key.
+  static Future<T?> toUnconfiguredPage<T extends Object?>(
+    BuildContext context, {
+    String? name,
+    Enum? page,
+    required RouteConfig routeConfig,
+  }) {
+    return context.toUnconfiguredPage<T>(
+      context: context,
+      name: name,
+      page: page,
+      routeConfig: routeConfig,
+    );
+  }
+
   /// The `T` type argument is the type of the return value of the popped route.
   ///
   /// The type of `result`, if provided,

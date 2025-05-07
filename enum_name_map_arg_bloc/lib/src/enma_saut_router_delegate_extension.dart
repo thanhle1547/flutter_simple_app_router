@@ -294,4 +294,11 @@ extension InternalSautRouterDelegateExtension on SautRouterDelegate {
       );
     }));
   }
+
+  Future<T?> add<T extends Object?>(SautPage<T> page) {
+    // ignore: invalid_use_of_protected_member
+    addPage(page);
+
+    return page.completed;
+  }
 }
