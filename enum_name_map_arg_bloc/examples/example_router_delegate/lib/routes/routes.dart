@@ -47,7 +47,7 @@ final RouteConfig _postPublished = RouteConfig(
   ),
 );
 
-final RouteConfig _postTrending = RouteConfig(
+final RouteConfig postTrending = RouteConfig(
   routeBuilder: <Void>(
     BuildContext context,
     RouteConfig resolvedConfig,
@@ -119,6 +119,6 @@ final RouteConfig _postDetail = RouteConfig(
 final Map<Enum, RouteConfig> routes = {
   AppPages.Initial: _splash,
   AppPages.Post_Published: _postPublished,
-  AppPages.Post_Trending: _postTrending,
+  AppPages.Post_Trending: postTrending,
   AppPages.Post_Detail: _postDetail,
 };

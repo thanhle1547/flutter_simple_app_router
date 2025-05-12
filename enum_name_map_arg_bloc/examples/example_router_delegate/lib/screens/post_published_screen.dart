@@ -6,6 +6,7 @@ import 'package:example_router_delegate/cubits/post_published/post_published_sta
 import 'package:example_router_delegate/cubits/post_trending/post_trending_cubit.dart';
 import 'package:example_router_delegate/notification_controller.dart';
 import 'package:example_router_delegate/routes/app_pages.dart';
+import 'package:example_router_delegate/routes/routes.dart';
 import 'package:example_router_delegate/routes/stacked_pages.dart';
 import 'package:example_router_delegate/screens/post_trending_dialog.dart';
 import 'package:example_router_delegate/widget/favorite_button.dart';
@@ -69,6 +70,75 @@ class PostPublishedScreen extends StatelessWidget {
     Saut.setPageStack(AppPageStack.tredingPost, {
       'PostFavoritesCubit': context.read<PostFavoritesCubit>(),
     });
+  }
+
+  void _navigateToUnconfiguredTrendingPostDialog(BuildContext context) {
+    Saut.toUnconfiguredPage(
+      context,
+      routeConfig: RouteConfig(
+        routeBuilder: <Void>(
+          BuildContext context,
+          RouteConfig resolvedConfig,
+          RouteSettings settings,
+          Widget page,
+        ) {
+          return DialogRoute(
+            context: context,
+            builder: (_) => Dialog(
+              backgroundColor: Colors.blue.shade700,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(24)),
+              ),
+              child: page,
+            ),
+            settings: settings,
+          );
+        },
+        pageBuilder: (arguments) {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (_) => PostTrendingCubit(),
+              ),
+              BlocProvider.value(
+                value: context.read<PostFavoritesCubit>(),
+              ),
+            ],
+            child: const PostTrendingDialog(),
+          );
+        },
+        transitionsBuilder: SautRouteTransition.none,
+      ),
+      name: 'unconfigured-trending-post-dialog',
+    );
+  }
+
+  void _navigateToModifiedTrendingPostDialog(BuildContext context) {
+    Saut.toUnconfiguredPage(
+      context,
+      routeConfig: postTrending.copyWith(
+        routeBuilder: <Void>(
+          BuildContext context,
+          RouteConfig resolvedConfig,
+          RouteSettings settings,
+          Widget page,
+        ) {
+          return DialogRoute(
+            context: context,
+            builder: (_) => Dialog(
+              backgroundColor: Colors.amber.shade700, // Change the color
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.zero), // Remove BorderRadius
+              ),
+              child: page,
+            ),
+            settings: settings,
+          );
+        },
+        transitionsBuilder: SautRouteTransition.none,
+      ),
+      page: AppPageStack.tredingPost,
+    );
   }
 
   void _fabPressedHandler(BuildContext context) {
@@ -146,7 +216,9 @@ class PostPublishedScreen extends StatelessWidget {
             // Toggle one of the lines below to see
             // onPressed: () => _showTrendingPostDialog(context),
             // onPressed: () => _navigateToTrendingPostDialog(context),
-            onPressed: () => _setStackTrendingPost(context),
+            // onPressed: () => _setStackTrendingPost(context),
+            onPressed: () => _navigateToUnconfiguredTrendingPostDialog(context),
+            // onPressed: () => _navigateToModifiedTrendingPostDialog(context),
             icon: const Icon(Icons.trending_up_rounded),
           ),
         ],
