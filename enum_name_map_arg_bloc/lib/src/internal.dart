@@ -142,23 +142,6 @@ Never routeObserverIsRequired() {
   throw "[RouteObserver] from [$source] has not been initialized";
 }
 
-bool get _shouldCheckRouteType => AppConfig.routeTypes.isNotEmpty;
-
-bool debugAssertRouteTypeIsValid(Enum page) {
-  assert(() {
-    if (_shouldCheckRouteType &&
-        !AppConfig.routeTypes.contains(page.runtimeType)) {
-      throw ArgumentError(
-        "Route types did not contain type ${page.runtimeType} ($page)",
-      );
-    }
-
-    return true;
-  }());
-
-  return true;
-}
-
 String _defaultRouteNameBuilder(Enum page) => page.name;
 
 String Function(Enum page) get effectiveRouteNameBuilder =>

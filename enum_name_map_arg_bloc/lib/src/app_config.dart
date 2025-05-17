@@ -21,8 +21,6 @@ class AppConfig {
 
   static String Function(Enum page)? routeNameBuilder;
 
-  static List<Type> routeTypes = [];
-
   static Map<Enum, RouteConfig> routes = HashMap(
     equals: (key0, key1) => key0 == key1,
     hashCode: (key) => key.hashCode,

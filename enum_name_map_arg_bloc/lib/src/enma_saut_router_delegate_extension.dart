@@ -67,8 +67,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
@@ -159,8 +157,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
@@ -222,8 +218,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,

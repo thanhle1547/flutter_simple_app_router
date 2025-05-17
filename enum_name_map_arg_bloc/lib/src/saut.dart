@@ -58,7 +58,6 @@ abstract class Saut {
   ///    [Curves] class.
   ///  * [Curves], a collection of common animation easing curves.
   static void setDefaultConfig({
-    List<Type>? routeTypes,
     Map<Enum, RouteConfig>? routes,
     Map<Object, List<Enum>>? stackedPages,
     required Enum initialPage,
@@ -68,8 +67,6 @@ abstract class Saut {
     Curve? transitionCurve = Curves.easeOutQuad,
     bool debugPreventDuplicates = true,
   }) {
-    if (routeTypes != null) AppConfig.routeTypes = routeTypes;
-
     if (routes != null) {
       AppConfig.routes
         ..clear()
@@ -96,7 +93,6 @@ abstract class Saut {
   }
 
   static void reset() {
-    AppConfig.routeTypes.clear();
     AppConfig.routes.clear();
     AppConfig.stackedPages.clear();
     AppConfig.routeNameBuilder = null;
@@ -184,8 +180,6 @@ abstract class Saut {
     bool fullscreenDialog = false,
     bool? debugPreventDuplicates,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     AppConfig.routes.putIfAbsent(
       page,
       () => RouteConfig(

@@ -398,8 +398,6 @@ extension on NavigatorState {
     bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
@@ -488,8 +486,6 @@ extension on NavigatorState {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
@@ -556,8 +552,6 @@ extension on NavigatorState {
     bool? opaque,
     bool? fullscreenDialog,
   }) {
-    assert(debugAssertRouteTypeIsValid(page));
-
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
       transitionsBuilder: transitionsBuilder,
       transitionDuration: duration,
