@@ -175,7 +175,11 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
     for (var i = oldPages.length - 1; i != -1; i--) {
       if (test(oldPages[i])) {
-        _pages.removeAt(i);
+        final removed = _pages.removeAt(i);
+
+        if (removed is SautPage) {
+          removed.completeWith(null);
+        }
 
         _didPopCount++;
 
@@ -204,7 +208,11 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
       if (test(oldPages[i])) {
         return true;
       } else {
-        _pages.removeAt(i);
+        final removed = _pages.removeAt(i);
+
+        if (removed is SautPage) {
+          removed.completeWith(null);
+        }
 
         _didPopCount++;
 
