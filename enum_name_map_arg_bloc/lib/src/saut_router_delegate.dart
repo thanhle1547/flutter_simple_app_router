@@ -19,13 +19,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   final List<Page<dynamic>> _pages = [];
 
-  /// To optimize [_PagelessNavigatorObserver.didPush] method
-  late List<Page<dynamic>> _pagesFromSetMethod = const [];
-
   late final List<NavigatorObserver> _navigatorObservers;
-
-  final TransitionDelegate _transitionDelegate =
-      const DefaultTransitionDelegate<dynamic>();
 
   /// The number of requests from the operating system that
   /// the current route be popped.
@@ -40,7 +34,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     return Navigator(
       key: navigatorKey, // needed to enable Android system Back button
       observers: _navigatorObservers,
-      transitionDelegate: _transitionDelegate,
+      transitionDelegate: const DefaultTransitionDelegate<dynamic>(),
       pages: List.unmodifiable(_pages),
       onPopPage: _onPopPage,
     );
@@ -133,8 +127,6 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     _pages
       ..clear()
       ..addAll(newPages);
-
-    _pagesFromSetMethod = List.of(_pages);
 
     notifyListeners();
   }
@@ -251,19 +243,6 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
   void didPush(Route<dynamic> route, Route<dynamic>? previousRoute) {
     if (route is AbstractSautPageRouteBuilder && route.createdFromSautPage) {
       return;
-    }
-
-    final List<Page<dynamic>> pages = routerDelegate._pagesFromSetMethod;
-
-    if (pages.isNotEmpty) {
-      for (final Page page in routerDelegate._pages) {
-        if (page == route.settings) {
-          pages.remove(page);
-          return;
-        }
-
-        pages.remove(page);
-      }
     }
 
     if (route.settings is SautPage) {
