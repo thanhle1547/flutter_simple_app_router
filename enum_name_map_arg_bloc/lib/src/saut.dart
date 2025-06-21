@@ -291,17 +291,24 @@ abstract class Saut {
         navigatorObservers: navigatorObservers,
       );
 
+      final List<Enum>? pageNames;
       if (initialPageStackName != null) {
-        global.currentRouterDelegate.setPageStack(
-          initialPageStackName,
-          arguments ?? {},
-        );
+        final List<Enum>? initialPageNames = AppConfig.stackedPages[initialPageStackName];
+
+        if (initialPageNames == null) {
+          throw StateError("Stack name: $initialPageStackName not found");
+        }
+
+        pageNames = initialPageNames;
       } else {
-        global.currentRouterDelegate.clearAndAppendPages(
-          [initialPage],
-          arguments,
-        );
+        pageNames = [initialPage];
       }
+
+      global.currentRouterDelegate.clearAndAppendPages(
+        null,
+        pageNames,
+        arguments: arguments,
+      );
     }
 
     return global.currentRouterDelegate;
@@ -309,12 +316,13 @@ abstract class Saut {
 
   /// Remove all the pages with new pages
   static void setPageStack(
-    Object stackName,
+    BuildContext context,
+    Object stackName, {
     Map<String, dynamic>? arguments,
-  ) {
+  }) {
     assert(debugAssertRouterDelegateExist());
 
-    global.currentRouterDelegate.setPageStack(stackName, arguments);
+    global.currentRouterDelegate.setPageStack(context, stackName, arguments: arguments);
   }
 
   /// Create [RouteSettings] for [showDialog], [showAboutDialog],

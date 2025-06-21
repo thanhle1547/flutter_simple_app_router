@@ -14,12 +14,16 @@ import 'saut_page.dart';
 
 extension EnmaBuildContextExtension on BuildContext {
   /// Remove all the pages with new pages
-  void setPageStack(Object stackName, Map<String, dynamic>? arguments) {
+  void setPageStack(
+    Object stackName, {
+    Map<String, dynamic>? arguments,
+  }) {
     assert(debugAssertRouterDelegateExist());
 
     global.currentRouterDelegate.setPageStack(
+      this,
       AppConfig.stackedPages[stackName]!,
-      arguments,
+      arguments: arguments,
     );
   }
 

@@ -14,12 +14,20 @@ import 'saut_router_delegate.dart';
 
 extension SautRouterDelegateExtension on SautRouterDelegate {
   /// Remove all the pages with new pages
-  void setPageStack(Object stackName, Map<String, dynamic>? arguments) {
+  void setPageStack(
+    BuildContext context,
+    Object stackName, {
+    Map<String, dynamic>? arguments,
+  }) {
     if (AppConfig.stackedPages[stackName] == null) {
       throw StateError("Stack name: $stackName not found");
     }
 
-    clearAndAppendPages(AppConfig.stackedPages[stackName]!, arguments);
+    clearAndAppendPages(
+      context,
+      AppConfig.stackedPages[stackName]!,
+      arguments: arguments,
+    );
   }
 
   /// * [blocValue]
@@ -270,9 +278,10 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
 
 extension InternalSautRouterDelegateExtension on SautRouterDelegate {
   void clearAndAppendPages(
-    List<Enum> pageNames,
+    BuildContext? context,
+    List<Enum> pageNames, {
     Map<String, dynamic>? arguments,
-  ) {
+  }) {
     // ignore: invalid_use_of_protected_member
     setPages(pageNames.map((e) {
       final RouteConfig routeConfig = getRouteConfig(e);
@@ -280,7 +289,7 @@ extension InternalSautRouterDelegateExtension on SautRouterDelegate {
       return SautPage(
         // ignore: invalid_use_of_protected_member
         key: getExistingPageKey(e) ?? SautPageKey(e),
-        context: null,
+        context: context,
         name: effectiveRouteNameBuilder(e),
         pageBuilder: getPageBuilder(routeConfig, arguments),
         arguments: arguments,
