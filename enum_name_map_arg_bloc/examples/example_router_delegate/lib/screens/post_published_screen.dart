@@ -10,6 +10,7 @@ import 'package:example_router_delegate/routes/routes.dart';
 import 'package:example_router_delegate/routes/stacked_pages.dart';
 import 'package:example_router_delegate/screens/post_trending_dialog.dart';
 import 'package:example_router_delegate/widget/favorite_button.dart';
+import 'package:example_router_delegate/widget/modified_popup_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -67,9 +68,13 @@ class PostPublishedScreen extends StatelessWidget {
   }
 
   void _setStackTrendingPost(BuildContext context) {
-    Saut.setPageStack(AppPageStack.tredingPost, {
-      'PostFavoritesCubit': context.read<PostFavoritesCubit>(),
-    });
+    Saut.setPageStack(
+      context,
+      AppPageStack.tredingPost,
+      arguments: {
+        'PostFavoritesCubit': context.read<PostFavoritesCubit>(),
+      },
+    );
   }
 
   void _navigateToUnconfiguredTrendingPostDialog(BuildContext context) {
@@ -213,13 +218,39 @@ class PostPublishedScreen extends StatelessWidget {
         centerTitle: true,
         actions: [
           IconButton(
-            // Toggle one of the lines below to see
-            // onPressed: () => _showTrendingPostDialog(context),
-            // onPressed: () => _navigateToTrendingPostDialog(context),
-            // onPressed: () => _setStackTrendingPost(context),
-            onPressed: () => _navigateToUnconfiguredTrendingPostDialog(context),
-            // onPressed: () => _navigateToModifiedTrendingPostDialog(context),
+            onPressed: () => _showTrendingPostDialog(context),
+            tooltip: 'Show Trending Post Dialog by using showDialog api',
             icon: const Icon(Icons.trending_up_rounded),
+          ),
+          ModifiedPopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _navigateToTrendingPostDialog(context);
+                  },
+                  child: const Text('"Navigate to" Trending Post Dialog'),
+                ),
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _setStackTrendingPost(context);
+                  },
+                  child: const Text('Set Stack: TrendingPost'),
+                ),
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _navigateToUnconfiguredTrendingPostDialog(context);
+                  },
+                  child: const Text('"Navigate to" Unconfigured Trending Post Dialog'),
+                ),
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _navigateToModifiedTrendingPostDialog(context);
+                  },
+                  child: const Text('"Navigate to" Modified Trending Post Dialog'),
+                ),
+              ];
+            },
           ),
         ],
       ),
@@ -330,11 +361,15 @@ class _NotificationTestingBannerState extends State<NotificationTestingBanner> {
     required String name,
     required int id,
   }) {
-    Saut.setPageStack(AppPageStack.detailTredingPost, {
-      'name': name,
-      'id': id,
-      'PostFavoritesCubit': context.read<PostFavoritesCubit>(),
-    });
+    Saut.setPageStack(
+      context,
+      AppPageStack.detailTredingPost,
+      arguments: {
+        'name': name,
+        'id': id,
+        'PostFavoritesCubit': context.read<PostFavoritesCubit>(),
+      },
+    );
   }
 
   @override
