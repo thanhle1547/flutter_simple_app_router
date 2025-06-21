@@ -284,7 +284,9 @@ class _PagelessNavigatorObserver extends NavigatorObserver {
     }
 
     routerDelegate.updateRemovedPageWhen((e) {
-      return e is SautPageless ? e.route == route : e == route.settings;
+      final bool isSautPageless = e is SautPageless;
+      final bool match = isSautPageless ? e.route == route : e == route.settings;
+      return match;
     });
   }
 }
