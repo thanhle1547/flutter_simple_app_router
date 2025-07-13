@@ -41,22 +41,6 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// Used to provide existing blocs to the new page.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// * [debugPreventDuplicates]
   ///
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
@@ -71,10 +55,6 @@ extension EnmaBuildContextExtension on BuildContext {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
     if (global.useRouter) {
@@ -84,10 +64,6 @@ extension EnmaBuildContextExtension on BuildContext {
         arguments: arguments,
         blocValue: blocValue,
         blocProviders: blocProviders,
-        transitionsBuilder: transitionsBuilder,
-        duration: duration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
         debugPreventDuplicates: debugPreventDuplicates,
       );
     }
@@ -100,10 +76,6 @@ extension EnmaBuildContextExtension on BuildContext {
       arguments: arguments,
       blocValue: blocValue,
       blocProviders: blocProviders,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
     );
   }
@@ -125,22 +97,6 @@ extension EnmaBuildContextExtension on BuildContext {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
@@ -150,10 +106,6 @@ extension EnmaBuildContextExtension on BuildContext {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
     if (global.useRouter) {
       return global.currentRouterDelegate.replaceWithPage(
@@ -163,10 +115,6 @@ extension EnmaBuildContextExtension on BuildContext {
         blocValue: blocValue,
         blocProviders: blocProviders,
         result: result,
-        transitionsBuilder: transitionsBuilder,
-        duration: duration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
       );
     }
 
@@ -179,10 +127,6 @@ extension EnmaBuildContextExtension on BuildContext {
       blocValue: blocValue,
       blocProviders: blocProviders,
       result: result,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
     );
   }
 
@@ -209,22 +153,6 @@ extension EnmaBuildContextExtension on BuildContext {
   ///
   /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   Future<T?> replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -232,10 +160,6 @@ extension EnmaBuildContextExtension on BuildContext {
     RoutePredicate? routePredicate,
     PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
     if (global.useRouter) {
       return global.currentRouterDelegate.replaceAllWithPage(
@@ -243,10 +167,6 @@ extension EnmaBuildContextExtension on BuildContext {
         page,
         predicate: pagePredicate,
         arguments: arguments,
-        transitionsBuilder: transitionsBuilder,
-        duration: duration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
       );
     }
 
@@ -257,10 +177,6 @@ extension EnmaBuildContextExtension on BuildContext {
       page,
       predicate: routePredicate,
       arguments: arguments,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
     );
   }
 
@@ -365,22 +281,6 @@ extension on NavigatorState {
   ///
   /// Used to provide existing blocs to the new page.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// * [debugPreventDuplicates]
   ///
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
@@ -396,17 +296,9 @@ extension on NavigatorState {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
@@ -459,22 +351,6 @@ extension on NavigatorState {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
@@ -485,17 +361,8 @@ extension on NavigatorState {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
-    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
-    );
+    final RouteConfig routeConfig = getRouteConfig(page);
 
     return pushReplacement(
       createRoute<T>(
@@ -528,22 +395,6 @@ extension on NavigatorState {
   /// or use a [RoutePredicate] that always returns false
   /// (e.g. `(Route<dynamic> route) => false`).
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   Future<T?> _replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -551,17 +402,8 @@ extension on NavigatorState {
     Enum page, {
     RoutePredicate? predicate,
     Map<String, dynamic>? arguments,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
-    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
-    );
+    final RouteConfig routeConfig = getRouteConfig(page);
 
     return pushAndRemoveUntil(
       createRoute<T>(

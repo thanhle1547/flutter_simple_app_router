@@ -38,22 +38,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   ///
   /// Used to provide existing blocs to the new page.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// * [debugPreventDuplicates]
   ///
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
@@ -69,17 +53,9 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
@@ -134,22 +110,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
@@ -160,17 +120,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
-    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
-    );
+    final RouteConfig routeConfig = getRouteConfig(page);
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
@@ -198,22 +149,6 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   ///
   /// To remove all the pages the replaced page, simply let [predicate] null.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   Future<T?> replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -221,17 +156,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     Enum page, {
     PagePredicate? predicate,
     Map<String, dynamic>? arguments,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
-    final RouteConfig routeConfig = getRouteConfig(page).copyWith(
-      transitionsBuilder: transitionsBuilder,
-      transitionDuration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
-    );
+    final RouteConfig routeConfig = getRouteConfig(page);
 
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),

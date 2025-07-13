@@ -360,22 +360,6 @@ abstract class Saut {
   ///
   /// Used to provide existing blocs to the new page.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// * [debugPreventDuplicates]
   ///
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
@@ -391,10 +375,6 @@ abstract class Saut {
     Map<String, dynamic>? arguments,
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
     return context.toPage(
@@ -402,10 +382,6 @@ abstract class Saut {
       arguments: arguments,
       blocValue: blocValue,
       blocProviders: blocProviders,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
       debugPreventDuplicates: debugPreventDuplicates,
     );
   }
@@ -427,22 +403,6 @@ abstract class Saut {
   /// will complete with result. The type of `result`, if provided,
   /// must match the type argument of the class of the old route (`TO`).
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The `T` type argument is the type of the return value of the new route,
   /// and `TO` is the type of the return value of the old route.
   @optionalTypeArgs
@@ -453,10 +413,6 @@ abstract class Saut {
     B? blocValue,
     List<BlocProviderSingleChildWidget>? blocProviders,
     TO? result,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
     return context.replaceWithPage(
       page,
@@ -464,10 +420,6 @@ abstract class Saut {
       blocValue: blocValue,
       blocProviders: blocProviders,
       result: result,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
     );
   }
 
@@ -494,22 +446,6 @@ abstract class Saut {
   ///
   /// To remove all the pages the replaced page, simply let [pagePredicate] null.
   ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [duration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
   /// The T type argument is the type of the return value of the new route.
   @optionalTypeArgs
   static Future<T?>? replaceAllWithPage<T extends Object?, B extends BlocBase<Object?>>(
@@ -518,20 +454,12 @@ abstract class Saut {
     RoutePredicate? routePredicate,
     PagePredicate? pagePredicate,
     Map<String, dynamic>? arguments,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? duration,
-    bool? opaque,
-    bool? fullscreenDialog,
   }) {
     return context.replaceAllWithPage(
       page,
       routePredicate: routePredicate,
       pagePredicate: pagePredicate,
       arguments: arguments,
-      transitionsBuilder: transitionsBuilder,
-      duration: duration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
     );
   }
 
