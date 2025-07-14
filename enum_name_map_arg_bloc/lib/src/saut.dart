@@ -1,3 +1,6 @@
+import 'dart:developer' show log;
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 // ignore: implementation_imports
@@ -106,92 +109,36 @@ abstract class Saut {
     global.disposeRouterDelegate();
   }
 
-  /// * [debugRequiredArguments]
+  /// Adds a route config if it doesn't exist.
   ///
-  /// If used, [Saut] will check this before navigating
-  /// The key is the name of the argument.
+  /// This method preventing overwriting of existing configurations.
   ///
-  /// The value is the type of argument. It can be anything but [dynamic].
-  ///
-  /// Example:
-  /// ```dart
-  /// requiredArguments: {
-  ///   'val_1': int,
-  ///   'val_2': String,
-  ///   'val_3': List,
-  ///   'val_4': 'List<int>',
-  ///   'val_5': 9,
-  /// }
-  /// ```
-  /// In above example:
-  ///
-  ///  * Notice `'val_4'` has value of `'List<int>'` (a String), not `List<int>`.
-  /// Because dart analysis will show this error if we pass `List<int>`:
-  /// `This requires the 'constructor-tearoffs' language feature to be enabled.`
-  ///
-  ///  * `'val_5'` has value of `9` (a certain number), this value will
-  /// be treat as `runtimeType`
-  ///
-  /// * For example:
-  ///
-  /// ```dart
-  /// Saut.define(
-  ///   page: Enum.home,
-  ///   requiredArgument: {
-  ///     'id': int,
-  ///     'name': String,
-  ///   },
-  ///   pageBuilder: (args) {
-  ///     // ...
-  ///   },
-  /// );
-  /// ```
-  ///
-  /// * [pageBuilder]
-  ///
-  /// Used build the route's primary contents.
-  ///
-  /// * [transitionsBuilder]
-  ///
-  /// Used to build the route's transition animation.
-  ///
-  /// * [transitionDuration]
-  ///
-  /// The duration the transition going forwards.
-  ///
-  /// * [opaque]
-  ///
-  /// {@macro flutter.widgets.TransitionRoute.opaque}
-  ///
-  /// * [fullscreenDialog]
-  ///
-  /// {@macro flutter.widgets.PageRoute.fullscreenDialog}
-  ///
-  /// * [debugPreventDuplicates]
-  ///
-  /// Prevent (accidentally) from navigating to the same page on `debug mode`.
-  void define({
+  /// It will log a debug message if the config is already present.
+  void maybeAddPageConfig({
     required Enum page,
-    Map<String, Object>? debugRequiredArguments,
-    required Widget Function(Map<String, dynamic>? arguments) pageBuilder,
-    PageTransitionsBuilder? transitionsBuilder,
-    Duration? transitionDuration,
-    bool opaque = true,
-    bool fullscreenDialog = false,
-    bool? debugPreventDuplicates,
+    required RouteConfig routeConfig,
   }) {
-    AppConfig.routes.putIfAbsent(
-      page,
-      () => RouteConfig(
-        debugRequiredArguments: debugRequiredArguments,
-        pageBuilder: pageBuilder,
-        transitionsBuilder: transitionsBuilder,
-        transitionDuration: transitionDuration,
-        opaque: opaque,
-        fullscreenDialog: fullscreenDialog,
-        debugPreventDuplicates: debugPreventDuplicates,
-      ),
-    );
+    if (AppConfig.routes.containsKey(page)) {
+      if (kDebugMode) {
+        log("$page config existed!! Ignoring...", name: source);
+      }
+      return;
+    }
+
+    AppConfig.routes[page] = routeConfig;
+  }
+
+  void maybeAddPageConfigs(Map<Enum, RouteConfig> routes) {
+    for (final entry in routes.entries) {
+      maybeAddPageConfig(page: entry.key, routeConfig: entry.value);
+    }
+  }
+
+  /// This method will overwrite existing configurations.
+  void addPageConfigs(Map<Enum, RouteConfig> routes) {
+    for (final entry in routes.entries) {
+      AppConfig.routes[entry.key] = entry.value;
+    }
   }
 
   static GlobalKey<NavigatorState> createNavigatorKeyIfNotExisted() =>
