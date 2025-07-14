@@ -150,7 +150,7 @@ abstract class Saut {
       return global.currentNavigatorState!;
     } catch (e) {
       throw StateError(
-        "${e.toString()}. Maybe you did not call createNavigatorKeyIfNotExisted",
+        "$e. Maybe you did not call createNavigatorKeyIfNotExisted",
       );
     }
   }

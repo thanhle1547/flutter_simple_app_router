@@ -251,6 +251,6 @@ class SautRouteLoggingObserver extends RouteObserver<PageRoute<dynamic>> {
               .join('&');
     }
 
-    return "?${args.toString()}";
+    return "?$args";
   }
 }
