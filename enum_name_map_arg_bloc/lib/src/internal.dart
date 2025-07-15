@@ -43,6 +43,7 @@ Route<T> createRoute<T>({
         AppConfig.defaultTransitionDuration ??
         kTransitionDuration,
     opaque: config.opaque,
+    barrierDismissible: config.barrierDismissible,
     fullscreenDialog: config.fullscreenDialog,
     createdFromSautPage: createdFromPage,
   );

@@ -65,6 +65,7 @@ class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
     required PageTransitionsBuilder pageTransitionsBuilder,
     required this.transitionDuration,
     required this.opaque,
+    required this.barrierDismissible,
     required bool fullscreenDialog,
     required bool createdFromSautPage,
   }) : super(
@@ -80,6 +81,9 @@ class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
 
   @override
   final bool opaque;
+
+  @override
+  final bool barrierDismissible;
 
   @override
   Color? get barrierColor => null;

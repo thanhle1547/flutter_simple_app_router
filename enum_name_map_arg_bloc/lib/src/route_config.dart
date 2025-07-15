@@ -38,6 +38,14 @@ class RouteConfig {
   final PageTransitionsBuilder? transitionsBuilder;
   final Duration? transitionDuration;
   final bool opaque;
+
+  /// If `barrierDismissible` is true, then pressing the escape key on the keyboard
+  /// will cause the current route to be popped with null as the value.
+  ///
+  /// Related Issue:
+  /// [Escape keystroke doesn't work](https://github.com/flutter/flutter/issues/132138)
+  final bool barrierDismissible;
+
   final bool fullscreenDialog;
 
   /// Prevent (accidentally) from navigating to the same page on `debug mode`.
@@ -52,6 +60,7 @@ class RouteConfig {
     this.transitionsBuilder,
     this.transitionDuration,
     this.opaque = kOpaque,
+    this.barrierDismissible = false,
     this.fullscreenDialog = kFullscreenDialog,
     this.debugPreventDuplicates,
   }) : assert(
@@ -70,6 +79,7 @@ class RouteConfig {
     PageTransitionsBuilder? transitionsBuilder,
     Duration? transitionDuration,
     bool? opaque,
+    bool? barrierDismissible,
     bool? fullscreenDialog,
     bool? debugPreventDuplicates,
   }) {
@@ -80,6 +90,7 @@ class RouteConfig {
       transitionsBuilder: transitionsBuilder ?? this.transitionsBuilder,
       transitionDuration: transitionDuration ?? this.transitionDuration,
       opaque: opaque ?? this.opaque,
+      barrierDismissible: barrierDismissible ?? this.barrierDismissible,
       fullscreenDialog: fullscreenDialog ?? this.fullscreenDialog,
       debugPreventDuplicates:
           debugPreventDuplicates ?? this.debugPreventDuplicates,
