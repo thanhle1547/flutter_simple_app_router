@@ -11,6 +11,7 @@ import 'package:example_router_delegate/routes/stacked_pages.dart';
 import 'package:example_router_delegate/screens/post_trending_dialog.dart';
 import 'package:example_router_delegate/widget/favorite_button.dart';
 import 'package:example_router_delegate/widget/modified_popup_menu.dart';
+import 'package:example_router_delegate/widget/post_trending_modal_bottom_sheet_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -149,6 +150,31 @@ class PostPublishedScreen extends StatelessWidget {
     );
   }
 
+  void _showTrendingPostModalBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: PostTrendingModalBottomSheetContent.shape,
+      builder: (_) {
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (_) => PostTrendingCubit(),
+            ),
+            BlocProvider.value(
+              value: context.read<PostFavoritesCubit>(),
+            ),
+          ],
+          child: const PostTrendingModalBottomSheetContent(),
+        );
+      },
+      routeSettings: Saut.createRouteSettings(
+        name: mixedCaseWithUnderscoresEnumRouteNameBuilder(
+          AppPages.Post_Trending,
+        ),
+      ),
+    );
+  }
+
   void _fabPressedHandler(BuildContext context) {
     Saut.toPage(context, AppPages.Post_Suggest);
   }
@@ -251,6 +277,13 @@ class PostPublishedScreen extends StatelessWidget {
                     _navigateToModifiedTrendingPostDialog(context);
                   },
                   child: const Text('"Navigate to" Modified Trending Post Dialog'),
+                ),
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _showTrendingPostModalBottomSheet(context);
+                  },
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
                 ),
               ];
             },
