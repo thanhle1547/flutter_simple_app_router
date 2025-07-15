@@ -135,7 +135,10 @@ class PostPublishedScreen extends StatelessWidget {
               shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.zero), // Remove BorderRadius
               ),
-              child: page,
+              child: BlocProvider.value(
+                value: context.read<PostFavoritesCubit>(),
+                child: page,
+              ),
             ),
             settings: settings,
           );
