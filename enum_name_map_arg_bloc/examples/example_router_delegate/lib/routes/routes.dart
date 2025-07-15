@@ -88,6 +88,38 @@ final RouteConfig postTrending = RouteConfig(
   transitionsBuilder: SautRouteTransition.none,
 );
 
+final RouteConfig postTrendingVariant = RouteConfig(
+  routeBuilder: SautDialogRouteBuilder(
+    barrierColor: Colors.amber.withAlpha(66), // opacity 40%
+  ).call,
+  pageBuilder: (arguments) {
+    final Completer<PostFavoritesCubit>? completer =
+        arguments?['postFavoritesCubitCompleter'];
+    final PostFavoritesCubit? postFavoritesCubit =
+        arguments?['PostFavoritesCubit'];
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => PostTrendingCubit(),
+        ),
+        if (postFavoritesCubit != null)
+          BlocProvider.value(value: postFavoritesCubit),
+      ],
+      child: Dialog(
+        backgroundColor: Colors.orange.shade300,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
+        child: PostTrendingDialog(
+          postFavoritesCubitCompleter: completer,
+        ),
+      ),
+    );
+  },
+  transitionsBuilder: SautRouteTransition.downToUp,
+);
+
 final RouteConfig _postDetail = RouteConfig(
   debugRequiredArguments: {
     'name': String,
@@ -120,5 +152,6 @@ final Map<Enum, RouteConfig> routes = {
   AppPages.Initial: _splash,
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Trending: postTrending,
+  AppPages.Post_TrendingVariant: postTrendingVariant,
   AppPages.Post_Detail: _postDetail,
 };

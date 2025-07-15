@@ -6,6 +6,7 @@ enum AppPages {
   Post_Published,
   //
   Post_Trending,
+  Post_TrendingVariant,
 
   // undefined page
   Post_Suggest,
