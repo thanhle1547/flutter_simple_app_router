@@ -5,6 +5,7 @@ export 'src/enma_saut_router_delegate_extension.dart' show SautRouterDelegateExt
 export 'src/route_config.dart' show RouteConfig;
 export 'src/route_transition.dart';
 export 'src/saut.dart';
+export 'src/saut_page.dart' show SautPage, SautPageKey;
 export 'src/saut_route_aware_state_mixin.dart';
 export 'src/saut_route_information_parser.dart';
 export 'src/saut_route_logging_observer.dart' show SautRouteLoggingObserver;
