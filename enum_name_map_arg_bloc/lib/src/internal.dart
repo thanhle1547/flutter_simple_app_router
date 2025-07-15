@@ -18,7 +18,7 @@ import 'saut_page_route_builder.dart';
 typedef PageBuilder = Widget Function();
 
 Route<T> createRoute<T>({
-  required PageBuilder pageBuilder,
+  required PageBuilder overridePageBuilder,
   required RouteConfig config,
   required RouteSettings settings,
   BuildContext? context,
@@ -29,43 +29,24 @@ Route<T> createRoute<T>({
       context!,
       config,
       settings,
-      pageBuilder(),
+      overridePageBuilder(),
     );
   }
 
-  return _createSautPageRoute<T>(
-    pageBuilder: pageBuilder,
+  return SautPageRouteBuilder<T>(
     settings: settings,
-    transitionsBuilder: config.transitionsBuilder,
-    transitionDuration: config.transitionDuration,
+    pageBuilder: (_, __, ___) => overridePageBuilder(),
+    pageTransitionsBuilder: config.transitionsBuilder ??
+        AppConfig.defaultTransitionsBuilder ??
+        kPageTransitionsBuilder,
+    transitionDuration: config.transitionDuration ??
+        AppConfig.defaultTransitionDuration ??
+        kTransitionDuration,
     opaque: config.opaque,
     fullscreenDialog: config.fullscreenDialog,
-    createdFromPage: createdFromPage,
+    createdFromSautPage: createdFromPage,
   );
 }
-
-PageRoute<T> _createSautPageRoute<T>({
-  required PageBuilder pageBuilder,
-  required RouteSettings settings,
-  PageTransitionsBuilder? transitionsBuilder,
-  Duration? transitionDuration,
-  bool opaque = kOpaque,
-  bool fullscreenDialog = kFullscreenDialog,
-  bool createdFromPage = false,
-}) =>
-    SautPageRouteBuilder<T>(
-      settings: settings,
-      pageBuilder: (_, __, ___) => pageBuilder(),
-      pageTransitionsBuilder: transitionsBuilder ??
-          AppConfig.defaultTransitionsBuilder ??
-          kPageTransitionsBuilder,
-      transitionDuration: transitionDuration ??
-          AppConfig.defaultTransitionDuration ??
-          kTransitionDuration,
-      opaque: opaque,
-      fullscreenDialog: fullscreenDialog,
-      createdFromSautPage: createdFromPage,
-    );
 
 Route createRouteFromName(String? name, [String? fallbackName]) {
   try {
@@ -117,7 +98,7 @@ Route createRouteFromName(String? name, [String? fallbackName]) {
     final RouteConfig config = AppConfig.routes[key]!;
 
     return createRoute(
-      pageBuilder: () => config.pageBuilder(null),
+      overridePageBuilder: () => config.pageBuilder(null),
       config: config,
       settings: RouteSettings(name: effectiveName),
     );

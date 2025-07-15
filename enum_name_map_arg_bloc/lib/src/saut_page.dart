@@ -40,7 +40,7 @@ class SautPage<T extends Object?> extends Page<T> {
   Route<T> createRoute(BuildContext context) {
     return router.createRoute<T>(
       context: this.context,
-      pageBuilder: pageBuilder,
+      overridePageBuilder: pageBuilder,
       config: routeConfig,
       settings: this,
       createdFromPage: true,
