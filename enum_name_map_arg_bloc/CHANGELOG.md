@@ -1,3 +1,41 @@
+## 0.12.0
+
+* fix: null check in assertion on `Saut.getCurrentRouteName`, `context.getCurrentRouteName`
+
+* fix: assertion error `Navigator operation requested with a context that does not include a Navigator. The context used to push or pop routes from the Navigator must be that of a widget that is a descendant of a Navigator widget.` when look up the `Navigator` in `RouteConfig.routeBuilder` (e.g., DialogRoute)
+
+* fix: the removed page did not call `completeWith` cause the navigation incomplete. This happend when using `SautRouterDelegate.backToPage`, `SautRouterDelegate.backToPageName` and `Navigator.pop*` apis
+
+* **add** ability to go to a new page from a widget without preconfigured by using `Saut.toUnconfiguredPage`
+
+* **add** optional `routeBuilder` and `pageBuilder` arguments to `RouteConfig.copyWith`
+
+* **remove** valid route types assertion
+
+* **remove** extension on `NavigatorState`
+
+* update `example_router_delegate` to show Saut's apis usage example instead of doing toggle line comment
+
+* breaking:
+
+  - prefer using closest instance of `NavigatorState` that encloses the given context when using `Navigator` (not `RouterDelegate`) than the global one created via `Saut.createNavigatorKeyIfNotExisted`, affected methods are:
+    - `toPage`
+    - `back`
+    - `backToPageName`
+    - `backToPage`
+    - `getCurrentRoute`
+    - `getCurrentRouteName`
+
+  - **add** `context` to `SautRouterDelegate` apis to look up the `Navigator` in `RouteConfig.routeBuilder` (e.g., DialogRoute)
+
+  - **remove** `transitionsBuilder`, `duration`, `opaque` and `fullscreenDialog` parameters
+
+  - **remove** `Saut.define`
+
+  - **add** `Saut.maybeAddPageConfig`, `Saut.maybeAddPageConfigs` and `Saut.addPageConfigs`
+
+  - use a named argument for `SautRouterDelegate.setPageStack` arguments
+
 ## 0.11.0
 
 * Suppress transition between routes
