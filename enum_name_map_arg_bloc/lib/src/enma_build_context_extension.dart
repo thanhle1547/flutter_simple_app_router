@@ -193,7 +193,7 @@ extension EnmaBuildContextExtension on BuildContext {
     final SautPage<T> sautPage = SautPage(
       key: SautPageKey(page ?? name),
       context: context,
-      pageBuilder: () => routeConfig.pageBuilder(null),
+      page: routeConfig.pageBuilder(null),
       name: name ?? effectiveRouteNameBuilder(page!),
       routeConfig: routeConfig,
     );
@@ -319,8 +319,8 @@ extension on NavigatorState {
 
     return push<T>(
       createRoute<T>(
-        overridePageBuilder: resolvePageBuilderWithBloc(
-          pageBuilder: getPageBuilder(routeConfig, arguments),
+        page: maybeWrapWithBlocProviders(
+          page: getPage(routeConfig, arguments),
           blocValue: blocValue,
           blocProviders: blocProviders,
         ),
@@ -366,8 +366,8 @@ extension on NavigatorState {
 
     return pushReplacement(
       createRoute<T>(
-        overridePageBuilder: resolvePageBuilderWithBloc(
-          pageBuilder: getPageBuilder(routeConfig, arguments),
+        page: maybeWrapWithBlocProviders(
+          page: getPage(routeConfig, arguments),
           blocValue: blocValue,
           blocProviders: blocProviders,
         ),
@@ -407,7 +407,7 @@ extension on NavigatorState {
 
     return pushAndRemoveUntil(
       createRoute<T>(
-        overridePageBuilder: getPageBuilder(routeConfig, arguments),
+        page: getPage(routeConfig, arguments),
         config: routeConfig,
         settings: RouteSettings(
           name: effectiveRouteNameBuilder(page),

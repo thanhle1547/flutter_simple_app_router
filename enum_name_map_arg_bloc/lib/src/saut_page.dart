@@ -17,7 +17,7 @@ class SautPage<T extends Object?> extends Page<T> {
   SautPage({
     required LocalKey key,
     required this.context,
-    required this.pageBuilder,
+    required this.page,
     String? name,
     Map<String, dynamic>? arguments,
     required this.routeConfig,
@@ -30,7 +30,7 @@ class SautPage<T extends Object?> extends Page<T> {
         );
 
   final BuildContext? context;
-  final Widget Function() pageBuilder;
+  final Widget page;
   final RouteConfig routeConfig;
   final Completer<T?> _popCompleter;
 
@@ -40,7 +40,7 @@ class SautPage<T extends Object?> extends Page<T> {
   Route<T> createRoute(BuildContext context) {
     return router.createRoute<T>(
       context: this.context,
-      overridePageBuilder: pageBuilder,
+      page: page,
       config: routeConfig,
       settings: this,
       createdFromPage: true,

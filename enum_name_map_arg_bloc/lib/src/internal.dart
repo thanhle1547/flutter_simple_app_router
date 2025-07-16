@@ -15,10 +15,8 @@ import 'constants.dart';
 import 'route_config.dart';
 import 'saut_page_route_builder.dart';
 
-typedef PageBuilder = Widget Function();
-
 Route<T> createRoute<T>({
-  required PageBuilder overridePageBuilder,
+  required Widget page,
   required RouteConfig config,
   required RouteSettings settings,
   BuildContext? context,
@@ -29,13 +27,13 @@ Route<T> createRoute<T>({
       context!,
       config,
       settings,
-      overridePageBuilder(),
+      page,
     );
   }
 
   return SautPageRouteBuilder<T>(
     settings: settings,
-    pageBuilder: (_, __, ___) => overridePageBuilder(),
+    page: page,
     pageTransitionsBuilder: config.transitionsBuilder ??
         AppConfig.defaultTransitionsBuilder ??
         kPageTransitionsBuilder,
@@ -99,7 +97,7 @@ Route createRouteFromName(String? name, [String? fallbackName]) {
     final RouteConfig config = AppConfig.routes[key]!;
 
     return createRoute(
-      overridePageBuilder: () => config.pageBuilder(null),
+      page: config.pageBuilder(null),
       config: config,
       settings: RouteSettings(name: effectiveName),
     );
@@ -129,8 +127,8 @@ String _defaultRouteNameBuilder(Enum page) => page.name;
 String Function(Enum page) get effectiveRouteNameBuilder =>
     AppConfig.routeNameBuilder ?? _defaultRouteNameBuilder;
 
-PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
-  required PageBuilder pageBuilder,
+Widget maybeWrapWithBlocProviders<B extends BlocBase<Object?>>({
+  required Widget page,
   B? blocValue,
   List<BlocProviderSingleChildWidget>? blocProviders,
 }) {
@@ -141,20 +139,20 @@ PageBuilder resolvePageBuilderWithBloc<B extends BlocBase<Object?>>({
   }
 
   if (blocValue != null) {
-    return () => BlocProvider.value(
-          value: blocValue,
-          child: pageBuilder(),
-        );
+    return BlocProvider.value(
+      value: blocValue,
+      child: page,
+    );
   }
 
   if (blocProviders != null) {
-    return () => MultiBlocProvider(
-          providers: blocProviders,
-          child: pageBuilder(),
-        );
+    return MultiBlocProvider(
+      providers: blocProviders,
+      child: page,
+    );
   }
 
-  return pageBuilder;
+  return page;
 }
 
 RouteConfig getRouteConfig(Enum page) {
@@ -189,7 +187,7 @@ late final RegExp _castTypeRegex = RegExp(
   multiLine: false,
 );
 
-Widget Function() getPageBuilder<T extends Object?>(
+Widget getPage<T extends Object?>(
   RouteConfig routeConfig,
   Map<String, dynamic>? arguments,
 ) {
@@ -256,5 +254,5 @@ Widget Function() getPageBuilder<T extends Object?>(
     return true;
   }());
 
-  return () => routeConfig.pageBuilder(arguments);
+  return routeConfig.pageBuilder(arguments);
 }

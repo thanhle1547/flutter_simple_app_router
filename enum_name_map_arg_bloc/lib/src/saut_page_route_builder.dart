@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 abstract class AbstractSautPageRouteBuilder<T> extends PageRoute<T> {
   AbstractSautPageRouteBuilder({
     RouteSettings? settings,
-    required this.pageBuilder,
+    required this.page,
     required this.pageTransitionsBuilder,
     required bool fullscreenDialog,
     required this.createdFromSautPage,
@@ -13,7 +13,7 @@ abstract class AbstractSautPageRouteBuilder<T> extends PageRoute<T> {
           fullscreenDialog: fullscreenDialog,
         );
 
-  final RoutePageBuilder pageBuilder;
+  final Widget page;
 
   final PageTransitionsBuilder pageTransitionsBuilder;
 
@@ -61,7 +61,7 @@ abstract class AbstractSautPageRouteBuilder<T> extends PageRoute<T> {
 class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
   SautPageRouteBuilder({
     RouteSettings? settings,
-    required RoutePageBuilder pageBuilder,
+    required Widget page,
     required PageTransitionsBuilder pageTransitionsBuilder,
     required this.transitionDuration,
     required this.opaque,
@@ -70,7 +70,7 @@ class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
     required bool createdFromSautPage,
   }) : super(
           settings: settings,
-          pageBuilder: pageBuilder,
+          page: page,
           pageTransitionsBuilder: pageTransitionsBuilder,
           fullscreenDialog: fullscreenDialog,
           createdFromSautPage: createdFromSautPage,
@@ -99,7 +99,7 @@ class SautPageRouteBuilder<T> extends AbstractSautPageRouteBuilder<T> {
     return Semantics(
       scopesRoute: true,
       explicitChildNodes: true,
-      child: pageBuilder(context, animation, secondaryAnimation),
+      child: page,
     );
   }
 }

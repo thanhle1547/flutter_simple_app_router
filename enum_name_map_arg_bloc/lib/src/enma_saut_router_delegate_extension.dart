@@ -78,8 +78,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       key: SautPageKey(page),
       context: context,
       name: name,
-      pageBuilder: resolvePageBuilderWithBloc(
-        pageBuilder: getPageBuilder(routeConfig, arguments),
+      page: maybeWrapWithBlocProviders(
+        page: getPage(routeConfig, arguments),
         blocValue: blocValue,
         blocProviders: blocProviders,
       ),
@@ -127,8 +127,8 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       key: SautPageKey(page),
       context: context,
       name: effectiveRouteNameBuilder(page),
-      pageBuilder: resolvePageBuilderWithBloc(
-        pageBuilder: getPageBuilder(routeConfig, arguments),
+      page: maybeWrapWithBlocProviders(
+        page: getPage(routeConfig, arguments),
         blocValue: blocValue,
         blocProviders: blocProviders,
       ),
@@ -163,7 +163,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       key: SautPageKey(page),
       context: context,
       name: effectiveRouteNameBuilder(page),
-      pageBuilder: getPageBuilder(routeConfig, arguments),
+      page: getPage(routeConfig, arguments),
       arguments: arguments,
       routeConfig: routeConfig,
     );
@@ -217,7 +217,7 @@ extension InternalSautRouterDelegateExtension on SautRouterDelegate {
         key: getExistingPageKey(e) ?? SautPageKey(e),
         context: context,
         name: effectiveRouteNameBuilder(e),
-        pageBuilder: getPageBuilder(routeConfig, arguments),
+        page: getPage(routeConfig, arguments),
         arguments: arguments,
         routeConfig: routeConfig,
       );
