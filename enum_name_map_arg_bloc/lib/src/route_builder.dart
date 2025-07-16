@@ -24,6 +24,7 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
     this.useSafeArea = true,
     this.useRootNavigator = true,
     this.transitionBuilder = _buildMaterialDialogTransitions,
+    this.traversalEdgeBehavior,
   });
 
   final bool barrierDismissible;
@@ -32,6 +33,7 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
   final bool useSafeArea;
   final bool useRootNavigator;
   final RouteTransitionsBuilder transitionBuilder;
+  final TraversalEdgeBehavior? traversalEdgeBehavior;
 
   @override
   Route<T> call<T>(
@@ -64,6 +66,7 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
       barrierLabel: barrierLabel ?? MaterialLocalizations.of(context).modalBarrierDismissLabel,
       transitionDuration: const Duration(milliseconds: 150),
       transitionBuilder: transitionBuilder,
+      traversalEdgeBehavior: traversalEdgeBehavior,
       settings: settings,
     );
   }
@@ -203,12 +206,14 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
     assert(debugCheckHasMaterialLocalizations(context));
 
     final NavigatorState navigator = Navigator.of(context, rootNavigator: useRootNavigator);
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
     return ModalBottomSheetRoute<T>(
       builder: (context) => page,
       capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
       isScrollControlled: isScrollControlled,
-      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      barrierLabel: localizations.scrimLabel,
+      barrierOnTapHint: localizations.scrimOnTapHint(localizations.bottomSheetLabel),
       backgroundColor: backgroundColor,
       elevation: elevation,
       shape: shape,
