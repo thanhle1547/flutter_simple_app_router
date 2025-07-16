@@ -160,3 +160,66 @@ class SautCupertinoDialogRouteBuilder extends SautRouteBuilder {
     );
   }
 }
+
+class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
+  const SautModalBottomSheetRouteBuilder({
+    this.backgroundColor,
+    this.elevation,
+    this.shape,
+    this.clipBehavior,
+    this.constraints,
+    this.barrierColor,
+    this.isScrollControlled = false,
+    this.useRootNavigator = false,
+    this.isDismissible = true,
+    this.enableDrag = true,
+    this.showDragHandle,
+    this.useSafeArea = false,
+    this.anchorPoint,
+  });
+
+  final Color? backgroundColor;
+  final double? elevation;
+  final ShapeBorder? shape;
+  final Clip? clipBehavior;
+  final BoxConstraints? constraints;
+  final Color? barrierColor;
+  final bool isScrollControlled;
+  final bool useRootNavigator;
+  final bool isDismissible;
+  final bool enableDrag;
+  final bool? showDragHandle;
+  final bool useSafeArea;
+  final Offset? anchorPoint;
+
+  @override
+  Route<T> call<T>(
+    BuildContext context,
+    RouteConfig resolvedConfig,
+    RouteSettings settings,
+    Widget page,
+  ) {
+    assert(debugCheckHasMediaQuery(context));
+    assert(debugCheckHasMaterialLocalizations(context));
+
+    final NavigatorState navigator = Navigator.of(context, rootNavigator: useRootNavigator);
+
+    return ModalBottomSheetRoute<T>(
+      builder: (context) => page,
+      capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
+      isScrollControlled: isScrollControlled,
+      barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      backgroundColor: backgroundColor,
+      elevation: elevation,
+      shape: shape,
+      clipBehavior: clipBehavior,
+      constraints: constraints,
+      isDismissible: isDismissible,
+      modalBarrierColor: barrierColor ?? Theme.of(context).bottomSheetTheme.modalBarrierColor,
+      enableDrag: enableDrag,
+      settings: settings,
+      anchorPoint: anchorPoint,
+      useSafeArea: useSafeArea,
+    );
+  }
+}
