@@ -1,3 +1,16 @@
+## 0.13.0
+
+* export `SautPage` and `SautPageKey` to make it accessible from outside this library
+
+* **add** some `SautRouteBuilder`s to reduce verbosity in creating `RouteConfig.routeBuilder`:
+  - SautDialogRouteBuilder
+  - SautCupertinoModalPopupRouteBuilder
+  - SautCupertinoDialogRouteBuilder
+
+* **add** `barrierDismissible` to `RouteConfig`
+
+* `SautPage` takes a widget as its page instead of a builder function to not delay widget creation
+
 ## 0.12.0
 
 * fix: null check in assertion on `Saut.getCurrentRouteName`, `context.getCurrentRouteName`
