@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_bloc: ^8.1.1
+  flutter_bloc: ^8.1.2
   mock_data: ^2.0.0
   saut_enma_bloc:
     path: ../../
