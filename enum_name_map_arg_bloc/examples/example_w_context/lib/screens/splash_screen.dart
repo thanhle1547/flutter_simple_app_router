@@ -14,15 +14,11 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
 
-    WidgetsBinding.instance?.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
       await Future.delayed(const Duration(milliseconds: 1200)).then((value) {
         Saut.replaceAllWithPage(
           context,
           AppPages.Post_Published,
-          transitionsBuilder: FadeInTransition(
-            curve: Curves.easeIn,
-          ),
-          duration: const Duration(milliseconds: 450),
         );
       });
     });
