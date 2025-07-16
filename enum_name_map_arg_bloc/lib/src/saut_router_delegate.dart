@@ -41,12 +41,23 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   bool _onPopPage(Route<dynamic> route, dynamic result) {
+    // using didPopCountModified as a flag to fix the issue (when using Flutter 3.7.12) that described below:
+    // - Show a dialog by using imperative api (e.g. `showDialog`, `Navigator.of(context).push`)
+    // - Back to the previous screen (by using Android back button or tap the barrier)
+    // - Navigate to a new screen by using Saut api
+    // - Back to the previous screen by using Android back button
+    // - The same screen replaced the old one instead of showing the previous screen
+    bool didPopCountModified = false;
+
     if (_didPopCount > 0) {
+      didPopCountModified = true;
       _didPopCount--;
-    } else if (_willPopCount > 0) {
+    }
+
+    if (_willPopCount > 0) {
       _willPopCount--;
       _removeLastPage(result);
-    } else {
+    } else if (!didPopCountModified) {
       // The request might come from [Navigator.pop] API
       _removeLastPage(result);
     }
