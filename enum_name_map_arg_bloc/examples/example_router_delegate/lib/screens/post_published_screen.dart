@@ -258,14 +258,16 @@ class PostPublishedScreen extends StatelessWidget {
       },
     );
 
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post published'),
         centerTitle: true,
         actions: [
           IconButton(
-            onPressed: () => _showTrendingPostDialog(context),
-            tooltip: 'Show Trending Post Dialog by using showDialog api',
+            onPressed: () => _navigateToTrendingPostDialog(context),
+            tooltip: '"Navigate to" Trending Post Dialog',
             icon: const Icon(Icons.trending_up_rounded),
           ),
           ModifiedPopupMenuButton(
@@ -273,9 +275,10 @@ class PostPublishedScreen extends StatelessWidget {
               return [
                 ModifiedPopupMenuItem(
                   onTap: () {
-                    _navigateToTrendingPostDialog(context);
+                    _showTrendingPostDialog(context);
                   },
-                  child: const Text('"Navigate to" Trending Post Dialog'),
+                  textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
+                  child: const Text('Show Trending Post Dialog by using showDialog api'),
                 ),
                 ModifiedPopupMenuItem(
                   onTap: () {
@@ -300,6 +303,7 @@ class PostPublishedScreen extends StatelessWidget {
                     _showTrendingPostModalBottomSheet(context);
                   },
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
                   child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
                 ),
                 ModifiedPopupMenuItem(
