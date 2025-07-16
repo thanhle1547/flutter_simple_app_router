@@ -1,3 +1,23 @@
+## 0.14.0
+
+* update `flutter_bloc` to version 8.1.6
+
+* bump minimum Dart SDK version to 2.19.0 ~ Flutter 3.7
+
+* **delete** example: `example_wo_context`
+
+* replace `example_w_context` example with new `example` project using Flutter 3.7.12
+
+* update `example_router_delegate` to highlight menu item that will throw error on select
+
+* fix navigation issues when using SautRouterDelegate
+
+* **add** `SautModalBottomSheetRouteBuilder` to reduce verbosity in creating `RouteConfig.routeBuilder`
+
+* update README about using imperative apis
+
+* chore: update copyright year
+
 ## 0.13.0
 
 * export `SautPage` and `SautPageKey` to make it accessible from outside this library
