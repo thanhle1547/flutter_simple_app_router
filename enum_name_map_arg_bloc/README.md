@@ -34,7 +34,7 @@
 
 * dart sdk từ phiên bản 2.19.0 trở lên
 
-* flutter sdk từ phiên bản 2.7.0 trở lên
+* flutter sdk từ phiên bản 3.7.0 trở lên
 
 * flutter_bloc bản mới nhất
 
