@@ -175,6 +175,14 @@ class PostPublishedScreen extends StatelessWidget {
     );
   }
 
+  void _navigateToTrendingPostModalBottomSheet(BuildContext context) {
+    Saut.toPage(
+      context,
+      AppPages.Post_TrendingModalBottomSheet,
+      blocValue: context.read<PostFavoritesCubit>(),
+    );
+  }
+
   void _navigateToVariantTrendingPostDialog(BuildContext context) {
     Saut.toPage(
       context,
@@ -292,6 +300,13 @@ class PostPublishedScreen extends StatelessWidget {
                   },
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                   child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
+                ),
+                ModifiedPopupMenuItem(
+                  onTap: () {
+                    _navigateToTrendingPostModalBottomSheet(context);
+                  },
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  child: const Text('"Navigate to" Trending Post Modal Bottom Sheet'),
                 ),
                 ModifiedPopupMenuItem(
                   onTap: () {

@@ -7,6 +7,7 @@ enum AppPages {
   //
   Post_Trending,
   Post_TrendingVariant,
+  Post_TrendingModalBottomSheet,
 
   // undefined page
   Post_Suggest,

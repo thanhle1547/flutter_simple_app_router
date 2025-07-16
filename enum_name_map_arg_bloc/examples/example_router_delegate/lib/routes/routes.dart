@@ -7,6 +7,7 @@ import 'package:example_router_delegate/screens/post_detail_screen.dart';
 import 'package:example_router_delegate/screens/post_published_screen.dart';
 import 'package:example_router_delegate/widget/post_trending_dialog_content.dart';
 import 'package:example_router_delegate/screens/splash_screen.dart';
+import 'package:example_router_delegate/widget/post_trending_modal_bottom_sheet_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
@@ -120,6 +121,27 @@ final RouteConfig postTrendingVariant = RouteConfig(
   transitionsBuilder: SautRouteTransition.downToUp,
 );
 
+final RouteConfig _postTrendingVariantModalBottomSheet = RouteConfig(
+  routeBuilder: const SautModalBottomSheetRouteBuilder(
+    shape: PostTrendingModalBottomSheetContent.shape,
+  ).call,
+  pageBuilder: (arguments) {
+    final PostFavoritesCubit? postFavoritesCubit =
+      arguments?['PostFavoritesCubit'];
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => PostTrendingCubit(),
+        ),
+        if (postFavoritesCubit != null)
+          BlocProvider.value(value: postFavoritesCubit),
+      ],
+      child: const PostTrendingModalBottomSheetContent(),
+    );
+  },
+);
+
 final RouteConfig _postDetail = RouteConfig(
   debugRequiredArguments: {
     'name': String,
@@ -153,5 +175,6 @@ final Map<Enum, RouteConfig> routes = {
   AppPages.Post_Published: _postPublished,
   AppPages.Post_Trending: postTrending,
   AppPages.Post_TrendingVariant: postTrendingVariant,
+  AppPages.Post_TrendingModalBottomSheet: _postTrendingVariantModalBottomSheet,
   AppPages.Post_Detail: _postDetail,
 };
