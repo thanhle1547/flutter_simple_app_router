@@ -216,7 +216,7 @@ extension EnmaBuildContextExtension on BuildContext {
   @optionalTypeArgs
   void back<T extends Object?>({T? result}) {
     if (global.useRouter) {
-      global.currentRouterDelegate.back(result: result);
+      return global.currentRouterDelegate.back(result: result);
     }
 
     final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
@@ -227,7 +227,7 @@ extension EnmaBuildContextExtension on BuildContext {
   /// Calls [back] repeatedly until found the page with a certain name.
   void backToPageName(String name) {
     if (global.useRouter) {
-      global.currentRouterDelegate.backToPageName(name);
+      return global.currentRouterDelegate.backToPageName(name);
     }
 
     final navigator = Navigator.maybeOf(this) ?? global.currentNavigatorState!;
@@ -245,7 +245,7 @@ extension EnmaBuildContextExtension on BuildContext {
   /// Calls [back] repeatedly until found the page.
   void backToPage(Enum page) {
     if (global.useRouter) {
-      global.currentRouterDelegate.backToPage(page);
+      return global.currentRouterDelegate.backToPage(page);
     }
 
     backToPageName(
