@@ -808,11 +808,15 @@ Trong trường hợp bạn cần thêm 1 dialog vào trong thiết lập này, 
 
 ### Sử dụng `showDialog` (các modal dialog) với `RouterDelegate`
 
+Không thể sử dụng các Imperative apis của Flutter, bao gồm cả `showDialog`, `showModalBottomSheet`, ... khi dùng `RouterDelegate`.
+
+<!--
 Bằng cách tạo `RouteSettings` thông qua phương thức `Saut.createRouteSettings`, bạn vẫn có thể sử dụng `showDialog`, `showGeneralDialog`, ... Nếu bạn không tạo `RouteSettings` thông qua phương thức trên, sau khi hiển thị dialog, bạn tiếp tục chuyển qua màn hình khác, Flutter sẽ tung ra một lỗi trong quá trình assert, ảnh hưởng đến việc điều hướng.
 
 > Bạn vẫn nên cấu hình bằng `routeBuilder` của `RouteConfig` và sử dụng `Saut.toPage` như đã đề cập ở phần bên trên.
 
 Lý do là Flutter vẫn sẽ tung ngoại lệ trong quá trình assert với nội dung: "A page-based route should not be added using the imperative api. Provide a new list with the corresponding Page to Navigator.pages instead". Ngoại lệ này __không__ ảnh hưởng đến việc điều hướng nhưng sẽ luôn xuất hiện trên console mỗi khi sử dụng các api này.
+-->
 
 ### Thiết lập lại tất cả các cấu hình đã đặt (Reset)
 
