@@ -25,9 +25,13 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   /// the current route be popped.
   int _willPopCount = 0;
 
-  /// The number of requests from [Saut.back], [Saut.backToPage], ... API that
-  /// the current route is popped.
+  /// The number of requests from [Saut.back], [Saut.backToPage],
+  /// [Saut.replaceAllWithPage] APIs that the current route is popped.
   int _didPopCount = 0;
+
+  /// The number of requests from [updateRemovedPageWhen] API that
+  /// the current route is popped.
+  int _didUpdatePopCount = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +58,24 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
       _didPopCount--;
     }
 
-    if (_willPopCount > 0) {
+    if (_didUpdatePopCount > 0) {
+      // fix the issue (when using Flutter 3.7.12) that described below: 
+      // - Show a dialog by using imperative api (e.g. `showDialog`, `Navigator.of(context).push`)
+      // - Back to the previous screen (by using Android back button or tap the barrier)
+      // - Navigate to a new screen by using Saut api
+      // - Back to the previous screen by using imperative api (`Navigator.of(context).pop`)
+      //   or back button in the app bar
+      // - Navigate to the same screen by using Saut api
+      // - An error will shown in the debug console that "Bad state: Duplicated Page: AppPages" (`debugPreventDuplicates` must be set to `true` by default)
+      // if we continue:
+      // - Show a popup by using imperative api
+      //   - Close the popup by using Android back button or tap the barrier
+      //   - The old screen with Duplicated Page error being pushed
+      // - Show a popup by using Saut api
+      //   - The old screen with Duplicated Page error being pushed with the popup
+      _didUpdatePopCount--;
+      _removeLastPage(result);
+    } else if (_willPopCount > 0) {
       _willPopCount--;
       _removeLastPage(result);
     } else if (!didPopCountModified) {
@@ -184,7 +205,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
           removed.completeWith(null);
         }
 
-        _didPopCount++;
+        _didUpdatePopCount++;
 
         // print(_pages);
 
