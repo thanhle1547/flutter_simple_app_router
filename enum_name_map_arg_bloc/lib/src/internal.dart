@@ -4,9 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart'
     show BlocBase, BlocProvider, MultiBlocProvider;
-// ignore: implementation_imports
-import 'package:flutter_bloc/src/bloc_provider.dart'
-    show BlocProviderSingleChildWidget;
+import 'package:provider/single_child_widget.dart' show SingleChildWidget;
 import 'package:saut_enma_bloc/src/global.dart';
 
 import 'app_config.dart';
@@ -130,7 +128,7 @@ String Function(Enum page) get effectiveRouteNameBuilder =>
 Widget maybeWrapWithBlocProviders<B extends BlocBase<Object?>>({
   required Widget page,
   B? blocValue,
-  List<BlocProviderSingleChildWidget>? blocProviders,
+  List<SingleChildWidget>? blocProviders,
 }) {
   if (blocValue != null && blocProviders != null) {
     throw ArgumentError(

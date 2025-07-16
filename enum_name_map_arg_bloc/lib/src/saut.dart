@@ -3,9 +3,7 @@ import 'dart:developer' show log;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// ignore: implementation_imports
-import 'package:flutter_bloc/src/bloc_provider.dart'
-    show BlocProviderSingleChildWidget;
+import 'package:provider/single_child_widget.dart' show SingleChildWidget;
 
 import 'app_config.dart';
 import 'constants.dart';
@@ -321,7 +319,7 @@ abstract class Saut {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     bool? debugPreventDuplicates,
   }) {
     return context.toPage(
@@ -358,7 +356,7 @@ abstract class Saut {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     TO? result,
   }) {
     return context.replaceWithPage(

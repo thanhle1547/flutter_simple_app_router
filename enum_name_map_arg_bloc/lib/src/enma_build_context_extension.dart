@@ -1,9 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-// ignore: implementation_imports
-import 'package:flutter_bloc/src/bloc_provider.dart'
-    show BlocProviderSingleChildWidget;
+import 'package:provider/single_child_widget.dart' show SingleChildWidget;
 
 import 'app_config.dart';
 import 'enma_saut_router_delegate_extension.dart';
@@ -54,7 +52,7 @@ extension EnmaBuildContextExtension on BuildContext {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     bool? debugPreventDuplicates,
   }) {
     if (global.useRouter) {
@@ -104,7 +102,7 @@ extension EnmaBuildContextExtension on BuildContext {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     TO? result,
   }) {
     if (global.useRouter) {
@@ -295,7 +293,7 @@ extension on NavigatorState {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     bool? debugPreventDuplicates,
   }) {
     final RouteConfig routeConfig = getRouteConfig(page).copyWith(
@@ -359,7 +357,7 @@ extension on NavigatorState {
     Enum page, {
     Map<String, dynamic>? arguments,
     B? blocValue,
-    List<BlocProviderSingleChildWidget>? blocProviders,
+    List<SingleChildWidget>? blocProviders,
     TO? result,
   }) {
     final RouteConfig routeConfig = getRouteConfig(page);
