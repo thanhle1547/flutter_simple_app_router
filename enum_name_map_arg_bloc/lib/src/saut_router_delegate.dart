@@ -45,7 +45,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   }
 
   bool _onPopPage(Route<dynamic> route, dynamic result) {
-    // using didPopCountModified as a flag to fix the issue (when using Flutter 3.7.12) that described below:
+    // using didPopCountModified as a flag to fix the issue (from Flutter 3.7.12) that described below:
     // - Show a dialog by using imperative api (e.g. `showDialog`, `Navigator.of(context).push`)
     // - Back to the previous screen (by using Android back button or tap the barrier)
     // - Navigate to a new screen by using Saut api
@@ -54,12 +54,20 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     bool didPopCountModified = false;
 
     if (_didPopCount > 0) {
-      didPopCountModified = true;
+      // instead of set didPopCountModified to true,
+      // checking the last page is a SautPage to able to fix issue below:
+      // - Show a dialog by using Saut api
+      // - Back to the previous screen by tapping the barrier
+      // - Navigate to a new screen by using Saut api
+      // - Back to the previous screen (by using Android back button or tap the barrier)
+      // - The dialog appear
+      // If the last page is a SautPage, didPopCountModified will be false
+      didPopCountModified = _lastPageIsSautPage != true;
       _didPopCount--;
     }
 
     if (_didUpdatePopCount > 0) {
-      // fix the issue (when using Flutter 3.7.12) that described below: 
+      // fix the issue (from Flutter 3.7.12) that described below: 
       // - Show a dialog by using imperative api (e.g. `showDialog`, `Navigator.of(context).push`)
       // - Back to the previous screen (by using Android back button or tap the barrier)
       // - Navigate to a new screen by using Saut api
@@ -117,6 +125,12 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     if (_pages.isEmpty) return null;
 
     return _pages.last.name;
+  }
+
+  bool? get _lastPageIsSautPage {
+    if (_pages.isEmpty) return null;
+
+    return _pages.last is SautPage;
   }
 
   @protected
