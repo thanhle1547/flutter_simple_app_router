@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
-class PostTrendingDialog extends StatelessWidget {
-  const PostTrendingDialog({
+class PostTrendingDialogContent extends StatelessWidget {
+  const PostTrendingDialogContent({
     Key? key,
     this.postFavoritesCubitCompleter,
   }) : super(key: key);

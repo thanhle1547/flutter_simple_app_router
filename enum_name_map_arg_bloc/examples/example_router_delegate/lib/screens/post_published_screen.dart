@@ -8,7 +8,7 @@ import 'package:example_router_delegate/notification_controller.dart';
 import 'package:example_router_delegate/routes/app_pages.dart';
 import 'package:example_router_delegate/routes/routes.dart';
 import 'package:example_router_delegate/routes/stacked_pages.dart';
-import 'package:example_router_delegate/screens/post_trending_dialog.dart';
+import 'package:example_router_delegate/widget/post_trending_dialog_content.dart';
 import 'package:example_router_delegate/widget/favorite_button.dart';
 import 'package:example_router_delegate/widget/modified_popup_menu.dart';
 import 'package:example_router_delegate/widget/post_trending_modal_bottom_sheet_content.dart';
@@ -49,7 +49,7 @@ class PostPublishedScreen extends StatelessWidget {
               value: context.read<PostFavoritesCubit>(),
             ),
           ],
-          child: const PostTrendingDialog(),
+          child: const PostTrendingDialogContent(),
         ),
       ),
       routeSettings: Saut.createRouteSettings(
@@ -110,7 +110,7 @@ class PostPublishedScreen extends StatelessWidget {
                 value: context.read<PostFavoritesCubit>(),
               ),
             ],
-            child: const PostTrendingDialog(),
+            child: const PostTrendingDialogContent(),
           );
         },
         transitionsBuilder: SautRouteTransition.none,

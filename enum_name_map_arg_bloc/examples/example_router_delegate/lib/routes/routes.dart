@@ -5,7 +5,7 @@ import 'package:example_router_delegate/cubits/post_published/post_published_cub
 import 'package:example_router_delegate/cubits/post_trending/post_trending_cubit.dart';
 import 'package:example_router_delegate/screens/post_detail_screen.dart';
 import 'package:example_router_delegate/screens/post_published_screen.dart';
-import 'package:example_router_delegate/screens/post_trending_dialog.dart';
+import 'package:example_router_delegate/widget/post_trending_dialog_content.dart';
 import 'package:example_router_delegate/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -80,7 +80,7 @@ final RouteConfig postTrending = RouteConfig(
         if (postFavoritesCubit != null)
           BlocProvider.value(value: postFavoritesCubit),
       ],
-      child: PostTrendingDialog(
+      child: PostTrendingDialogContent(
         postFavoritesCubitCompleter: completer,
       ),
     );
@@ -111,7 +111,7 @@ final RouteConfig postTrendingVariant = RouteConfig(
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(24)),
         ),
-        child: PostTrendingDialog(
+        child: PostTrendingDialogContent(
           postFavoritesCubitCompleter: completer,
         ),
       ),
