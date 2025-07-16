@@ -2,15 +2,15 @@
 
 enum AppPages {
   Initial,
-  //
+
   Post_Published,
-  //
+
   Post_Trending,
   Post_TrendingVariant,
   Post_TrendingModalBottomSheet,
 
-  // undefined page
+  /// An example of undefined page
   Post_Suggest,
-  //
+
   Post_Detail,
 }

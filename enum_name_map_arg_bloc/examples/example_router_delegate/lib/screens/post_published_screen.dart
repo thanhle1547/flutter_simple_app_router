@@ -191,6 +191,7 @@ class PostPublishedScreen extends StatelessWidget {
     );
   }
 
+  /// An error will be shown in the debug console
   void _fabPressedHandler(BuildContext context) {
     Saut.toPage(context, AppPages.Post_Suggest);
   }
@@ -331,6 +332,7 @@ class PostPublishedScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _fabPressedHandler(context),
+        tooltip: 'An error will be shown in the debug console',
         child: const Icon(Icons.undo_rounded),
       ),
     );
