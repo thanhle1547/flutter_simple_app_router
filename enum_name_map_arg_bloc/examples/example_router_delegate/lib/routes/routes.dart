@@ -122,9 +122,7 @@ final RouteConfig postTrendingVariant = RouteConfig(
 );
 
 final RouteConfig _postTrendingVariantModalBottomSheet = RouteConfig(
-  routeBuilder: const SautModalBottomSheetRouteBuilder(
-    shape: PostTrendingModalBottomSheetContent.shape,
-  ).call,
+  routeBuilder: const SautModalBottomSheetRouteBuilder().call,
   pageBuilder: (arguments) {
     final PostFavoritesCubit? postFavoritesCubit =
       arguments?['PostFavoritesCubit'];

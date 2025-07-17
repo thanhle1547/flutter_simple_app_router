@@ -25,24 +25,27 @@ class PostTrendingModalBottomSheetContent extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16))
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text(
-            'Trending',
-            style: TextStyle(fontSize: 18),
-          ),
-          const SizedBox(height: 12),
-          TrendingItem(
-            name: state.topOne!,
-            id: 1,
-          ),
-          const SizedBox(height: 10),
-          TrendingItem(
-            name: state.secondary!,
-            id: 2,
-          ),
-        ],
+      child: Material(
+        type: MaterialType.transparency,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Trending',
+              style: TextStyle(fontSize: 18),
+            ),
+            const SizedBox(height: 12),
+            TrendingItem(
+              name: state.topOne!,
+              id: 1,
+            ),
+            const SizedBox(height: 10),
+            TrendingItem(
+              name: state.secondary!,
+              id: 2,
+            ),
+          ],
+        ),
       ),
     );
   }
