@@ -1,3 +1,13 @@
+## 0.15.1
+
+* bump minimum Dart SDK version to 3.1.0 ~ Flutter 3.13.0
+
+* update `example`, `example_router_delegate` examples to Flutter 3.13.9
+
+* update `SautModalBottomSheetRouteBuilder` following these flutter PRs:
+  - [Fix bottom sheet rebuilding when tapping](https://github.com/flutter/flutter/pull/127526)
+  - [Support keeping a bottom sheet with a DraggableScrollableSheet from closing on drag/fling to min extent](https://github.com/flutter/flutter/pull/127339)
+
 ## 0.15.0
 
 * bump minimum Dart SDK version to 3.0.0 ~ Flutter 3.10
