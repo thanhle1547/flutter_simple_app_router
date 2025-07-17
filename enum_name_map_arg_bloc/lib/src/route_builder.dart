@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'modified_copy/bottom_sheet.dart' as bottom_sheet;
 import 'modified_copy/dialog.dart' as dialog;
 import 'route_config.dart';
 
@@ -209,12 +210,18 @@ class SautCupertinoDialogRouteBuilder extends SautRouteBuilder {
   }
 }
 
+/// {@macro saut.modified_copy.ModalBottomSheetRoute}
+///
+/// The `useRootNavigator` parameter ensures that the root navigator is used to
+/// display the [BottomSheet] when set to `true`. This is useful in the case
+/// that a modal [BottomSheet] needs to be displayed above all other content
+/// but the caller is inside another [Navigator].
+///
+/// The 'barrierLabel' parameter can be used to set a custom barrier label.
+/// Will default to [MaterialLocalizations.modalBarrierDismissLabel] of context
+/// if not set.
 class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   const SautModalBottomSheetRouteBuilder({
-    this.backgroundColor,
-    this.elevation,
-    this.shape,
-    this.clipBehavior,
     this.constraints,
     this.barrierColor,
     this.isScrollControlled = false,
@@ -223,13 +230,10 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
     this.enableDrag = true,
     this.showDragHandle,
     this.useSafeArea = false,
-    this.anchorPoint,
+    this.fallbackToMediaQuery = true,
+    this.useDisplayFeatureSubScreen = true,
   });
 
-  final Color? backgroundColor;
-  final double? elevation;
-  final ShapeBorder? shape;
-  final Clip? clipBehavior;
   final BoxConstraints? constraints;
   final Color? barrierColor;
   final bool isScrollControlled;
@@ -238,7 +242,27 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   final bool enableDrag;
   final bool? showDragHandle;
   final bool useSafeArea;
-  final Offset? anchorPoint;
+
+  /// If [useSafeArea] is false, then [MediaQuery.removePadding]
+  /// will be used to remove top padding, so that a [SafeArea] widget
+  /// inside the bottom sheet will have no effect at the top edge.
+  /// If this is undesired, set the alue of
+  /// [SautModalBottomSheetRouteBuilder.fallbackToMediaQuery] to false.
+  final bool fallbackToMediaQuery;
+
+  /// Whether to avoid overlapping any display feature.
+  ///
+  /// If true, a [DisplayFeatureSubScreen] is inserted to keep the bottom sheet
+  /// away from overlapping any [DisplayFeature] that splits the screen
+  /// into sub-screens.
+  ///
+  /// The default is true.
+  ///
+  /// See also:
+  ///
+  ///  * [DisplayFeatureSubScreen], which documents the specifics of how
+  ///    [DisplayFeature]s can split the screen into sub-screens.
+  final bool useDisplayFeatureSubScreen;
 
   @override
   Route<T> call<T>(
@@ -253,23 +277,20 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
     final NavigatorState navigator = Navigator.of(context, rootNavigator: useRootNavigator);
     final MaterialLocalizations localizations = MaterialLocalizations.of(context);
 
-    return ModalBottomSheetRoute<T>(
-      builder: (context) => page,
+    return bottom_sheet.ModalBottomSheetRoute<T>(
+      page: page,
       capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
       isScrollControlled: isScrollControlled,
       barrierLabel: localizations.scrimLabel,
       barrierOnTapHint: localizations.scrimOnTapHint(localizations.bottomSheetLabel),
-      backgroundColor: backgroundColor,
-      elevation: elevation,
-      shape: shape,
-      clipBehavior: clipBehavior,
       constraints: constraints,
       isDismissible: isDismissible,
       modalBarrierColor: barrierColor ?? Theme.of(context).bottomSheetTheme.modalBarrierColor,
       enableDrag: enableDrag,
       settings: settings,
-      anchorPoint: anchorPoint,
       useSafeArea: useSafeArea,
+      fallbackToMediaQuery: fallbackToMediaQuery,
+      useDisplayFeatureSubScreen: useDisplayFeatureSubScreen,
     );
   }
 }
