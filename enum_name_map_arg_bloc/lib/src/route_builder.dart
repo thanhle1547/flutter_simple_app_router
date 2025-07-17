@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'modified_copy/dialog.dart' as dialog;
 import 'route_config.dart';
 
 abstract class SautRouteBuilder {
@@ -31,7 +32,8 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
     this.barrierLabel,
     this.useSafeArea = true,
     this.useRootNavigator = true,
-    this.transitionBuilder = _buildMaterialDialogTransitions,
+    this.useDisplayFeatureSubScreen = true,
+    this.transitionBuilder = const SautRawDialogRouteTransitionsBuilder(),
     this.traversalEdgeBehavior,
   });
 
@@ -40,7 +42,8 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
   final String? barrierLabel;
   final bool useSafeArea;
   final bool useRootNavigator;
-  final RouteTransitionsBuilder transitionBuilder;
+  final bool useDisplayFeatureSubScreen;
+  final SautRouteTransitionsBuilder transitionBuilder;
   final TraversalEdgeBehavior? traversalEdgeBehavior;
 
   @override
@@ -61,14 +64,16 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
       ).context,
     );
 
-    return RawDialogRoute<T>(
-      pageBuilder: (context, animation, secondaryAnimation) {
-        Widget dialog = themes.wrap(page);
-        if (useSafeArea) {
-          dialog = SafeArea(child: dialog);
-        }
-        return dialog;
-      },
+    Widget dialogWidget = themes.wrap(page);
+    if (useSafeArea) {
+      dialogWidget = SafeArea(child: dialogWidget);
+    }
+    if (useDisplayFeatureSubScreen) {
+      dialogWidget = DisplayFeatureSubScreen(child: dialogWidget);
+    }
+
+    return dialog.RawDialogRoute<T>(
+      page: dialogWidget,
       barrierColor: barrierColor,
       barrierDismissible: barrierDismissible,
       barrierLabel: barrierLabel ?? MaterialLocalizations.of(context).modalBarrierDismissLabel,
@@ -80,13 +85,45 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
   }
 }
 
-/// See also:
-///  * [fixes `RawDialogRoute` memory leak [prod-leak-fix]](https://github.com/flutter/flutter/pull/147817)
-Widget _buildMaterialDialogTransitions(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
-  return FadeTransition(
-    opacity: animation,
-    child: child,
-  );
+class SautRawDialogRouteTransitionsBuilder extends SautRouteTransitionsBuilder {
+  const SautRawDialogRouteTransitionsBuilder();
+
+  /// See also:
+  ///  * [fixes `RawDialogRoute` memory leak [prod-leak-fix]](https://github.com/flutter/flutter/pull/147817)
+  @override
+  Widget call(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    return FadeTransition(
+      opacity: animation,
+      child: child,
+    );
+  }
+}
+
+class SautMaterialDialogRouteTransitionsBuilder extends SautRouteTransitionsBuilder {
+  CurvedAnimation? _curvedAnimation;
+
+  void _setAnimation(Animation<double> animation) {
+    if (_curvedAnimation?.parent != animation) {
+      _curvedAnimation?.dispose();
+      _curvedAnimation = CurvedAnimation(parent: animation, curve: Curves.easeOut);
+    }
+  }
+
+  /// See also:
+  ///  * [fixes `DialogRoute` memory leak [prod-leak-fix]](https://github.com/flutter/flutter/pull/147816)
+  @override
+  Widget call(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child) {
+    _setAnimation(animation);
+    return FadeTransition(
+      opacity: _curvedAnimation!,
+      child: child,
+    );
+  }
+
+  @override
+  void dispose() {
+    _curvedAnimation?.dispose();
+  }
 }
 
 bool _debugIsActive(BuildContext context) {
