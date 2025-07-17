@@ -16,6 +16,14 @@ abstract class SautRouteBuilder {
   );
 }
 
+abstract class SautRouteTransitionsBuilder {
+  const SautRouteTransitionsBuilder();
+
+  Widget call(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation, Widget child);
+
+  void dispose() {}
+}
+
 class SautDialogRouteBuilder extends SautRouteBuilder {
   const SautDialogRouteBuilder({
     this.barrierDismissible = true,
