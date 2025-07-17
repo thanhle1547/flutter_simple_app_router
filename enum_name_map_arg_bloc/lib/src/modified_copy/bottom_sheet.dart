@@ -256,7 +256,7 @@ class _BottomSheetState extends State<BottomSheet> {
   }
 
   bool extentChanged(DraggableScrollableNotification notification) {
-    if (notification.extent == notification.minExtent) {
+    if (notification.extent == notification.minExtent && notification.shouldCloseOnMinExtent) {
       widget.onClosing();
     }
     return false;
@@ -512,10 +512,9 @@ class _RenderBottomSheetLayoutWithSizeListener extends RenderShiftedBox {
     return BoxConstraints(
       minWidth: constraints.maxWidth,
       maxWidth: constraints.maxWidth,
-      maxHeight:
-          isScrollControlled
-              ? constraints.maxHeight
-              : constraints.maxHeight * scrollControlDisabledMaxHeightRatio,
+      maxHeight: isScrollControlled
+        ? constraints.maxHeight
+        : constraints.maxHeight * scrollControlDisabledMaxHeightRatio,
     );
   }
 
@@ -624,7 +623,9 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
         onDragEnd: handleDragEnd,
       ),
       builder: (BuildContext context, Widget? child) {
-        final double animationValue = animationCurve.transform(widget.route.animation!.value);
+        final double animationValue = animationCurve.transform(
+          widget.route.animation!.value,
+        );
         return Semantics(
           scopesRoute: true,
           namesRoute: true,
@@ -633,7 +634,9 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
           child: ClipRect(
             child: _BottomSheetLayoutWithSizeListener(
               onChildSizeChanged: (Size size) {
-                widget.route._didChangeBarrierSemanticsClip(_getNewClipDetails(size));
+                widget.route._didChangeBarrierSemanticsClip(
+                  _getNewClipDetails(size),
+                );
               },
               animationValue: animationValue,
               isScrollControlled: widget.isScrollControlled,
@@ -1035,16 +1038,16 @@ class _BottomSheetGestureDetector extends StatelessWidget {
     return RawGestureDetector(
       excludeFromSemantics: true,
       gestures: <Type, GestureRecognizerFactory<GestureRecognizer>>{
-        VerticalDragGestureRecognizer:
-            GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
-              () => VerticalDragGestureRecognizer(debugOwner: this),
-              (VerticalDragGestureRecognizer instance) {
-                instance
-                  ..onStart = onVerticalDragStart
-                  ..onUpdate = onVerticalDragUpdate
-                  ..onEnd = onVerticalDragEnd;
-              },
-            ),
+        VerticalDragGestureRecognizer : GestureRecognizerFactoryWithHandlers<VerticalDragGestureRecognizer>(
+          () => VerticalDragGestureRecognizer(debugOwner: this),
+          (VerticalDragGestureRecognizer instance) {
+            instance
+              ..onStart = onVerticalDragStart
+              ..onUpdate = onVerticalDragUpdate
+              ..onEnd = onVerticalDragEnd
+              ..onlyAcceptDragOnThreshold = true;
+          },
+        ),
       },
       child: child,
     );
@@ -1070,13 +1073,13 @@ class _BottomSheetDefaultsM3 extends BottomSheetThemeData {
   Color? get backgroundColor => _colors.surface;
 
   @override
-  Color? get surfaceTintColor => Colors.transparent;
+  Color? get surfaceTintColor => _colors.surfaceTint;
 
   @override
   Color? get shadowColor => Colors.transparent;
 
   @override
-  Color? get dragHandleColor => _colors.onSurfaceVariant;
+  Color? get dragHandleColor => _colors.onSurfaceVariant.withOpacity(0.4);
 
   @override
   Size? get dragHandleSize => const Size(32, 4);
