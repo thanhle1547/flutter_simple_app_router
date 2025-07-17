@@ -228,6 +228,7 @@ class SautCupertinoDialogRouteBuilder extends SautRouteBuilder {
 class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   const SautModalBottomSheetRouteBuilder({
     this.constraints,
+    this.barrierLabel,
     this.barrierColor,
     this.modalBarrierBuilder,
     this.isScrollControlled = false,
@@ -241,6 +242,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   });
 
   final BoxConstraints? constraints;
+  final String? barrierLabel;
   final Color? barrierColor;
   final SautModalBarrierBuilder? modalBarrierBuilder;
   final bool isScrollControlled;
@@ -288,7 +290,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
       page: page,
       capturedThemes: InheritedTheme.capture(from: context, to: navigator.context),
       isScrollControlled: isScrollControlled,
-      barrierLabel: localizations.scrimLabel,
+      barrierLabel: barrierLabel ?? localizations.scrimLabel,
       barrierOnTapHint: localizations.scrimOnTapHint(localizations.bottomSheetLabel),
       modalBarrierBuilder: modalBarrierBuilder,
       constraints: constraints,
