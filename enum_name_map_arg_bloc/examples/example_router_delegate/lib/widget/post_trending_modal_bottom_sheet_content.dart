@@ -19,7 +19,7 @@ class PostTrendingModalBottomSheetContent extends StatelessWidget {
     final state = context.read<PostTrendingCubit>().state;
 
     return Container(
-      height: 200,
+      height: 220,
       padding: const EdgeInsets.all(18),
       decoration: const BoxDecoration(
         color: Colors.white,

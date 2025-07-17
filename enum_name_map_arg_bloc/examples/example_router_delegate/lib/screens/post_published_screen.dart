@@ -284,7 +284,10 @@ class PostPublishedScreen extends StatelessWidget {
                 onTap: () {
                   _showTrendingPostDialog(context);
                 },
-                textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                labelTextStyle: MaterialStateTextStyle.resolveWith(
+                  (states) => textTheme.labelLarge!.copyWith(color: Colors.red),
+                ),
                 child: const Text('Show Trending Post Dialog by using showDialog api'),
               ),
               ModifiedPopupMenuItem(
@@ -315,8 +318,10 @@ class PostPublishedScreen extends StatelessWidget {
                 onTap: () {
                   _showTrendingPostModalBottomSheet(context);
                 },
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                labelTextStyle: MaterialStateTextStyle.resolveWith(
+                  (states) => textTheme.labelLarge!.copyWith(color: Colors.red),
+                ),
                 child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
               ),
               ModifiedPopupMenuItem(
@@ -383,13 +388,13 @@ class __PopupMenuButtonState extends State<_PopupMenuButton> {
           ...widget.entries,
           ModifiedPopupMenuItem(
             enabled: false,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     'Use Saut api to open this popup menu',
-                    style: textTheme.titleMedium,
+                    style: textTheme.labelLarge,
                   ),
                 ),
                 ValueListenableBuilder(
@@ -412,13 +417,13 @@ class __PopupMenuButtonState extends State<_PopupMenuButton> {
           ),
           ModifiedPopupMenuItem(
             enabled: false,
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     'Use Saut api to dismiss this popup menu',
-                    style: textTheme.titleMedium,
+                    style: textTheme.labelLarge,
                   ),
                 ),
                 ValueListenableBuilder(
