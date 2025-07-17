@@ -270,58 +270,56 @@ class PostPublishedScreen extends StatelessWidget {
             tooltip: '"Navigate to" Trending Post Dialog',
             icon: const Icon(Icons.trending_up_rounded),
           ),
-          ModifiedPopupMenuButton(
-            itemBuilder: (context) {
-              return [
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _showTrendingPostDialog(context);
-                  },
-                  textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
-                  child: const Text('Show Trending Post Dialog by using showDialog api'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _setStackTrendingPost(context);
-                  },
-                  child: const Text('Set Stack: TrendingPost'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _navigateToUnconfiguredTrendingPostDialog(context);
-                  },
-                  child: const Text('"Navigate to" Unconfigured Trending Post Dialog'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _navigateToModifiedTrendingPostDialog(context);
-                  },
-                  child: const Text('"Navigate to" Modified Trending Post Dialog'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _showTrendingPostModalBottomSheet(context);
-                  },
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
-                  child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _navigateToTrendingPostModalBottomSheet(context);
-                  },
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: const Text('"Navigate to" Trending Post Modal Bottom Sheet'),
-                ),
-                ModifiedPopupMenuItem(
-                  onTap: () {
-                    _navigateToVariantTrendingPostDialog(context);
-                  },
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                  child: const Text('"Navigate to" Trending Post Dialog with the route built by SautDialogRouteBuilder'),
-                ),
-              ];
-            },
+          _PopupMenuButton(
+            entries: [
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _showTrendingPostDialog(context);
+                },
+                textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
+                child: const Text('Show Trending Post Dialog by using showDialog api'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _setStackTrendingPost(context);
+                },
+                child: const Text('Set Stack: TrendingPost'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _navigateToUnconfiguredTrendingPostDialog(context);
+                },
+                child: const Text('"Navigate to" Unconfigured Trending Post Dialog'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _navigateToModifiedTrendingPostDialog(context);
+                },
+                child: const Text('"Navigate to" Modified Trending Post Dialog'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _showTrendingPostModalBottomSheet(context);
+                },
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                textStyle: textTheme.titleMedium?.copyWith(color: Colors.red),
+                child: const Text('Show Trending Post Modal Bottom Sheet by using showModalBottomSheet api'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _navigateToTrendingPostModalBottomSheet(context);
+                },
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: const Text('"Navigate to" Trending Post Modal Bottom Sheet'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _navigateToVariantTrendingPostDialog(context);
+                },
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                child: const Text('"Navigate to" Trending Post Dialog with the route built by SautDialogRouteBuilder'),
+              ),
+            ],
           ),
         ],
       ),
@@ -339,6 +337,96 @@ class PostPublishedScreen extends StatelessWidget {
         tooltip: 'An error will be shown in the debug console',
         child: const Icon(Icons.undo_rounded),
       ),
+    );
+  }
+}
+
+class _PopupMenuButton extends StatefulWidget {
+  const _PopupMenuButton({required this.entries});
+
+  final List<PopupMenuEntry<dynamic>> entries;
+
+  @override
+  State<_PopupMenuButton> createState() => __PopupMenuButtonState();
+}
+
+class __PopupMenuButtonState extends State<_PopupMenuButton> {
+  final ValueNotifier<bool> useImperativeApiToOpenPopupMenu = ValueNotifier(false);
+  final ValueNotifier<bool> useImperativeApiToDismissPopupMenu = ValueNotifier(false);
+
+  @override
+  Widget build(BuildContext context) {
+    final TextTheme textTheme = Theme.of(context).textTheme;
+
+    return ModifiedPopupMenuButton(
+      useImperativeApiToOpen: useImperativeApiToOpenPopupMenu.value,
+      useImperativeApiToDismiss: useImperativeApiToDismissPopupMenu.value,
+      onCanceled: () {
+        setState(() {});
+      },
+      itemBuilder: (context) {
+        return [
+          ...widget.entries,
+          ModifiedPopupMenuItem(
+            enabled: false,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Use Saut api to open this popup menu',
+                    style: textTheme.titleMedium,
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: useImperativeApiToOpenPopupMenu,
+                  builder: (context, useImperativeApiToOpenPopupMenu, child) {
+                    return Checkbox(
+                      value: !useImperativeApiToOpenPopupMenu,
+                      onChanged: (value) {
+                        this.useImperativeApiToOpenPopupMenu.value = !value!;
+
+                        if (!value) {
+                          useImperativeApiToDismissPopupMenu.value = true;
+                        }
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          ModifiedPopupMenuItem(
+            enabled: false,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    'Use Saut api to dismiss this popup menu',
+                    style: textTheme.titleMedium,
+                  ),
+                ),
+                ValueListenableBuilder(
+                  valueListenable: useImperativeApiToDismissPopupMenu,
+                  builder: (context, useImperativeApiToDismissPopupMenu, child) {
+                    return Checkbox(
+                      value: !useImperativeApiToDismissPopupMenu,
+                      onChanged: (value) {
+                        this.useImperativeApiToDismissPopupMenu.value = !value!;
+
+                        if (value) {
+                          useImperativeApiToOpenPopupMenu.value = false;
+                        }
+                      },
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        ];
+      },
     );
   }
 }

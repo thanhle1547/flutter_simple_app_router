@@ -538,6 +538,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     required this.capturedThemes,
     this.constraints,
     required this.clipBehavior,
+    required this.useImperativeApiToDismiss,
     required RouteSettings settings,
   })  : itemSizes = List<Size?>.filled(items.length, null),
         super(settings: settings);
@@ -555,6 +556,7 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
   final CapturedThemes capturedThemes;
   final BoxConstraints? constraints;
   final Clip clipBehavior;
+  final bool useImperativeApiToDismiss;
 
   CurvedAnimation? _animation;
 
@@ -578,6 +580,41 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
 
   @override
   final String barrierLabel;
+
+  @override
+  Widget buildModalBarrier() {
+    if (useImperativeApiToDismiss) {
+      return super.buildModalBarrier();
+    }
+
+    return Builder(
+      builder: (context) {
+        if (barrierColor != null && barrierColor!.alpha != 0 && !offstage) { // changedInternalState is called if barrierColor or offstage updates
+          assert(barrierColor != barrierColor!.withOpacity(0.0));
+          final Animation<Color?> color = animation!.drive(
+            ColorTween(
+              begin: barrierColor!.withOpacity(0.0),
+              end: barrierColor, // changedInternalState is called if barrierColor updates
+            ).chain(CurveTween(curve: barrierCurve)), // changedInternalState is called if barrierCurve updates
+          );
+          return AnimatedModalBarrier(
+            color: color,
+            dismissible: barrierDismissible, // changedInternalState is called if barrierDismissible updates
+            semanticsLabel: barrierLabel, // changedInternalState is called if barrierLabel updates
+            barrierSemanticsDismissible: semanticsDismissible,
+            onDismiss: () => Saut.back(context),
+          );
+        } else {
+          return ModalBarrier(
+            dismissible: barrierDismissible, // changedInternalState is called if barrierDismissible updates
+            semanticsLabel: barrierLabel, // changedInternalState is called if barrierLabel updates
+            barrierSemanticsDismissible: semanticsDismissible,
+            onDismiss: () => Saut.back(context),
+          );
+        }
+      }
+    );
+  }
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
@@ -705,6 +742,7 @@ Future<T?> showModifiedMenu<T>({
   bool useRootNavigator = false,
   BoxConstraints? constraints,
   Clip clipBehavior = Clip.none,
+  required bool useImperativeApiToDismiss,
 }) {
   assert(items.isNotEmpty);
   assert(debugCheckHasMaterialLocalizations(context));
@@ -740,6 +778,7 @@ Future<T?> showModifiedMenu<T>({
       capturedThemes: capturedThemes,
       constraints: constraints,
       clipBehavior: clipBehavior,
+      useImperativeApiToDismiss: useImperativeApiToDismiss,
       settings: settings,
     );
   }
@@ -799,6 +838,8 @@ class ModifiedPopupMenuButton<T> extends StatefulWidget {
     this.constraints,
     this.position,
     this.clipBehavior = Clip.none,
+    required this.useImperativeApiToOpen,
+    required this.useImperativeApiToDismiss,
   }) : assert(
          !(child != null && icon != null),
          'You can only pass [child] or [icon], not both.',
@@ -956,6 +997,12 @@ class ModifiedPopupMenuButton<T> extends StatefulWidget {
   /// Defaults to [Clip.none], and must not be null.
   final Clip clipBehavior;
 
+  final bool useImperativeApiToOpen;
+
+  /// Whether the popup menu will dismiss by using imperative api
+  /// ([Navigator.pop]) or using [Saut.back] api.
+  final bool useImperativeApiToDismiss;
+
   @override
   ModifiedPopupMenuButtonState<T> createState() => ModifiedPopupMenuButtonState<T>();
 }
@@ -998,20 +1045,38 @@ class ModifiedPopupMenuButtonState<T> extends State<ModifiedPopupMenuButton<T>> 
     // Only show the menu if there is something to show
     if (items.isNotEmpty) {
       widget.onOpened?.call();
-      showMenu<T?>(
-        context: context,
-        elevation: widget.elevation ?? popupMenuTheme.elevation,
-        shadowColor: widget.shadowColor ?? popupMenuTheme.shadowColor,
-        surfaceTintColor: widget.surfaceTintColor ?? popupMenuTheme.surfaceTintColor,
-        items: items,
-        initialValue: widget.initialValue,
-        position: position,
-        shape: widget.shape ?? popupMenuTheme.shape,
-        color: widget.color ?? popupMenuTheme.color,
-        constraints: widget.constraints,
-        clipBehavior: widget.clipBehavior,
-      )
-      .then<void>((T? newValue) {
+      Future<T?> result;
+      if (widget.useImperativeApiToOpen) {
+        result = showMenu<T?>(
+          context: context,
+          elevation: widget.elevation ?? popupMenuTheme.elevation,
+          shadowColor: widget.shadowColor ?? popupMenuTheme.shadowColor,
+          surfaceTintColor: widget.surfaceTintColor ?? popupMenuTheme.surfaceTintColor,
+          items: items,
+          initialValue: widget.initialValue,
+          position: position,
+          shape: widget.shape ?? popupMenuTheme.shape,
+          color: widget.color ?? popupMenuTheme.color,
+          constraints: widget.constraints,
+          clipBehavior: widget.clipBehavior,
+        );
+      } else {
+        result = showModifiedMenu<T?>(
+          context: context,
+          elevation: widget.elevation ?? popupMenuTheme.elevation,
+          shadowColor: widget.shadowColor ?? popupMenuTheme.shadowColor,
+          surfaceTintColor: widget.surfaceTintColor ?? popupMenuTheme.surfaceTintColor,
+          items: items,
+          initialValue: widget.initialValue,
+          position: position,
+          shape: widget.shape ?? popupMenuTheme.shape,
+          color: widget.color ?? popupMenuTheme.color,
+          constraints: widget.constraints,
+          clipBehavior: widget.clipBehavior,
+          useImperativeApiToDismiss: widget.useImperativeApiToDismiss,
+        );
+      }
+      result.then<void>((T? newValue) {
         if (!mounted) {
           return null;
         }
