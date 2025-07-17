@@ -90,35 +90,35 @@ final RouteConfig postTrending = RouteConfig(
   transitionsBuilder: SautRouteTransition.none,
 );
 
+Widget _buildPostTrendingDialogVariant(Map<String, dynamic>? arguments) {
+  final Completer<PostFavoritesCubit>? completer = arguments?['postFavoritesCubitCompleter'];
+  final PostFavoritesCubit? postFavoritesCubit = arguments?['PostFavoritesCubit'];
+
+  return MultiBlocProvider(
+    providers: [
+      BlocProvider(
+        create: (_) => PostTrendingCubit(),
+      ),
+      if (postFavoritesCubit != null)
+        BlocProvider.value(value: postFavoritesCubit),
+    ],
+    child: Dialog(
+      backgroundColor: Colors.orange.shade300,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(24)),
+      ),
+      child: PostTrendingDialogContent(
+        postFavoritesCubitCompleter: completer,
+      ),
+    ),
+  );
+}
+
 final RouteConfig postTrendingVariant = RouteConfig(
   routeBuilder: SautDialogRouteBuilder(
     barrierColor: Colors.amber.withAlpha(66), // opacity 40%
   ).call,
-  pageBuilder: (arguments) {
-    final Completer<PostFavoritesCubit>? completer =
-        arguments?['postFavoritesCubitCompleter'];
-    final PostFavoritesCubit? postFavoritesCubit =
-        arguments?['PostFavoritesCubit'];
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => PostTrendingCubit(),
-        ),
-        if (postFavoritesCubit != null)
-          BlocProvider.value(value: postFavoritesCubit),
-      ],
-      child: Dialog(
-        backgroundColor: Colors.orange.shade300,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(24)),
-        ),
-        child: PostTrendingDialogContent(
-          postFavoritesCubitCompleter: completer,
-        ),
-      ),
-    );
-  },
+  pageBuilder: _buildPostTrendingDialogVariant,
   transitionsBuilder: SautRouteTransition.downToUp,
 );
 
@@ -152,31 +152,7 @@ final RouteConfig _postTrendingVariantCustomBarrier = RouteConfig(
       );
     },
   ).call,
-  pageBuilder: (arguments) {
-    final Completer<PostFavoritesCubit>? completer =
-        arguments?['postFavoritesCubitCompleter'];
-    final PostFavoritesCubit? postFavoritesCubit =
-        arguments?['PostFavoritesCubit'];
-
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => PostTrendingCubit(),
-        ),
-        if (postFavoritesCubit != null)
-          BlocProvider.value(value: postFavoritesCubit),
-      ],
-      child: Dialog(
-        backgroundColor: Colors.orange.shade300,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(24)),
-        ),
-        child: PostTrendingDialogContent(
-          postFavoritesCubitCompleter: completer,
-        ),
-      ),
-    );
-  },
+  pageBuilder: _buildPostTrendingDialogVariant,
   transitionsBuilder: SautRouteTransition.downToUp,
 );
 
