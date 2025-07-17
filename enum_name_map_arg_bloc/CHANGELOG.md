@@ -1,3 +1,35 @@
+## 0.15.0
+
+* bump minimum Dart SDK version to 3.0.0 ~ Flutter 3.10
+
+* update `example`, `example_router_delegate` examples to Flutter 3.10.6
+
+* fix remaining navigation issues when using SautRouterDelegate
+
+* **add** `SautRouteTransitionsBuilder` and some pre-built:
+  - `SautRawDialogRouteTransitionsBuilder`
+  - `SautMaterialDialogRouteTransitionsBuilder`
+
+* `SautDialogRouteBuilder`:
+  - add `traversalEdgeBehavior` parameter
+  - add `modalBarrierBuilder` parameter
+  - add `useDisplayFeatureSubScreen` parameter to able to opt-out `DisplayFeatureSubScreen`, default to true
+  - breaking:
+    - using a copy version of `RawDialogRoute` in Flutter 3.29.3
+    - `transitionBuilder` type change to `SautRouteTransitionsBuilder` and use `SautRawDialogRouteTransitionsBuilder` as default
+
+* `SautModalBottomSheetRouteBuilder`:
+  - add `barrierOnTapHint`
+  - add `barrierLabel` parameter
+  - add `modalBarrierBuilder` parameter
+  - add `fallbackToMediaQuery` parameter to able to opt-out `MediaQuery` when `useSafeArea` is false, default to true
+  - add `useDisplayFeatureSubScreen` parameter to able to opt-out `DisplayFeatureSubScreen`, default to true
+  - breaking:
+    - using a copy version of `ModalBottomSheetRoute` and `BottomSheet` in Flutter 3.29.3
+    - remove `backgroundColor`, `elevation`, `shape`, `clipBehavior` and `anchorPoint`
+
+* fix `Saut.back`, `Saut.backToPageName`, `Saut.backToPage`, `context.back`, `context.backToPageName`, `context.backToPage` cause navigation issues when using `SautRouterDelegate` from version 0.12.0
+
 ## 0.14.0
 
 * update `flutter_bloc` to version 8.1.6
