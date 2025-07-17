@@ -4,8 +4,8 @@ version: 0.15.0
 homepage: https://github.com/thanhle1547/flutter_simple_app_router/tree/main/enum_name_map_arg_bloc
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: ">=3.10.0"
+  sdk: '>=3.1.0 <4.0.0'
+  flutter: ">=3.13.0"
 
 dependencies:
   flutter:
