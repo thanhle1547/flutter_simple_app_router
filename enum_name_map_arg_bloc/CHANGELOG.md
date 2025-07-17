@@ -1,3 +1,9 @@
+## 0.15.2
+
+* update `example`, `example_router_delegate` examples to Flutter 3.16.9
+
+* fix notification example not working (`example_router_delegate`)
+
 ## 0.15.1
 
 * bump minimum Dart SDK version to 3.1.0 ~ Flutter 3.13.0
