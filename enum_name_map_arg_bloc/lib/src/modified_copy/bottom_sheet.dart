@@ -11,6 +11,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../route_builder.dart';
 import '../saut.dart';
 
 const Duration _bottomSheetEnterDuration = Duration(milliseconds: 250);
@@ -697,6 +698,7 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
     this.barrierOnTapHint,
     this.constraints,
     this.modalBarrierColor,
+    this.modalBarrierBuilder,
     this.isDismissible = true,
     this.enableDrag = true,
     this.showDragHandle,
@@ -834,6 +836,8 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
   ///  * [ModalBarrier], which uses this field as onTapHint when it has an onTap action.
   final String? barrierOnTapHint;
 
+  final SautModalBarrierBuilder? modalBarrierBuilder;
+
   final ValueNotifier<EdgeInsets> _clipDetailsNotifier = ValueNotifier<EdgeInsets>(EdgeInsets.zero);
 
   @override
@@ -918,7 +922,7 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildModalBarrier() {
-    return Builder(
+    final modalBarrier = Builder(
       builder: (context) {
         if (barrierColor.alpha != 0 && !offstage) { // changedInternalState is called if barrierColor or offstage updates
           assert(barrierColor != barrierColor.withOpacity(0.0));
@@ -951,6 +955,8 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
         }
       },
     );
+
+    return modalBarrierBuilder?.call(modalBarrier) ?? modalBarrier;
   }
 }
 

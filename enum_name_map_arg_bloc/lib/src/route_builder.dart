@@ -26,11 +26,14 @@ abstract class SautRouteTransitionsBuilder {
   void dispose() {}
 }
 
+typedef SautModalBarrierBuilder = Widget Function(Widget superModalBarrier);
+
 class SautDialogRouteBuilder extends SautRouteBuilder {
   const SautDialogRouteBuilder({
     this.barrierDismissible = true,
     this.barrierColor = Colors.black54,
     this.barrierLabel,
+    this.modalBarrierBuilder,
     this.useSafeArea = true,
     this.useRootNavigator = true,
     this.useDisplayFeatureSubScreen = true,
@@ -41,6 +44,7 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
   final bool barrierDismissible;
   final Color? barrierColor;
   final String? barrierLabel;
+  final SautModalBarrierBuilder? modalBarrierBuilder;
   final bool useSafeArea;
   final bool useRootNavigator;
   final bool useDisplayFeatureSubScreen;
@@ -78,6 +82,7 @@ class SautDialogRouteBuilder extends SautRouteBuilder {
       barrierColor: barrierColor,
       barrierDismissible: barrierDismissible,
       barrierLabel: barrierLabel ?? MaterialLocalizations.of(context).modalBarrierDismissLabel,
+      modalBarrierBuilder: modalBarrierBuilder,
       transitionDuration: const Duration(milliseconds: 150),
       transitionBuilder: transitionBuilder,
       traversalEdgeBehavior: traversalEdgeBehavior,
@@ -224,6 +229,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   const SautModalBottomSheetRouteBuilder({
     this.constraints,
     this.barrierColor,
+    this.modalBarrierBuilder,
     this.isScrollControlled = false,
     this.useRootNavigator = false,
     this.isDismissible = true,
@@ -236,6 +242,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
 
   final BoxConstraints? constraints;
   final Color? barrierColor;
+  final SautModalBarrierBuilder? modalBarrierBuilder;
   final bool isScrollControlled;
   final bool useRootNavigator;
   final bool isDismissible;
@@ -283,6 +290,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
       isScrollControlled: isScrollControlled,
       barrierLabel: localizations.scrimLabel,
       barrierOnTapHint: localizations.scrimOnTapHint(localizations.bottomSheetLabel),
+      modalBarrierBuilder: modalBarrierBuilder,
       constraints: constraints,
       isDismissible: isDismissible,
       modalBarrierColor: barrierColor ?? Theme.of(context).bottomSheetTheme.modalBarrierColor,

@@ -43,6 +43,7 @@ class RawDialogRoute<T> extends PopupRoute<T> {
     String? barrierLabel,
     Duration transitionDuration = const Duration(milliseconds: 200),
     required SautRouteTransitionsBuilder transitionBuilder,
+    required SautModalBarrierBuilder? modalBarrierBuilder,
     super.settings,
     super.traversalEdgeBehavior,
   }) : _page = page,
@@ -50,7 +51,8 @@ class RawDialogRoute<T> extends PopupRoute<T> {
        _barrierLabel = barrierLabel,
        _barrierColor = barrierColor,
        _transitionDuration = transitionDuration,
-       _transitionBuilder = transitionBuilder;
+       _transitionBuilder = transitionBuilder,
+       _modalBarrierBuilder = modalBarrierBuilder;
 
   final Widget _page;
 
@@ -71,6 +73,8 @@ class RawDialogRoute<T> extends PopupRoute<T> {
   final Duration _transitionDuration;
 
   final SautRouteTransitionsBuilder _transitionBuilder;
+
+  final SautModalBarrierBuilder? _modalBarrierBuilder;
 
   @override
   Widget buildPage(
@@ -97,7 +101,7 @@ class RawDialogRoute<T> extends PopupRoute<T> {
 
   @override
   Widget buildModalBarrier() {
-    return Builder(
+    final modalBarrier = Builder(
       builder: (context) {
         if (barrierColor != null && barrierColor!.alpha != 0 && !offstage) { // changedInternalState is called if barrierColor or offstage updates
           assert(barrierColor != barrierColor!.withOpacity(0.0));
@@ -124,6 +128,8 @@ class RawDialogRoute<T> extends PopupRoute<T> {
         }
       }
     );
+
+    return _modalBarrierBuilder?.call(modalBarrier) ?? modalBarrier;
   }
 
   @override
