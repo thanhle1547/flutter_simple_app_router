@@ -150,6 +150,14 @@ class PostPublishedScreen extends StatelessWidget {
     );
   }
 
+  void _navigateToTrendingPostDialogWithCustomBarrier(BuildContext context) {
+    Saut.toPage(
+      context,
+      AppPages.Post_Trending_CustomBarrier,
+      blocValue: context.read<PostFavoritesCubit>(),
+    );
+  }
+
   void _showTrendingPostModalBottomSheet(BuildContext context) {
     showModalBottomSheet(
       context: context,
@@ -296,6 +304,12 @@ class PostPublishedScreen extends StatelessWidget {
                   _navigateToModifiedTrendingPostDialog(context);
                 },
                 child: const Text('"Navigate to" Modified Trending Post Dialog'),
+              ),
+              ModifiedPopupMenuItem(
+                onTap: () {
+                  _navigateToTrendingPostDialogWithCustomBarrier(context);
+                },
+                child: const Text('"Navigate to" Trending Post Dialog with custom barrier'),
               ),
               ModifiedPopupMenuItem(
                 onTap: () {

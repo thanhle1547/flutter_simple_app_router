@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:example_router_delegate/cubits/post_favorites/post_favorites_cubit.dart';
 import 'package:example_router_delegate/cubits/post_published/post_published_cubit.dart';
@@ -140,6 +141,45 @@ final RouteConfig _postTrendingVariantModalBottomSheet = RouteConfig(
   },
 );
 
+final RouteConfig _postTrendingVariantCustomBarrier = RouteConfig(
+  routeBuilder: SautDialogRouteBuilder(
+    barrierColor: Colors.black12,
+    modalBarrierBuilder: (superModalBarrier) {
+      return BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        blendMode: BlendMode.srcATop,
+        child: superModalBarrier,
+      );
+    },
+  ).call,
+  pageBuilder: (arguments) {
+    final Completer<PostFavoritesCubit>? completer =
+        arguments?['postFavoritesCubitCompleter'];
+    final PostFavoritesCubit? postFavoritesCubit =
+        arguments?['PostFavoritesCubit'];
+
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => PostTrendingCubit(),
+        ),
+        if (postFavoritesCubit != null)
+          BlocProvider.value(value: postFavoritesCubit),
+      ],
+      child: Dialog(
+        backgroundColor: Colors.orange.shade300,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
+        child: PostTrendingDialogContent(
+          postFavoritesCubitCompleter: completer,
+        ),
+      ),
+    );
+  },
+  transitionsBuilder: SautRouteTransition.downToUp,
+);
+
 final RouteConfig _postDetail = RouteConfig(
   debugRequiredArguments: {
     'name': String,
@@ -174,5 +214,6 @@ final Map<Enum, RouteConfig> routes = {
   AppPages.Post_Trending: postTrending,
   AppPages.Post_TrendingVariant: postTrendingVariant,
   AppPages.Post_TrendingModalBottomSheet: _postTrendingVariantModalBottomSheet,
+  AppPages.Post_Trending_CustomBarrier: _postTrendingVariantCustomBarrier,
   AppPages.Post_Detail: _postDetail,
 };
