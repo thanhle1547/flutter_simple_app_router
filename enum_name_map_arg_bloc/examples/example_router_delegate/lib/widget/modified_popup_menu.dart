@@ -316,7 +316,7 @@ class _PopupMenu<T> extends StatelessWidget {
       );
       Widget item = route.items[i];
       if (route.initialValue != null && route.items[i].represents(route.initialValue)) {
-        item = Container(
+        item = ColoredBox(
           color: Theme.of(context).highlightColor,
           child: item,
         );
@@ -462,10 +462,8 @@ class _PopupMenuRouteLayout extends SingleChildLayoutDelegate {
       switch (textDirection) {
         case TextDirection.rtl:
           x = size.width - position.right - childSize.width;
-          break;
         case TextDirection.ltr:
           x = position.left;
-          break;
       }
     }
     final Offset wantedPosition = Offset(x, y);
@@ -541,7 +539,12 @@ class _PopupMenuRoute<T> extends PopupRoute<T> {
     required this.useImperativeApiToDismiss,
     required RouteSettings settings,
   })  : itemSizes = List<Size?>.filled(items.length, null),
-        super(settings: settings);
+        super(
+          settings: settings,
+          // Menus always cycle focus through their items irrespective of the
+          // focus traversal edge behavior set in the Navigator.
+          traversalEdgeBehavior: TraversalEdgeBehavior.closedLoop,
+        );
 
   final RelativeRect position;
   final List<PopupMenuEntry<T>> items;
@@ -1029,10 +1032,8 @@ class ModifiedPopupMenuButtonState<T> extends State<ModifiedPopupMenuButton<T>> 
     switch (popupMenuPosition) {
       case PopupMenuPosition.over:
         offset = widget.offset;
-        break;
       case PopupMenuPosition.under:
         offset = Offset(0.0, button.size.height - (widget.padding.vertical / 2)) + widget.offset;
-        break;
     }
     final RelativeRect position = RelativeRect.fromRect(
       Rect.fromPoints(
@@ -1090,7 +1091,7 @@ class ModifiedPopupMenuButtonState<T> extends State<ModifiedPopupMenuButton<T>> 
   }
 
   bool get _canRequestFocus {
-    final NavigationMode mode = MediaQuery.maybeOf(context)?.navigationMode ?? NavigationMode.traditional;
+    final NavigationMode mode = MediaQuery.maybeNavigationModeOf(context) ?? NavigationMode.traditional;
     switch (mode) {
       case NavigationMode.traditional:
         return widget.enabled;
