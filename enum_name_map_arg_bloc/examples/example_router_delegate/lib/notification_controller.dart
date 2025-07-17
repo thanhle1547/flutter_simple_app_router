@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -5,7 +6,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
-import 'package:rxdart/rxdart.dart';
 // ignore: depend_on_referenced_packages
 import 'package:timezone/data/latest_all.dart' as tz;
 // ignore: depend_on_referenced_packages
@@ -43,17 +43,6 @@ class ReceivedNotification {
 final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
-/// On iOS and macOS
-///
-/// Streams are created so that app can respond to notification-related events
-/// since the plugin is initialised in the `main` function
-final BehaviorSubject<ReceivedNotification>
-    _didReceiveLocalNotificationSubject =
-    BehaviorSubject<ReceivedNotification>();
-
-final BehaviorSubject<String?> _selectNotificationSubject =
-    BehaviorSubject<String?>();
-
 const MethodChannel platform = MethodChannel('saut/example_router_delegate');
 
 String? selectedNotificationPayload;
@@ -79,8 +68,7 @@ enum NotificationConfig {
 }
 
 class NotificationController {
-  static Future<NotificationAppLaunchDetails?>
-      getNotificationAppLaunchDetails() async {
+  static Future<NotificationAppLaunchDetails?> getNotificationAppLaunchDetails() async {
     return !kIsWeb && Platform.isLinux
         ? null
         : await _flutterLocalNotificationsPlugin
@@ -88,78 +76,67 @@ class NotificationController {
   }
 
   static Future<void> initialize() async {
-    _configureLocalTimeZone();
+    await _configureLocalTimeZone();
 
     const AndroidInitializationSettings initializationSettingsAndroid =
         AndroidInitializationSettings(_kIconName);
 
     /// Note: permissions aren't requested here just to demonstrate that can be
     /// done later
-    final IOSInitializationSettings initializationSettingsIOS =
-        IOSInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
-      onDidReceiveLocalNotification: (
-        int id,
-        String? title,
-        String? body,
-        String? payload,
-      ) async {
-        _didReceiveLocalNotificationSubject.add(
-          ReceivedNotification(
-            id: id,
-            title: title,
-            body: body,
-            payload: payload,
-          ),
-        );
-      },
-    );
-    const MacOSInitializationSettings initializationSettingsMacOS =
-        MacOSInitializationSettings(
+    const DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
       requestSoundPermission: false,
     );
-    final LinuxInitializationSettings initializationSettingsLinux =
-        LinuxInitializationSettings(
+
+    final LinuxInitializationSettings initializationSettingsLinux = LinuxInitializationSettings(
       defaultActionName: 'Open notification',
       defaultIcon: AssetsLinuxIcon(_kIconPath),
     );
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
+
+    final InitializationSettings initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
-      macOS: initializationSettingsMacOS,
+      iOS: initializationSettingsDarwin,
+      macOS: initializationSettingsDarwin,
       linux: initializationSettingsLinux,
     );
+
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onSelectNotification: (String? payload) async {
-        if (payload != null) {
-          debugPrint('notification payload: $payload');
-        }
-        selectedNotificationPayload = payload;
-        _selectNotificationSubject.add(payload);
-      },
+      onDidReceiveNotificationResponse: selectNotificationStream.add,
+      onDidReceiveBackgroundNotificationResponse: _notificationTapBackground,
     );
   }
 
-  static FlutterLocalNotificationsPlugin get plugin =>
-      _flutterLocalNotificationsPlugin;
 
-  static ValueStream<ReceivedNotification> get receivedNotificationStream =>
-      _didReceiveLocalNotificationSubject.stream;
+  static final StreamController<NotificationResponse> selectNotificationStream =
+      StreamController<NotificationResponse>.broadcast();
 
-  static void closeReceivedNotificationStream() =>
-      _didReceiveLocalNotificationSubject.close();
 
-  static ValueStream<String?> get selectedNotificationStream =>
-      _selectNotificationSubject.stream;
+  static Future<void> requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      _flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          _flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
 
-  static void closeSelectedNotificationStream() =>
-      _selectNotificationSubject.close();
+      final bool? grantedNotificationPermission =
+          await androidImplementation?.requestNotificationsPermission();
+    }
+  }
 
   static Future<void> showNotification({
     required NotificationConfig config,
@@ -168,25 +145,25 @@ class NotificationController {
     String? body,
     Object? data,
   }) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    final AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       config._channelId,
       config._channelName,
       channelDescription: config._channelDescription,
       importance: Importance.max,
       priority: Priority.high,
-      ticker: body,
+      ticker: 'ticker',
     );
 
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
     );
 
     await _flutterLocalNotificationsPlugin.show(
       id,
       title,
       body,
-      platformChannelSpecifics,
+      notificationDetails,
       payload: jsonEncode(data),
     );
   }
@@ -199,7 +176,7 @@ class NotificationController {
     String? body,
     Object? data,
   }) async {
-    final AndroidNotificationDetails androidPlatformChannelSpecifics =
+    final AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
       config._channelId,
       config._channelName,
@@ -209,8 +186,8 @@ class NotificationController {
       ticker: body,
     );
 
-    final NotificationDetails platformChannelSpecifics = NotificationDetails(
-      android: androidPlatformChannelSpecifics,
+    final NotificationDetails notificationDetails = NotificationDetails(
+      android: androidNotificationDetails,
     );
 
     await _flutterLocalNotificationsPlugin.zonedSchedule(
@@ -218,11 +195,23 @@ class NotificationController {
       title,
       body,
       tz.TZDateTime.now(tz.local).add(duration),
-      platformChannelSpecifics,
+      notificationDetails,
       payload: jsonEncode(data),
-      androidAllowWhileIdle: true,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
     );
+  }
+}
+
+@pragma('vm:entry-point')
+void _notificationTapBackground(NotificationResponse notificationResponse) {
+  print(
+    'notification(${notificationResponse.id}) action tapped: '
+    '${notificationResponse.actionId} with'
+    ' payload: ${notificationResponse.payload}',
+  );
+
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    print('notification action tapped with input: ${notificationResponse.input}');
   }
 }

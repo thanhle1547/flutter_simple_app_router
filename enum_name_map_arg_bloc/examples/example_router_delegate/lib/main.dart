@@ -26,10 +26,13 @@ Future<void> main() async {
     routeNameBuilder: mixedCaseWithUnderscoresEnumRouteNameBuilder,
   );
 
+  // initialization notification settings
+  await NotificationController.initialize();
+
   final NotificationAppLaunchDetails? notificationAppLaunchDetails =
       await NotificationController.getNotificationAppLaunchDetails();
 
-  selectedNotificationPayload = notificationAppLaunchDetails?.payload;
+  selectedNotificationPayload = notificationAppLaunchDetails?.notificationResponse?.payload;
 
   if ((notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) &&
       selectedNotificationPayload != null) {
@@ -47,9 +50,6 @@ Future<void> main() async {
     initialPageStackName = null;
     arguments = null;
   }
-
-  // initialization notification settings
-  NotificationController.initialize();
 
   runApp(const MyApp());
 }

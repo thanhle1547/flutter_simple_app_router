@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:example_router_delegate/cubits/post_favorites/post_favorites_cubit.dart';
@@ -489,47 +490,26 @@ class _NotificationTestingBannerState extends State<NotificationTestingBanner> {
   @override
   void initState() {
     super.initState();
-    _requestPermissions();
-    _configureDidReceiveLocalNotificationSubject();
+    NotificationController.requestPermissions();
     _configureSelectNotificationSubject();
   }
 
-  void _requestPermissions() {
-    NotificationController.plugin
-        .resolvePlatformSpecificImplementation<
-            IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-    NotificationController.plugin
-        .resolvePlatformSpecificImplementation<
-            MacOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-          alert: true,
-          badge: true,
-          sound: true,
-        );
-  }
-
-  void _configureDidReceiveLocalNotificationSubject() {
-    NotificationController.receivedNotificationStream
-        .listen((ReceivedNotification receivedNotification) async {
-      _handleNotification(receivedNotification.payload);
-    });
-  }
+  late final StreamSubscription<NotificationResponse> _selectNotificationStreamSubscription;
 
   void _configureSelectNotificationSubject() {
-    NotificationController.selectedNotificationStream
-        .listen(_handleNotification);
+    _selectNotificationStreamSubscription = 
+        NotificationController.selectNotificationStream.stream.listen(_handleNotification);
   }
 
-  void _handleNotification(String? rawData) {
+  void _handleNotification(NotificationResponse? response) {
+    if (response == null) return;
+
+    final String? rawData = response.payload;
+
     if (rawData == null) return;
 
-    final Map<String, dynamic> data =
-        jsonDecode(rawData) as Map<String, dynamic>;
+    final Map<String, dynamic> data = jsonDecode(rawData) as Map<String, dynamic>;
+
     _setStackDetailTrendingPost(
       name: data['name'],
       id: data['id'],
@@ -553,8 +533,7 @@ class _NotificationTestingBannerState extends State<NotificationTestingBanner> {
 
   @override
   void dispose() {
-    NotificationController.closeReceivedNotificationStream();
-    NotificationController.closeSelectedNotificationStream();
+    _selectNotificationStreamSubscription.cancel();
     super.dispose();
   }
 

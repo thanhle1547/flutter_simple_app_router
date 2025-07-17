@@ -26,10 +26,9 @@ dependencies:
     sdk: flutter
 
   flutter_bloc: ^8.1.6
-  flutter_local_notifications: ^9.6.1
+  flutter_local_notifications: ^18.0.1
   flutter_timezone: ^1.0.8
   mock_data: ^2.0.0
-  rxdart: ^0.27.4
   saut_enma_bloc:
     path: ../../
 
