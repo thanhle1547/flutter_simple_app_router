@@ -8,7 +8,7 @@ import 'package:example/routes/app_pages.dart';
 import 'package:example/widget/favorite_button.dart';
 
 class PostPublishedScreen extends StatelessWidget {
-  const PostPublishedScreen({Key? key}) : super(key: key);
+  const PostPublishedScreen({super.key});
 
   void _listItemTapHandler(BuildContext context, String name, int id) {
     Saut.toPage(

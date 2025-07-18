@@ -4,7 +4,7 @@ import 'package:example/cubits/post_favorites/post_favorites_cubit.dart';
 import 'package:example/cubits/post_favorites/post_favorites_state.dart';
 
 class FavoriteButton extends StatelessWidget {
-  const FavoriteButton({Key? key, required this.id}) : super(key: key);
+  const FavoriteButton({super.key, required this.id});
 
   final int id;
 
