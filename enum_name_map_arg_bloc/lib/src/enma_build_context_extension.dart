@@ -192,7 +192,7 @@ extension EnmaBuildContextExtension on BuildContext {
       key: SautPageKey(page ?? name),
       context: context,
       page: routeConfig.pageBuilder(null),
-      name: name ?? effectiveRouteNameBuilder(page!),
+      name: name ?? getRouteName(page!),
       routeConfig: routeConfig,
     );
 
@@ -249,7 +249,7 @@ extension EnmaBuildContextExtension on BuildContext {
     }
 
     backToPageName(
-      effectiveRouteNameBuilder(page),
+      getRouteName(page),
     );
   }
 
@@ -300,7 +300,7 @@ extension on NavigatorState {
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
-    final String name = effectiveRouteNameBuilder(page);
+    final String name = getRouteName(page);
 
     assert(() {
       if ((debugPreventDuplicates ??
@@ -371,7 +371,7 @@ extension on NavigatorState {
         ),
         config: routeConfig,
         settings: RouteSettings(
-          name: effectiveRouteNameBuilder(page),
+          name: getRouteName(page),
           arguments: arguments,
         ),
         context: context,
@@ -408,7 +408,7 @@ extension on NavigatorState {
         page: getPage(routeConfig, arguments),
         config: routeConfig,
         settings: RouteSettings(
-          name: effectiveRouteNameBuilder(page),
+          name: getRouteName(page),
           arguments: arguments,
         ),
         context: context,

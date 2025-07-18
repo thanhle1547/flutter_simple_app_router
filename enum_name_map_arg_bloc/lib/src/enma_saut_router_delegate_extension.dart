@@ -57,7 +57,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
       debugPreventDuplicates: debugPreventDuplicates,
     );
 
-    final String name = effectiveRouteNameBuilder(page);
+    final String name = getRouteName(page);
 
     assert(() {
       if ((debugPreventDuplicates ??
@@ -124,7 +124,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
       context: context,
-      name: effectiveRouteNameBuilder(page),
+      name: getRouteName(page),
       page: maybeWrapWithBlocProviders(
         page: getPage(routeConfig, arguments),
         blocValue: blocValue,
@@ -160,7 +160,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     final pageRoute = SautPage<T>(
       key: SautPageKey(page),
       context: context,
-      name: effectiveRouteNameBuilder(page),
+      name: getRouteName(page),
       page: getPage(routeConfig, arguments),
       arguments: arguments,
       routeConfig: routeConfig,
@@ -193,7 +193,7 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
   /// Calls [back] repeatedly until found the page.
   void backToPage(Enum page) {
     backToPageName(
-      effectiveRouteNameBuilder(page),
+      getRouteName(page),
     );
   }
 
@@ -214,7 +214,7 @@ extension InternalSautRouterDelegateExtension on SautRouterDelegate {
         // ignore: invalid_use_of_protected_member
         key: getExistingPageKey(e) ?? SautPageKey(e),
         context: context,
-        name: effectiveRouteNameBuilder(e),
+        name: getRouteName(e),
         page: getPage(routeConfig, arguments),
         arguments: arguments,
         routeConfig: routeConfig,

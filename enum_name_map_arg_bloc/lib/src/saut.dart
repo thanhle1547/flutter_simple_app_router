@@ -85,7 +85,7 @@ abstract class Saut {
     AppConfig.initialPage = initialPage;
     AppConfig.initialPageName = AppConfig.initialPage == null
         ? null
-        : effectiveRouteNameBuilder(initialPage);
+        : getRouteName(initialPage);
 
     AppConfig.defaultTransitionsBuilder = transitionsBuilder;
     AppConfig.defaultTransitionDuration = transitionDuration;
@@ -416,14 +416,14 @@ abstract class Saut {
   ///
   /// This function use [ModalRoute.withName()] internally.
   static RoutePredicate getModalRoutePredicate(Enum page) =>
-      ModalRoute.withName(effectiveRouteNameBuilder(page));
+      ModalRoute.withName(getRouteName(page));
 
   /// Returns a predicate that's true if the page has the specified name and if
   /// popping the page will not yield the same page
   ///
   /// This function is typically used with [Saut.replaceAllWithPage()], [Navigator.popUntil()].
   static PagePredicate getPagePredicate(Enum page) {
-    final pageName = effectiveRouteNameBuilder(page);
+    final pageName = getRouteName(page);
 
     return (Page<dynamic> page) {
       if (page is SautPageless) {

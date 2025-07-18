@@ -51,11 +51,11 @@ Route createRouteFromName(String? name, [String? fallbackName]) {
 
     String? configuredInitialPageName = AppConfig.initialPage == null
         ? null
-        : effectiveRouteNameBuilder(AppConfig.initialPage!);
+        : getRouteName(AppConfig.initialPage!);
 
     final key = AppConfig.routes.keys.firstWhere(
       (e) {
-        final String builtName = effectiveRouteNameBuilder(e);
+        final String builtName = getRouteName(e);
 
         if (builtName != name) return false;
 
@@ -68,7 +68,7 @@ Route createRouteFromName(String? name, [String? fallbackName]) {
         try {
           return AppConfig.routes.keys.firstWhere(
             (e) {
-              final String builtName = effectiveRouteNameBuilder(e);
+              final String builtName = getRouteName(e);
 
               if (builtName == configuredInitialPageName) {
                 effectiveName = configuredInitialPageName;
@@ -120,10 +120,9 @@ Never routeObserverIsRequired() {
   throw "[RouteObserver] from [$source] has not been initialized";
 }
 
-String _defaultRouteNameBuilder(Enum page) => page.name;
-
-String Function(Enum page) get effectiveRouteNameBuilder =>
-    AppConfig.routeNameBuilder ?? _defaultRouteNameBuilder;
+String getRouteName(Enum page) {
+  return AppConfig.routeNameBuilder?.call(page) ?? page.name;
+}
 
 Widget maybeWrapWithBlocProviders<B extends BlocBase<Object?>>({
   required Widget page,
