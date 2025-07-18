@@ -239,6 +239,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
     this.useSafeArea = false,
     this.fallbackToMediaQuery = true,
     this.useDisplayFeatureSubScreen = true,
+    this.sheetAnimationStyle,
   });
 
   final BoxConstraints? constraints;
@@ -273,6 +274,8 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
   ///    [DisplayFeature]s can split the screen into sub-screens.
   final bool useDisplayFeatureSubScreen;
 
+  final AnimationStyle? sheetAnimationStyle;
+
   @override
   Route<T> call<T>(
     BuildContext context,
@@ -301,6 +304,7 @@ class SautModalBottomSheetRouteBuilder extends SautRouteBuilder {
       useSafeArea: useSafeArea,
       fallbackToMediaQuery: fallbackToMediaQuery,
       useDisplayFeatureSubScreen: useDisplayFeatureSubScreen,
+      sheetAnimationStyle: sheetAnimationStyle,
     );
   }
 }

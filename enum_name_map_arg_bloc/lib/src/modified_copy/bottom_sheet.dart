@@ -16,7 +16,7 @@ import '../saut.dart';
 
 const Duration _bottomSheetEnterDuration = Duration(milliseconds: 250);
 const Duration _bottomSheetExitDuration = Duration(milliseconds: 200);
-const Curve _modalBottomSheetCurve = decelerateEasing;
+const Curve _modalBottomSheetCurve = Easing.legacyDecelerate;
 const double _minFlingVelocity = 700.0;
 const double _closeProgressThreshold = 0.5;
 const double _defaultScrollControlDisabledMaxHeightRatio = 9.0 / 16.0;
@@ -177,10 +177,13 @@ class BottomSheet extends StatefulWidget {
   /// This API is available as a convenience for a Material compliant bottom sheet
   /// animation. If alternative animation durations are required, a different
   /// animation controller could be provided.
-  static AnimationController createAnimationController(TickerProvider vsync) {
+  static AnimationController createAnimationController(
+    TickerProvider vsync, {
+    AnimationStyle? sheetAnimationStyle,
+  }) {
     return AnimationController(
-      duration: _bottomSheetEnterDuration,
-      reverseDuration: _bottomSheetExitDuration,
+      duration: sheetAnimationStyle?.duration ?? _bottomSheetEnterDuration,
+      reverseDuration: sheetAnimationStyle?.reverseDuration ?? _bottomSheetExitDuration,
       debugLabel: 'BottomSheet',
       vsync: vsync,
     );
@@ -711,6 +714,7 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
     this.useSafeArea = false,
     this.fallbackToMediaQuery = true,
     this.useDisplayFeatureSubScreen = true,
+    this.sheetAnimationStyle,
   });
 
   final Widget page;
@@ -824,6 +828,20 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
   ///    [DisplayFeature]s can split the screen into sub-screens.
   final bool useDisplayFeatureSubScreen;
 
+  /// Used to override the modal bottom sheet animation duration and reverse
+  /// animation duration.
+  ///
+  /// If [AnimationStyle.duration] is provided, it will be used to override
+  /// the modal bottom sheet animation duration in the underlying
+  /// [BottomSheet.createAnimationController].
+  ///
+  /// If [AnimationStyle.reverseDuration] is provided, it will be used to
+  /// override the modal bottom sheet reverse animation duration in the
+  /// underlying [BottomSheet.createAnimationController].
+  ///
+  /// To disable the modal bottom sheet animation, use [AnimationStyle.noAnimation].
+  final AnimationStyle? sheetAnimationStyle;
+
   /// {@template saut.modified_copy.ModalBottomSheetRoute.barrierOnTapHint}
   /// The semantic hint text that informs users what will happen if they
   /// tap on the widget. Announced in the format of 'Double tap to ...'.
@@ -862,10 +880,14 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
   }
 
   @override
-  Duration get transitionDuration => _bottomSheetEnterDuration;
+  Duration get transitionDuration =>
+      sheetAnimationStyle?.duration ??
+      _bottomSheetEnterDuration;
 
   @override
-  Duration get reverseTransitionDuration => _bottomSheetExitDuration;
+  Duration get reverseTransitionDuration =>
+      sheetAnimationStyle?.reverseDuration ??
+      _bottomSheetExitDuration;
 
   @override
   bool get barrierDismissible => isDismissible;
@@ -881,7 +903,10 @@ class ModalBottomSheetRoute<T> extends PopupRoute<T> {
   @override
   AnimationController createAnimationController() {
     assert(_animationController == null);
-    _animationController = BottomSheet.createAnimationController(navigator!);
+    _animationController = BottomSheet.createAnimationController(
+      navigator!,
+      sheetAnimationStyle: sheetAnimationStyle,
+    );
     return _animationController!;
   }
 
