@@ -1,3 +1,13 @@
+## 0.15.3
+
+* bump minimum Dart SDK version to 3.3.0 ~ Flutter 3.19.0
+
+* update `example`, `example_router_delegate` examples to Flutter 3.19.6
+
+* add `sheetAnimationStyle` paramenter to `SautModalBottomSheetRouteBuilder`
+
+* update `SautRouterDelegate.currentConfiguration` to use Uri as the location of the application, include `scheme` and `host` from the last RouteInformation received via `RouterDelegate.setNewRoutePath`. The `Uri.queryParameters` is the queryParameters from the last received RouteInformation and the arguments of last page
+
 ## 0.15.2
 
 * update `example`, `example_router_delegate` examples to Flutter 3.16.9
