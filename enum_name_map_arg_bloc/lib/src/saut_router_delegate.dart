@@ -100,8 +100,11 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   GlobalKey<NavigatorState>? get navigatorKey =>
       global.createNavigatorKeyIfNotExisted();
 
+  late RouteInformation _lastReceivedRouteConfiguration;
+
   @override
   SynchronousFuture<void> setNewRoutePath(RouteInformation configuration) {
+    _lastReceivedRouteConfiguration = configuration;
     return SynchronousFuture(null);
   }
 
@@ -116,8 +119,18 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @override
   RouteInformation? get currentConfiguration {
+    final scheme = _lastReceivedRouteConfiguration.uri.scheme;
+    final host = _lastReceivedRouteConfiguration.uri.host;
     return RouteInformation(
-      location: lastPageName,
+      uri: Uri(
+        scheme: scheme.isEmpty ? null : scheme,
+        host: host.isEmpty ? null : host,
+        path: lastPageName,
+        queryParameters: {
+          ..._lastReceivedRouteConfiguration.uri.queryParameters,
+          ...?_lastPageArgumentsAsQueryParametersAll,
+        },
+      ),
     );
   }
 
@@ -131,6 +144,28 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     if (_pages.isEmpty) return null;
 
     return _pages.last is SautPage;
+  }
+
+  Map<String, String>? get _lastPageArgumentsAsQueryParametersAll {
+    if (_pages.isEmpty) return null;
+
+    final arguments = _pages.last.arguments;
+
+    if (arguments is Map) {
+      if (arguments.isEmpty) return null;
+
+      if (arguments is Map<String, dynamic>) {
+        return Map.unmodifiable({
+          for (final e in arguments.entries) e.key: e.value.toString(),
+        });
+      }
+
+      if (arguments is Map<String, String>) {
+        return Map.unmodifiable(arguments);
+      }
+    }
+
+    return null;
   }
 
   @protected
