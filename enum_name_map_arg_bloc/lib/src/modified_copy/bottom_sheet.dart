@@ -615,7 +615,7 @@ class _ModalBottomSheetState<T> extends State<_ModalBottomSheet<T>> {
         animationController: widget.route._animationController,
         onClosing: () {
           if (widget.route.isCurrent) {
-            Navigator.pop(context);
+            Saut.back(context);
           }
         },
         content: widget.route.page,
