@@ -30,4 +30,6 @@ class AppConfig {
     equals: (key0, key1) => key0 == key1,
     hashCode: (key) => key.hashCode,
   );
+
+  static bool didPreventBackButtonToGoBack = false;
 }

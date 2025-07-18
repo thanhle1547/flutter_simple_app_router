@@ -14,6 +14,7 @@ import 'internal.dart';
 import 'navigator_state_extension.dart';
 import 'route_config.dart';
 import 'route_transition.dart';
+import 'saut_back_button_dispatcher.dart';
 import 'saut_page.dart';
 import 'saut_router_delegate.dart';
 
@@ -431,6 +432,25 @@ abstract class Saut {
 
       return page.name == pageName;
     };
+  }
+
+  /// Used to ignore all pop route requests
+  /// when the user taps the back button on platforms
+  /// that support back buttons (such as Android).
+  ///
+  /// This only working when using [RouterDelegate]
+  /// and [SautRootBackButtonDispatcher] as [Router.backButtonDispatcher].
+  static void preventBackButtonToGoBack() {
+    AppConfig.didPreventBackButtonToGoBack = true;
+  }
+
+  /// Used to continue handling any incomming pop route request
+  /// from the platform as normal.
+  ///
+  /// This only working when using [RouterDelegate]
+  /// and [SautRootBackButtonDispatcher] as [Router.backButtonDispatcher].
+  static void allowBackButtonToGoBack() {
+    AppConfig.didPreventBackButtonToGoBack = false;
   }
 
   /// The [name], [page] parameters are used to

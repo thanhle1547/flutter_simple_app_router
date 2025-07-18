@@ -6,6 +6,7 @@ export 'src/route_builder.dart';
 export 'src/route_config.dart' show RouteConfig;
 export 'src/route_transition.dart';
 export 'src/saut.dart';
+export 'src/saut_back_button_dispatcher.dart';
 export 'src/saut_page.dart' show SautPage, SautPageKey;
 export 'src/saut_route_aware_state_mixin.dart';
 export 'src/saut_route_information_parser.dart';
