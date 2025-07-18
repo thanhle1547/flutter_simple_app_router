@@ -1,3 +1,9 @@
+## 0.15.5
+
+* fix `SautModalBottomSheetRouteBuilder`:
+  - Null check operator used on a null value when drag bottom sheet
+  - using imperative api (`Navigator.pop()`) instead of `Saut.back()`
+
 ## 0.15.4
 
 * add `SautRootBackButtonDispatcher`, `Saut.preventBackButtonToGoBack`, `Saut.allowBackButtonToGoBack` to able to ignore the pop route request when the user taps the back button on platforms that support back buttons (such as Android)
