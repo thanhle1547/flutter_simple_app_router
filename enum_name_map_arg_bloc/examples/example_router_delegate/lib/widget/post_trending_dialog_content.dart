@@ -9,9 +9,9 @@ import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
 class PostTrendingDialogContent extends StatelessWidget {
   const PostTrendingDialogContent({
-    Key? key,
+    super.key,
     this.postFavoritesCubitCompleter,
-  }) : super(key: key);
+  });
 
   // checkout Q&A in README.md
   final Completer<PostFavoritesCubit>? postFavoritesCubitCompleter;
@@ -49,11 +49,11 @@ class PostTrendingDialogContent extends StatelessWidget {
 
 class TrendingItem extends StatelessWidget {
   const TrendingItem({
-    Key? key,
+    super.key,
     required this.name,
     required this.id,
     this.postFavoritesCubitCompleter,
-  }) : super(key: key);
+  });
 
   final int id;
   final String name;

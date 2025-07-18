@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class PostDetailScreen extends StatelessWidget {
   const PostDetailScreen({
-    Key? key,
+    super.key,
     required this.name,
     required this.id,
-  }) : super(key: key);
+  });
 
   final String name;
   final int id;

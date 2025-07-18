@@ -7,8 +7,8 @@ import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
 class PostTrendingModalBottomSheetContent extends StatelessWidget {
   const PostTrendingModalBottomSheetContent({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   static const RoundedRectangleBorder shape = RoundedRectangleBorder(
     borderRadius: BorderRadius.vertical(top: Radius.circular(16))
@@ -53,10 +53,10 @@ class PostTrendingModalBottomSheetContent extends StatelessWidget {
 
 class TrendingItem extends StatelessWidget {
   const TrendingItem({
-    Key? key,
+    super.key,
     required this.name,
     required this.id,
-  }) : super(key: key);
+  });
 
   final int id;
   final String name;

@@ -19,7 +19,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:saut_enma_bloc/enum_name_map_arg_bloc.dart';
 
 class PostPublishedScreen extends StatelessWidget {
-  const PostPublishedScreen({Key? key}) : super(key: key);
+  const PostPublishedScreen({super.key});
 
   void _listItemTapHandler(BuildContext context, String name, int id) {
     Saut.toPage(
@@ -452,7 +452,7 @@ class __PopupMenuButtonState extends State<_PopupMenuButton> {
 }
 
 class NotificationTestingBanner extends StatefulWidget {
-  const NotificationTestingBanner({Key? key}) : super(key: key);
+  const NotificationTestingBanner({super.key});
 
   @override
   State<NotificationTestingBanner> createState() =>
