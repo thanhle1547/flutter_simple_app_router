@@ -17,7 +17,7 @@ extension on Animation<double> {
   Animation<double> resolveWith({Curve? curve}) {
     if (curve == null) return this;
 
-    return CurvedAnimation(parent: this, curve: curve);
+    return CurveTween(curve: curve).animate(this);
   }
 }
 
