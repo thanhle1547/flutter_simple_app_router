@@ -75,7 +75,7 @@ class RightToLeftTransition extends PageTransitionsBuilder {
     ).chainWithCurve(curve ?? AppConfig.defaultTransitionCurve);
 
     return SlideTransition(
-      position: animation.drive(tween),
+      position: tween.animate(animation),
       child: child,
     );
   }
@@ -128,7 +128,7 @@ class DownToUpTransition extends PageTransitionsBuilder {
     ).chainWithCurve(curve ?? AppConfig.defaultTransitionCurve);
 
     return SlideTransition(
-      position: animation.drive(tween),
+      position: tween.animate(animation),
       child: child,
     );
   }
