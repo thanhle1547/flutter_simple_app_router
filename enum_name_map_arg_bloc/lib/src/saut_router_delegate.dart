@@ -298,19 +298,27 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   @protected
   void removeLastPage<T extends Object?>(T value) {
-    _removeLastPage(value);
+    final bool hasNoPageLeft = _removeLastPage(value);
+
+    if (hasNoPageLeft) return;
 
     _didPopCount++;
 
     notifyListeners();
   }
 
-  void _removeLastPage<T extends Object?>(T value) {
+  /// Returns `true` if there are no pages left to remove, 
+  /// or `false` if a page was successfully removed.
+  bool _removeLastPage<T extends Object?>(T value) {
+    if (_pages.isEmpty) return true;
+
     final removed = _pages.removeLast();
 
     if (removed is SautPage) {
       removed.completeWith(value);
     }
+
+    return false;
   }
 }
 
