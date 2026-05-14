@@ -27,6 +27,8 @@ class RouteConfig {
   /// be treat as `runtimeType`
   final Map<String, Object>? debugRequiredArguments;
 
+  final Map<String, Object> Function(Map<String, String> queryParameters)? queryParametersParser;
+
   /// A builder for custom [Route]
   final Route<T> Function<T>(
     BuildContext context,
@@ -55,6 +57,7 @@ class RouteConfig {
 
   RouteConfig({
     this.debugRequiredArguments,
+    this.queryParametersParser,
     this.routeBuilder,
     required this.pageBuilder,
     this.transitionsBuilder,
@@ -85,6 +88,7 @@ class RouteConfig {
   }) {
     return RouteConfig(
       debugRequiredArguments: debugRequiredArguments,
+      queryParametersParser: queryParametersParser,
       routeBuilder: routeBuilder ?? this.routeBuilder,
       pageBuilder: pageBuilder ?? this.pageBuilder,
       transitionsBuilder: transitionsBuilder ?? this.transitionsBuilder,
