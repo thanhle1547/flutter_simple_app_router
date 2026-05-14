@@ -26,9 +26,15 @@ bool get useRouter => _routerDelegate != null;
 
 SautRouterDelegate initRouterDelegate({
   List<NavigatorObserver>? navigatorObservers,
+  ValueSetter<RouteInformation>? onSetInitialRoutePath,
+  ValueSetter<RouteInformation>? onSetNewRoutePath,
+  SystemRouteReportHandler? systemRouteReportHandler,
 }) {
   return _routerDelegate ??= SautRouterDelegate(
     navigatorObservers: navigatorObservers,
+    onSetInitialRoutePath: onSetInitialRoutePath,
+    onSetNewRoutePath: onSetNewRoutePath,
+    systemRouteReportHandler: systemRouteReportHandler,
   );
 }
 

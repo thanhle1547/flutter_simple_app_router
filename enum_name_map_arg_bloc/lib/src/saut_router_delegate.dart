@@ -8,6 +8,11 @@ import 'global.dart' as global;
 import 'saut_page.dart';
 import 'saut_page_route_builder.dart';
 
+typedef SystemRouteReportHandler = void Function(
+  RouteInformation configuration, 
+  VoidCallback update,
+);
+
 class SautRouterDelegate extends RouterDelegate<RouteInformation>
     with PopNavigatorRouterDelegateMixin<RouteInformation>, ChangeNotifier {
   SautRouterDelegate({
@@ -24,7 +29,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   final ValueSetter<RouteInformation>? onSetInitialRoutePath;
   final ValueSetter<RouteInformation>? onSetNewRoutePath;
-  final void Function(RouteInformation configuration, VoidCallback update)? systemRouteReportHandler;
+  final SystemRouteReportHandler? systemRouteReportHandler;
 
   final List<Page<dynamic>> _pages = [];
 

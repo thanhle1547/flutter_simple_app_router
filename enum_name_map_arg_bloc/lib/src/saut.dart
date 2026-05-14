@@ -219,6 +219,9 @@ abstract class Saut {
     Enum? initialPage,
     Object? initialPageStackName,
     Map<String, dynamic>? arguments,
+    ValueSetter<RouteInformation>? onSetInitialRoutePath,
+    ValueSetter<RouteInformation>? onSetNewRoutePath,
+    SystemRouteReportHandler? systemRouteReportHandler,
   }) {
     assert(initialPage != null || AppConfig.initialPage != null);
 
@@ -235,6 +238,9 @@ abstract class Saut {
 
       global.initRouterDelegate(
         navigatorObservers: navigatorObservers,
+        onSetInitialRoutePath: onSetInitialRoutePath,
+        onSetNewRoutePath: onSetNewRoutePath,
+        systemRouteReportHandler: systemRouteReportHandler,
       );
 
       final List<Enum>? pageNames;
