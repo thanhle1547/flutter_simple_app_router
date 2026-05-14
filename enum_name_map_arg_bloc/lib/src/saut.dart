@@ -108,6 +108,12 @@ abstract class Saut {
     global.disposeRouterDelegate();
   }
 
+  static void resetToRestart() {
+    global.routeObserver = null;
+    global.disposeNavigatorKey();
+    global.disposeRouterDelegate();
+  }
+
   /// Adds a route config if it doesn't exist.
   ///
   /// This method preventing overwriting of existing configurations.
