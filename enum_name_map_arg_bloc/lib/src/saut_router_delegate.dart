@@ -10,12 +10,21 @@ import 'saut_page_route_builder.dart';
 
 class SautRouterDelegate extends RouterDelegate<RouteInformation>
     with PopNavigatorRouterDelegateMixin<RouteInformation>, ChangeNotifier {
-  SautRouterDelegate({List<NavigatorObserver>? navigatorObservers}) {
+  SautRouterDelegate({
+    List<NavigatorObserver>? navigatorObservers,
+    this.onSetInitialRoutePath,
+    this.onSetNewRoutePath,
+    this.systemRouteReportHandler,
+  }) {
     _navigatorObservers = [
       ...?navigatorObservers,
       _PagelessNavigatorObserver(this),
     ];
   }
+
+  final ValueSetter<RouteInformation>? onSetInitialRoutePath;
+  final ValueSetter<RouteInformation>? onSetNewRoutePath;
+  final void Function(RouteInformation configuration, VoidCallback update)? systemRouteReportHandler;
 
   final List<Page<dynamic>> _pages = [];
 
@@ -100,11 +109,22 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   GlobalKey<NavigatorState>? get navigatorKey =>
       global.createNavigatorKeyIfNotExisted();
 
+  @override
+  Future<void> setInitialRoutePath(RouteInformation configuration) {
+    onSetInitialRoutePath?.call(configuration);
+    return setNewRoutePath(configuration);
+  }
+
   late RouteInformation _lastReceivedRouteConfiguration;
 
   @override
   SynchronousFuture<void> setNewRoutePath(RouteInformation configuration) {
     _lastReceivedRouteConfiguration = configuration;
+
+    onSetNewRoutePath?.call(configuration);
+
+    systemRouteReportHandler?.call(configuration, notifyListeners);
+
     return SynchronousFuture(null);
   }
 
