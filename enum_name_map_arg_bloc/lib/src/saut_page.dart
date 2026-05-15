@@ -13,6 +13,10 @@ class SautPageKey<T> extends UniqueKey {
   final ValueKey key;
 }
 
+/// The data passed to this page, which is stored in [RouteSettings.arguments].
+///
+/// This can be retrieved within the widget tree using:
+/// `ModalRoute.of(context)?.settings.arguments` or `Saut.extractArguments()`.
 class SautPage<T extends Object?> extends Page<T> {
   SautPage({
     required LocalKey key,
