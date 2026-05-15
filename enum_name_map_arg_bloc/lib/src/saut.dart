@@ -278,9 +278,22 @@ abstract class Saut {
     Object stackName, {
     Map<String, dynamic>? arguments,
   }) {
-    assert(debugAssertRouterDelegateExist());
+    context.setPageStack(stackName, arguments: arguments);
+  }
 
-    global.currentRouterDelegate.setPageStack(context, stackName, arguments: arguments);
+  static void addConfiguredPages(
+    BuildContext context,
+    List<Enum> pages, {
+    Map<String, dynamic>? arguments,
+  }) {
+    context.addConfiguredPages(
+      pages,
+      arguments: arguments,
+    );
+  }
+
+  static void addPages(BuildContext context, List<SautPage> pages) {
+    context.addPages(pages);
   }
 
   /// Create [RouteSettings] for [showDialog], [showAboutDialog],

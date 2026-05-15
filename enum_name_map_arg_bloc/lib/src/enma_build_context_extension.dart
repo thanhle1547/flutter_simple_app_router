@@ -25,6 +25,25 @@ extension EnmaBuildContextExtension on BuildContext {
     );
   }
 
+  void addConfiguredPages(
+    List<Enum> pages, {
+    Map<String, dynamic>? arguments,
+  }) {
+    assert(debugAssertRouterDelegateExist());
+
+    global.currentRouterDelegate.addConfiguredPages(
+      this,
+      pages,
+      arguments: arguments,
+    );
+  }
+
+  void addPages(List<SautPage> pages) {
+    assert(debugAssertRouterDelegateExist());
+
+    global.currentRouterDelegate.addPages(pages);
+  }
+
   /// This function use [ModalRoute.of(context)?.settings.arguments] internally
   ///
   /// See also:

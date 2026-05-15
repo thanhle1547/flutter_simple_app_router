@@ -29,6 +29,26 @@ class SautPage<T extends Object?> extends Page<T> {
           restorationId: name,
         );
 
+  /// Creates a [SautPage] where the view is resolved from a [RouteConfig].
+  factory SautPage.fromConfig(
+    BuildContext context, {
+    required Enum page,
+    String? name,
+    required RouteConfig routeConfig,
+    Map<String, dynamic>? arguments,
+  }) {
+    final String effectiveName = name ?? router.getRouteName(page);
+
+    return SautPage(
+      key: SautPageKey(page),
+      context: context,
+      name: effectiveName,
+      page: router.getPage(routeConfig, arguments),
+      arguments: arguments,
+      routeConfig: routeConfig,
+    );
+  }
+
   final BuildContext? context;
   final Widget page;
   final RouteConfig routeConfig;

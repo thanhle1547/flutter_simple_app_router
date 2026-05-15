@@ -28,6 +28,26 @@ extension SautRouterDelegateExtension on SautRouterDelegate {
     );
   }
 
+  void addConfiguredPages(
+    BuildContext context,
+    List<Enum> pages, {
+    Map<String, dynamic>? arguments,
+  }) {
+    addPages(pages.map((e) {
+      final RouteConfig routeConfig = getRouteConfig(e);
+      final String name = getRouteName(e);
+
+      return SautPage(
+        key: SautPageKey(e),
+        context: context,
+        name: name,
+        page: getPage(routeConfig, arguments),
+        arguments: arguments,
+        routeConfig: routeConfig,
+      );
+    }));
+  }
+
   /// * [blocValue]
   ///
   /// Used to provide an existing bloc to the new page.

@@ -237,6 +237,12 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     notifyListeners();
   }
 
+  void addPages(Iterable<SautPage> pages) {
+    _pages.addAll(pages);
+
+    notifyListeners();
+  }
+
   @protected
   void addPage(SautPage page) {
     _pages.add(page);
