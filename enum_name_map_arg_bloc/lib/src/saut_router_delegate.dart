@@ -33,6 +33,20 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
 
   final List<Page<dynamic>> _pages = [];
 
+  /// Identifies the current app run session.
+  /// Browser history entries can persist across reloads, so entries from
+  /// previous runs must be ignored when matching pages in the current run.
+  static final int _sessionId = DateTime.now().microsecondsSinceEpoch;
+
+  int _nextSerial = 0;
+
+  /// A unique, sequentially increasing serial number for each page added to [_pages].
+  /// [Expando] does not retain strong references to its keys,
+  /// so no manual cleanup is required when a page is removed.
+  final Expando<int> _serials = Expando<int>();
+
+  void _track(Page page) => _serials[page] = _nextSerial++;
+
   late final List<NavigatorObserver> _navigatorObservers;
 
   /// The number of requests from the operating system that
@@ -117,6 +131,12 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @override
   Future<void> setInitialRoutePath(RouteInformation configuration) {
     onSetInitialRoutePath?.call(configuration);
+
+    // Called not only at app startup, but also when the Router is remounted,
+    // for example, when the Widget Inspector is toggled (which wraps/unwraps 
+    // its subtree). In this case, the provider supplies the last reported route 
+    // information, allowing [setNewRoutePath] to recognize it via the history 
+    // state and preserve the current page stack.
     return setNewRoutePath(configuration);
   }
 
@@ -125,6 +145,51 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @override
   SynchronousFuture<void> setNewRoutePath(RouteInformation configuration) {
     _lastReceivedRouteConfiguration = configuration;
+
+    // On the web (multi-entry history), every browser back/forward,
+    // including the iOS Safari swipe-back gesture, triggers this method
+    // instead of [popRoute].
+    // By the time this is called, the browser has already navigated to the target entry,
+    // so we synchronize [_pages] to match that entry using the state provided 
+    // by [currentConfiguration].
+    final state = configuration.state;
+
+    if (state is Map && state['session'] == _sessionId && _pages.isNotEmpty) {
+      final pageCount = state['pageCount'] as int?;
+      final serial = state['serial'] as int?;
+
+      // Drop the pages that come after the entry the browser went back to,
+      // but always keep at least one page to avoid a black screen.
+      //
+      // With the while loop below (stops when only 1 page is left):
+      //   [A, B, C], pageCount = 1 → remove C → remove B → [A]
+      //   [A, B, C], pageCount = 0 → remove C → remove B → [A] (root kept)
+      if (pageCount != null) {
+        while (_pages.length > pageCount && _pages.length > 1) {
+          final removed = _pages.removeLast();
+
+          if (removed is SautPage) {
+            removed.completeWith(null);
+          }
+        }
+      }
+
+      // The top page corresponds to the route information previously reported, 
+      // meaning the stack is already correct: we bypass hooks and do not rebuild 
+      // from the URL. 
+      // 
+      // This situation occurs when:
+      // - The browser navigates back/forward to an entry within the current session.
+      // - The [Router] is remounted (e.g., toggling the Widget Inspector), replaying 
+      //   the last reported route info through [setInitialRoutePath]; without this 
+      //   check, the current page would be redundantly pushed.
+      //
+      // Since the [Router] automatically rebuilds the [Navigator] after this future 
+      // completes, calling `notifyListeners()` is unnecessary.
+      if (serial != null && _serials[_pages.last] == serial) {
+        return SynchronousFuture(null);
+      }
+    }
 
     onSetNewRoutePath?.call(configuration);
 
@@ -156,6 +221,13 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
           ...?_lastPageArgumentsAsQueryParametersAll,
         },
       ),
+      // Stored in the browser history entry and sent back to
+      // [setNewRoutePath] when the user navigates back/forward.
+      state: <String, Object?>{
+        'session': _sessionId,
+        'serial': _pages.isEmpty ? null : _serials[_pages.last],
+        'pageCount': _pages.length,
+      },
     );
   }
 
@@ -229,6 +301,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @protected
   void updateAddedPage(Page page) {
     _pages.add(page);
+    _track(page);
   }
 
   @protected
@@ -244,15 +317,15 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
     // it won't loop through the empty [_pages]
     final newPages = pages.toList();
 
-    _pages
-      ..clear()
-      ..addAll(newPages);
-
-    notifyListeners();
+    _pages.clear();
+    addPages(newPages);
   }
 
   void addPages(Iterable<SautPage> pages) {
-    _pages.addAll(pages);
+    for (final page in pages) {
+      _pages.add(page);
+      _track(page);
+    }
 
     notifyListeners();
   }
@@ -260,6 +333,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   @protected
   void addPage(SautPage page) {
     _pages.add(page);
+    _track(page);
 
     notifyListeners();
   }
@@ -272,9 +346,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
       _removeUntil(test);
     }
 
-    _pages.add(page);
-
-    notifyListeners();
+    addPage(page);
   }
 
   /// `TO` is the type of the return value of the old page (route).
@@ -282,9 +354,7 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
   void replaceLastPage<TO extends Object?>(SautPage page, TO value) {
     _removeLastPage(value);
 
-    _pages.add(page);
-
-    notifyListeners();
+    addPage(page);
   }
 
   @protected
