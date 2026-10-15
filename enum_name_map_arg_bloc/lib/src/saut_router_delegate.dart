@@ -180,9 +180,23 @@ class SautRouterDelegate extends RouterDelegate<RouteInformation>
       if (arguments.isEmpty) return null;
 
       if (arguments is Map<String, dynamic>) {
-        return Map.unmodifiable({
-          for (final e in arguments.entries) e.key: e.value.toString(),
-        });
+        final result = {};
+
+        for (final entry in arguments.entries) {
+          final value = entry.value;
+
+          try {
+            result[entry.key] = value.toString();
+          } catch (e) {
+            // CastMap.toString() iterates all entries via forEach, casting each
+            // value to the declared type (String). The underlying map contains a
+            // List<dynamic> where a String was expected, so the cast fails here.
+            // We can't predict which entries will mismatch, so we guard the
+            // toString() path rather than the cast itself.
+          }
+        }
+
+        return Map.unmodifiable(result);
       }
 
       if (arguments is Map<String, String>) {

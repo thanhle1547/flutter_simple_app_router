@@ -232,23 +232,33 @@ class SautRouteLoggingObserver extends RouteObserver<PageRoute<dynamic>> {
 
     if (args is Map) {
       return '?' +
-          args.entries
-              .map(
-                (e) => [
-                  e.key.toString(),
-                  if (e.value is Function)
-                    objectRuntimeType(e.value, '')
-                  else if (e.value is List)
-                    [
-                      e.value.runtimeType,
-                      "(${e.value.length})",
-                      getStringRepresentationOfListItems(e.value as List),
-                    ].join(' ')
-                  else
-                    e.value.toString(),
-                ].join('='),
-              )
-              .join('&');
+          args.entries.map(
+            (e) {
+              String value;
+              if (e.value is Function) {
+                value = objectRuntimeType(e.value, '');
+              } else if (e.value is List) {
+                value = [
+                  e.value.runtimeType,
+                  "(${e.value.length})",
+                  getStringRepresentationOfListItems(e.value as List),
+                ].join(' ');
+              } else {
+                try {
+                  value = e.value.toString();
+                } catch (_) {
+                  // CastMap.toString() iterates all entries via forEach, casting each
+                  // value to the declared type (String). The underlying map contains a
+                  // List<dynamic> where a String was expected, so the cast fails here.
+                  // We can't predict which entries will mismatch, so we guard the
+                  // toString() path rather than the cast itself.
+                  value = e.value.runtimeType.toString();
+                }
+              }
+
+              return "${e.key}=$value";
+            },
+          ).join('&');
     }
 
     return "?$args";
