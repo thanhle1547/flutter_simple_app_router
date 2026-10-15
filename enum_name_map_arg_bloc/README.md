@@ -60,7 +60,12 @@ Thư viện này chưa hỗ trợ xử lý một số trường hợp điều h�
 
 * Deep Links
 
-* Đối với bản Web, việc thay đổi địa chỉ trên trình duyệt không làm thay đổi màn hình hiện tại. Nói theo cách khác là thực hiện điều hướng đến màn hình mới khi địa chỉ thay đổi.
+* Đối với bản Web khi dùng `SautRouterDelegate`:
+
+  * Việc thay đổi địa chỉ trên trình duyệt không làm thay đổi màn hình hiện tại. Nói theo cách khác là thực hiện điều hướng đến màn hình mới khi địa chỉ thay đổi.
+
+  * Chưa hỗ trọ button Forward của trình duyệt, các màn hình đã bị đóng sẽ không được khôi phục, và việc xử lý sẽ được chuyển cho `systemRouteReportHandler`.
+
 
 ## 🚩 Mục lục
 
