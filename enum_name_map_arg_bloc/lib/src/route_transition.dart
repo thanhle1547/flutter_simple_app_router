@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// ignore: undefined_shown_name, unused_import, unnecessary_import
+import 'package:flutter/cupertino.dart' show CupertinoPageTransitionsBuilder;
 
 import 'transition_builder.dart';
 
